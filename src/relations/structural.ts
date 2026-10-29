@@ -1,6 +1,6 @@
 import { COLUMN_COUNT, PERIOD_COUNT } from '../layout/table';
 import { BLOCK_COLORS, CATEGORIES } from '../ui/palette';
-import type { Block, BuildContext, CategoryId, LayerBuilder, RelationSet, Source } from '../types';
+import type { Block, BuildContext, CategoryId, Group3Convention, LayerBuilder, RelationSet, Source } from '../types';
 import { madelungOrder, periodOfSubshell } from './madelung';
 
 const IUPAC_TABLE: Source = {
@@ -13,7 +13,7 @@ const RED_BOOK: Source = {
 };
 /** Where the element data comes from (the dataset is generated from it). */
 export const DATASET_SOURCE: Source = {
-  label: 'L. M. Mentel, mendeleev: a Python resource for properties of chemical elements (source of the dataset)',
+  label: 'L. M. Mentel, mendeleev – A Python resource for properties of chemical elements, ions and isotopes (source of the dataset)',
   url: 'https://github.com/lmmentel/mendeleev',
 };
 const GROUP3_REPORT: Source = {
@@ -41,6 +41,11 @@ export function formatRanges(zs: readonly number[], symbol: (z: number) => strin
     i = j + 1;
   }
   return parts.join(', ');
+}
+
+/** "A", "A and B", "A, B and C". */
+function andList(items: readonly string[]): string {
+  return items.length <= 2 ? items.join(' and ') : `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
 }
 
 function periodSubshells(period: number): string[] {
@@ -139,6 +144,20 @@ function blockNote(ctx: BuildContext, block: Block, members: number[]): string {
   }
 }
 
+// Which ground states contradict their block depends on who sits in group 3. Lr's 7p¹ is a
+// calculation that its measured ionization energy supports (Sato et al. 2015), hence "predicted".
+const BLOCK_CAVEATS: Readonly<Record<Group3Convention, string>> = {
+  Lu:
+    'Blocks here are positional, and ground states do not always agree. La ([Xe] 5d¹ 6s²), Ac ([Rn] 6d¹ 7s²) ' +
+    'and Th ([Rn] 6d² 7s²) sit in the f-block with no f electron, and Lr, d-block here, is predicted to take ' +
+    'a 7p electron rather than a 6d one ([Rn] 5f¹⁴ 7s² 7p¹). He is s-block yet sits over the p-block noble gases.',
+  La:
+    'Blocks here are positional, and ground states do not always agree. Th ([Rn] 6d² 7s²) sits in the f-block ' +
+    'with no f electron, and Lu ([Xe] 4f¹⁴ 5d¹ 6s²) and Lr ([Rn] 5f¹⁴ 7s² 7p¹, predicted) end the f-block ' +
+    'rows although Yb and No have already filled the f subshell: Lu adds a 5d electron, Lr a 7p one. He is ' +
+    's-block yet sits over the p-block noble gases.',
+};
+
 export const blocksLayer: LayerBuilder = (ctx) => {
   const sym = (z: number) => symbolFor(ctx, z);
   const byBlock = new Map<Block, number[]>(BLOCK_ORDER.map((b) => [b, []]));
@@ -158,7 +177,8 @@ export const blocksLayer: LayerBuilder = (ctx) => {
     summary: 's, p, d and f blocks by position.',
     description:
       "Each block is named for the subshell that, by position, receives an element's differentiating " +
-      'electron: s (groups 1–2 and He), p (groups 13–18), d (groups 3–12) and f (the fourteen inner columns). ' +
+      'electron: s (groups 1–2 and He), p (groups 13–18 apart from He), d (groups 3–12) and f (the fourteen ' +
+      'inner columns). ' +
       `Membership depends on the group-3 convention. ${current}`,
     sources: [
       {
@@ -170,10 +190,7 @@ export const blocksLayer: LayerBuilder = (ctx) => {
     color: '#c98500',
     items,
     style: { hubDepth: 0.5 },
-    caveat:
-      'Blocks here are positional. Ground states do not always agree: La is [Xe] 5d¹ 6s² and Th is ' +
-      "[Rn] 6d² 7s², with no f electron, and lawrencium's outermost electron is 7p rather than 6d; " +
-      'He is s-block yet sits over the p-block noble gases.',
+    caveat: BLOCK_CAVEATS[ctx.layout.convention],
   };
 };
 
@@ -197,7 +214,8 @@ function categoryNote(ctx: BuildContext, id: CategoryId, members: number[]): str
       return 'An informal class with no IUPAC definition; sources draw its border with the metalloids differently.';
     case 'reactive-nonmetal': {
       const halogens = ctx.layout.membersOfColumn(ctx.layout.columnOfGroup(17)).filter((z) => members.includes(z)).map(sym);
-      return `An informal grouping that includes hydrogen and the halogens ${halogens.join(', ')}, which are a group rather than a class.`;
+      const hydrogen = members.includes(1) ? 'hydrogen and ' : '';
+      return `An informal grouping that includes ${hydrogen}the halogens ${halogens.join(', ')}, which are a group rather than a class.`;
     }
     case 'lanthanide':
     case 'actinide': {
@@ -211,6 +229,25 @@ function categoryNote(ctx: BuildContext, id: CategoryId, members: number[]): str
   }
 }
 
+/** "Noble gas" → "noble gases", "Metalloid" → "metalloids". */
+function pluralLabel(label: string): string {
+  return `${label.toLowerCase()}${label.endsWith('s') ? 'es' : 's'}`;
+}
+
+/** e.g. "Halogens are group 17, not a class: here F, Cl, Br and I sit among the reactive nonmetals, At among the metalloids …" */
+function halogenSentence(ctx: BuildContext): string {
+  const sym = (z: number) => symbolFor(ctx, z);
+  const halogens = ctx.layout.membersOfColumn(ctx.layout.columnOfGroup(17));
+  const parts = CATEGORIES.map((cat) => ({ cat, zs: halogens.filter((z) => ctx.byZ.get(z)?.category === cat.id) }))
+    .filter(({ zs }) => zs.length > 0)
+    .sort((a, b) => a.zs[0]! - b.zs[0]!)
+    .map(({ cat, zs }, i) => {
+      const verb = i > 0 ? '' : zs.length === 1 ? ' sits' : ' sit';
+      return `${andList(zs.map(sym))}${verb} among the ${pluralLabel(cat.label)}`;
+    });
+  return parts.length ? `Halogens are group 17, not a class: here ${andList(parts)}.` : 'Halogens are group 17, not a class.';
+}
+
 export const categoriesLayer: LayerBuilder = (ctx) => {
   const sym = (z: number) => symbolFor(ctx, z);
   const elements = [...ctx.elements].sort((a, b) => a.z - b.z);
@@ -221,8 +258,11 @@ export const categoriesLayer: LayerBuilder = (ctx) => {
     const note = categoryNote(ctx, cat.id, members);
     items.push({ kind: 'set', id: `cat-${cat.id}`, label: cat.label, members, color: cat.color, ...(note ? { note } : {}) });
   }
-  const superheavy = elements.filter((e) => e.z >= 104).map((e) => e.z);
-  const extrapolated = superheavy.length ? ` Classes for ${formatRanges(superheavy, sym)} are extrapolated from position, not observed.` : '';
+  // docs/DATA.md explains the flags: no bulk sample of At, nor of any element from Mt on.
+  const flagged = elements.filter((e) => e.predicted.includes('category')).map((e) => e.z);
+  const predicted = flagged.length
+    ? ` Classes marked predicted in the dataset (${formatRanges(flagged, sym)}) rest on calculation or extrapolation rather than on observed bulk properties.`
+    : '';
   const count = COUNT_WORDS[items.length] ?? String(items.length);
   return {
     id: 'categories',
@@ -230,9 +270,8 @@ export const categoriesLayer: LayerBuilder = (ctx) => {
     section: 'Structure',
     summary: `${count} metallicity classes, coloured as in the category legend.`,
     description:
-      `${count} classes from alkali metals to noble gases, one hub per class. Halogens are a group (column 17) ` +
-      'rather than a class, so they appear among the reactive nonmetals; lanthanides and actinides follow ' +
-      'IUPAC (La–Lu, Ac–Lr) whichever group-3 convention is shown.',
+      `${count} classes from alkali metals to noble gases, one hub per class. ${halogenSentence(ctx)} ` +
+      'Lanthanides and actinides follow IUPAC (La–Lu, Ac–Lr) whichever group-3 convention is shown.',
     sources: [
       RED_BOOK,
       { label: 'IUPAC Gold Book: transition element', url: 'https://goldbook.iupac.org/terms/view/T06456' },
@@ -247,6 +286,6 @@ export const categoriesLayer: LayerBuilder = (ctx) => {
     caveat:
       'The boundaries are conventions, not natural kinds: metalloid lists differ between sources, group 12 ' +
       'is counted among the transition metals by some tables and not others, and La–Lu and Ac–Lr give ' +
-      `fifteen lanthanides and fifteen actinides for fourteen f-block columns.${extrapolated}`,
+      `fifteen lanthanides and fifteen actinides for fourteen f-block columns.${predicted}`,
   };
 };

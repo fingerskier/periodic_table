@@ -70,5 +70,9 @@ export function matchesLegend(e: ElementData, cell: Cell, focus: LegendFocus): b
       // Inclusive at both ends so the domain maximum still lands in the top bin.
       return v !== null && v >= focus.lo && v <= focus.hi;
     }
+    case 'missing': {
+      const v = numericValue(e, focus.prop);
+      return v === null || (!!NUMERIC_PROP_BY_ID.get(focus.prop)?.log && v <= 0);
+    }
   }
 }

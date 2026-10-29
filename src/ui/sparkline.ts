@@ -4,15 +4,18 @@ import { formatNumber } from './format';
 // Trend sparklines as self-contained SVG markup.
 //
 // Escaping contract: sparklineSvg() builds the whole document itself and passes every piece of
-// caller text (point labels, formatted values, units, the accessible title) through escapeHtml,
-// which escapes & < > " ' — enough for both XML text and quoted attribute values. Numbers are
-// emitted by the module. The result is therefore safe to parse; sparklineElement() parses it as
-// XML with DOMParser (an inert document: nothing in it runs) and imports the resulting node, so
-// callers never assign markup through innerHTML.
+// caller text (point labels, formatted values, units, the accessible title) through xml(), which
+// drops characters XML 1.0 forbids (one stray control character would otherwise make the whole
+// chart fail to parse) and escapes & < > " ' — enough for both XML text and quoted attribute
+// values. Numbers are emitted by the module. The result is therefore safe to parse;
+// sparklineElement() parses it as XML with DOMParser (an inert document: nothing in it runs) and
+// imports the resulting node, so callers never assign markup through innerHTML.
 
 export interface SparkPoint {
   label: string;
   value: number | null;
+  /** A predicted or estimated value: drawn as a hollow marker and flagged in its tooltip. */
+  predicted?: boolean;
 }
 
 export interface SparklineOptions {
@@ -27,6 +30,8 @@ export interface SparklineOptions {
   unit?: string;
   /** Formats values for tooltips and min/max labels; default 3 significant figures + unit. */
   format?: (value: number) => string;
+  /** Tooltip text for a null value (default 'no data'), e.g. 'known since antiquity'. */
+  missing?: string;
   /** Accessible name. Without one the chart is aria-hidden and the caller must describe it. */
   title?: string;
 }
@@ -37,6 +42,8 @@ export const SPARK_COLORS = {
   ring: '#f0efec',
   gap: '#898781',
   baseline: '#ffffff',
+  /** The inspector's panel colour, filling hollow (predicted) markers so the line stops at them. */
+  surface: '#0f1420',
 } as const;
 
 const FONT = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
@@ -73,9 +80,18 @@ export function extremes(points: readonly SparkPoint[], log = false): { min: Ext
 
 const num = (n: number): string => String(Math.round(n * 100) / 100);
 
+// Everything outside XML 1.0's Char production: C0 controls other than tab/LF/CR, lone
+// surrogates, U+FFFE and U+FFFF.
+const NOT_XML = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g;
+
+/** Caller text made safe for XML text and quoted attribute values. */
+function xml(text: string): string {
+  return escapeHtml(text.replace(NOT_XML, ''));
+}
+
 function attrs(record: Record<string, string | number>): string {
   return Object.entries(record)
-    .map(([k, v]) => `${k}="${typeof v === 'number' ? num(v) : escapeHtml(v)}"`)
+    .map(([k, v]) => `${k}="${typeof v === 'number' ? num(v) : xml(v)}"`)
     .join(' ');
 }
 
@@ -86,19 +102,25 @@ function label(text: string, x: number, y: number, width: number): string {
   let tx = x;
   if (x - w / 2 < 0) { anchor = 'start'; tx = Math.max(0, x - MARKER_R); }
   else if (x + w / 2 > width) { anchor = 'end'; tx = Math.min(width, x + MARKER_R); }
-  return `<text ${attrs({ x: tx, y, 'text-anchor': anchor, fill: SPARK_COLORS.text })}>${escapeHtml(text)}</text>`;
+  return `<text ${attrs({ x: tx, y, 'text-anchor': anchor, fill: SPARK_COLORS.text })}>${xml(text)}</text>`;
 }
 
 /**
  * A sparkline as an SVG string: 2px round-capped line with gaps at missing values (one path
- * per contiguous run), 8px markers with a per-point tooltip ('Fe: 7.90 eV'), an optional ring
- * on the highlighted point, min and max value labels and a recessive baseline.
+ * per contiguous run), 8px markers (hollow when predicted) with a per-point tooltip
+ * ('Fe: 7.90 eV'), an optional ring on the highlighted point, min and max value labels and a
+ * recessive baseline. On a log axis, values ≤ 0 are gaps whose tooltip still gives the value.
  */
 export function sparklineSvg(points: readonly SparkPoint[], opts: SparklineOptions): string {
   const width = Number.isFinite(opts.width) && opts.width > 0 ? opts.width : 300;
   const height = Number.isFinite(opts.height) && opts.height > 0 ? opts.height : 72;
   const log = !!opts.log;
   const fmt = opts.format ?? ((v: number) => formatNumber(v, { digits: 3, trim: false, unit: opts.unit }));
+  const tip = (p: SparkPoint): string => {
+    if (p.value === null || !Number.isFinite(p.value)) return `${p.label}: ${opts.missing ?? 'no data'}`;
+    const flags = [p.predicted ? 'predicted' : '', log && p.value <= 0 ? 'not on log scale' : ''].filter(Boolean);
+    return `${p.label}: ${fmt(p.value)}${flags.length ? ` (${flags.join(', ')})` : ''}`;
+  };
 
   const n = points.length;
   const top = PAD_TOP;
@@ -151,15 +173,18 @@ export function sparklineSvg(points: readonly SparkPoint[], opts: SparklineOptio
     const v = scaled[i];
     const x = xOf(i);
     if (v === null || v === undefined) {
-      out.push(`<g><title>${escapeHtml(`${p.label}: no data`)}</title>`
+      out.push(`<g><title>${xml(tip(p))}</title>`
         + `<rect ${attrs({ x: x - hitR, y: top, width: hitR * 2, height: height - top, fill: 'transparent' })}/>`
         + `<line ${attrs({ x1: x, y1: height - 5, x2: x, y2: height - 1, stroke: SPARK_COLORS.gap, 'stroke-width': 1 })}/></g>`);
       return;
     }
     const y = yOf(v);
-    out.push(`<g><title>${escapeHtml(`${p.label}: ${fmt(p.value!)}`)}</title>`
+    const marker: Record<string, string | number> = p.predicted
+      ? { cx: x, cy: y, r: MARKER_R - 0.75, fill: SPARK_COLORS.surface, stroke: SPARK_COLORS.line, 'stroke-width': 1.5 }
+      : { cx: x, cy: y, r: MARKER_R, fill: SPARK_COLORS.line };
+    out.push(`<g><title>${xml(tip(p))}</title>`
       + `<circle ${attrs({ cx: x, cy: y, r: hitR, fill: 'transparent' })}/>`
-      + `<circle ${attrs({ cx: x, cy: y, r: MARKER_R, fill: SPARK_COLORS.line })}/></g>`);
+      + `<circle ${attrs(marker)}/></g>`);
   });
 
   if (highlight >= 0) {

@@ -33,7 +33,7 @@ const SERIES: readonly Series[] = [
     ions: [['N', -3], ['O', -2], ['F', -1], ['Na', 1], ['Mg', 2], ['Al', 3]],
     note:
       'Shannon radii (CN 6) fall as nuclear charge rises: O²⁻ 140, F⁻ 133, Na⁺ 102, Mg²⁺ 72, Al³⁺ 53.5 pm. ' +
-      'N³⁻ (146 pm at CN 4) is the nitride ion of Li₃N.',
+      'N³⁻, the nitride ion of Li₃N, is listed only for CN 4 (146 pm).',
   },
   {
     gas: 'Ar',
@@ -46,15 +46,15 @@ const SERIES: readonly Series[] = [
     gas: 'Kr',
     ions: [['Se', -2], ['Br', -1], ['Rb', 1], ['Sr', 2], ['Y', 3]],
     note:
-      'Shannon radii (CN 6): Se²⁻ 198, Br⁻ 196, Rb⁺ 152, Sr²⁺ 118, Y³⁺ 90 pm. Zr⁴⁺ is left out: zirconium(IV) ' +
-      'hydrolyses to polynuclear ions rather than a simple aqua ion.',
+      'Shannon radii (CN 6): Se²⁻ 198, Br⁻ 196, Rb⁺ 152, Sr²⁺ 118, Y³⁺ 90 pm. Zr⁴⁺ is left out: in water ' +
+      'zirconium(IV) forms hydroxo-bridged ions such as [Zr₄(OH)₈(H₂O)₁₆]⁸⁺, not a simple aqua ion.',
   },
   {
     gas: 'Xe',
-    ions: [['Te', -2], ['I', -1], ['Cs', 1], ['Ba', 2], ['La', 3], ['Ce', 4]],
+    ions: [['Te', -2], ['I', -1], ['Cs', 1], ['Ba', 2], ['La', 3]],
     note:
-      'Shannon radii (CN 6): Te²⁻ 221, I⁻ 220, Cs⁺ 167, Ba²⁺ 135, La³⁺ 103.2, Ce⁴⁺ 87 pm. Ceric Ce⁴⁺ is the ' +
-      'oxidant of cerimetric titrations.',
+      'Shannon radii (CN 6): Te²⁻ 221, I⁻ 220, Cs⁺ 167, Ba²⁺ 135, La³⁺ 103.2 pm. Ce⁴⁺ is left out: in water ' +
+      'cerium(IV) is strongly hydrolysed and forms oxo-bridged polynuclear species.',
   },
   {
     gas: 'Rn',
@@ -86,13 +86,13 @@ export const isoelectronicLayer: LayerBuilder = () => ({
   section: 'Chemistry',
   summary: 'Each noble gas with the common ions that share its electron count.',
   description:
-    'Each set joins a noble gas to the common monatomic ions with the same number of electrons, and size falls ' +
-    "steadily as nuclear charge rises through the set. 'Common' means the ion is the element's ordinary form " +
-    'in its simple salts or in water: the hydride, nitride, phosphide, chalcogenide (O–Te) and halide anions ' +
-    'of salt-like compounds with electropositive metals, and cations that exist as aqua ions. Charges that are ' +
-    "only formal or never free (B³⁺, C⁴⁻, Ti⁴⁺, Zr⁴⁺) are left out, as is At⁻: astatine's speciation in water " +
-    'is still being worked out at tracer scale. On the cylinder every set straddles the seam: the anions end ' +
-    'one period, the cations open the next, and the seam stitches them together at the noble gas.',
+    'Each set joins a noble gas to the common monatomic ions with its electron count; size falls steadily as ' +
+    "nuclear charge rises through a set. 'Common' means the element's ordinary ion in simple salts or in water: " +
+    'hydride, nitride, phosphide, chalcogenide (O–Te) and halide anions of salt-like compounds, and cations that ' +
+    'exist as simple aqua ions. Left out: B³⁺ and C⁴⁻ (formal only); Ti⁴⁺, Zr⁴⁺ and Ce⁴⁺ (water hydrolyses ' +
+    "them to oxo- or hydroxo-bridged species); Po²⁻ (polonium's usual states are positive); At⁻ (its aqueous " +
+    'speciation is unsettled). On the cylinder each set straddles the seam: anions other than H⁻ sit just ' +
+    'before it, s-block cations just after.',
   sources: [
     {
       label: 'R. D. Shannon, "Revised effective ionic radii and systematic studies of interatomic distances in halides and chalcogenides", Acta Cryst. A32 (1976) 751–767',
@@ -106,11 +106,15 @@ export const isoelectronicLayer: LayerBuilder = () => ({
       label: 'N. N. Greenwood & A. Earnshaw, Chemistry of the Elements, 2nd edn, Butterworth-Heinemann (1997)',
       url: 'https://doi.org/10.1016/C2009-0-30414-6',
     },
+    {
+      label: 'P. L. Brown & C. Ekberg, Hydrolysis of Metal Ions, Wiley-VCH (2016) (aqua ions and their hydrolysis)',
+      url: 'https://doi.org/10.1002/9783527656189',
+    },
   ],
   color: '#e66767',
   items: SERIES.map(seriesSet),
   style: { hubDepth: 0.25 },
   caveat:
-    "'Common' is a judgement call: hydride, nitride, phosphide and oxide ions exist only in solids (water " +
-    'destroys them), and Fr⁺ is known only from tracer-scale chemistry.',
+    "'Common' is a judgement call: hydride, nitride, phosphide and oxide ions do not survive in water, which " +
+    'protonates them, and Fr⁺ is known only from tracer-scale chemistry.',
 });

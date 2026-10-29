@@ -37,10 +37,11 @@ export const diagonalLayer: LayerBuilder = () => ({
   summary: 'Li–Mg, Be–Al and B–Si: light elements that resemble their lower-right neighbour.',
   description:
     'Each of the first three period-2 elements resembles, in several ways, the element one period down and ' +
-    'one group to the right more than its own heavier congener: lithium behaves like magnesium, beryllium ' +
-    'like aluminium, boron like silicon. Periods 2 and 3 have no d-block, so aluminium is the ' +
-    "right-hand neighbour of beryllium's column one row down. The usual explanation is similar charge density: " +
-    'moving right raises it and moving down lowers it, so the two changes roughly cancel along the diagonal.',
+    'one group to the right more than its own heavier congener (period 3 has no d-block, so aluminium directly ' +
+    'follows magnesium). The textbook explanation is similar charge density: moving right raises it and moving ' +
+    'down lowers it, so the changes roughly cancel along the diagonal. The match is loose: with Shannon radii ' +
+    '(76 and 72 pm) Li⁺ has about half the charge-to-radius ratio of Mg²⁺, and Hanusa (1987) argues that Li⁺ ' +
+    'and Mg²⁺ are better paired with other ions than with each other.',
   sources: [
     {
       label: 'T. P. Hanusa, "Reexamining the diagonal relationships", J. Chem. Educ. 64 (1987) 686',
@@ -83,8 +84,8 @@ export const diagonalLayer: LayerBuilder = () => ({
   ],
   style: { bow: 0.75 },
   caveat:
-    'A tendency, not a law: it is clear only for these three period-2/period-3 pairs and weakens beyond ' +
-    'period 3, and in most respects each element still follows its own group.',
+    'A tendency, not a law: these three are the commonly cited pairs, though Rayner-Canham (2011) reports ' +
+    'isodiagonal links elsewhere in the table, and in most respects each element still follows its own group.',
 });
 
 // ---------------------------------------------------------------- group n and n + 10
@@ -98,13 +99,13 @@ export const nPlus10Layer: LayerBuilder = () => ({
   id: 'n-plus-10',
   title: 'Group n and n+10',
   section: 'Chemistry',
-  summary: 'Main-group elements paired with the transition metal ten groups away, in matching oxidation states.',
+  summary: 'Main-group elements paired with the d-block metal ten groups away, in matching oxidation states.',
   description:
     'Eight-column tables, before the 18-column form, put groups n and n + 10 together: manganese beside ' +
     'chlorine in group VII, chromium beside sulfur in group VI. Rayner-Canham (2013) surveyed the resemblance ' +
     'systematically. It shows in matching compounds and ions in the same oxidation state (here always the old ' +
     'group number, from +2 for Mg and Zn to +8 for Os and Xe), species he calls pseudo-isoelectronic. Each arc ' +
-    'joins a transition metal to its main-group partner and names one documented match.',
+    'joins a d-block metal to its main-group partner and names one documented match.',
   sources: [
     {
       label: 'G. Rayner-Canham, "Periodic patterns: the Group (n) and Group (n + 10) linkage", Found. Chem. 15 (2013) 229–237',
@@ -140,8 +141,8 @@ export const nPlus10Layer: LayerBuilder = () => ({
           'Sc',
           'Al',
           '3, 13',
-          'Both form only noble-gas-core M³⁺ ions; both hydroxides are amphoteric, dissolving in excess strong ' +
-            'alkali, and γ-ScOOH has the boehmite (γ-AlOOH) structure.',
+          'Each has one common state, +3, with a noble-gas core (Al³⁺ [Ne], Sc³⁺ [Ar]); both hydroxides are ' +
+            'amphoteric, dissolving in excess strong alkali, and γ-ScOOH has the boehmite (γ-AlOOH) structure.',
         ),
         linkage(
           'Ti',
@@ -177,8 +178,9 @@ export const nPlus10Layer: LayerBuilder = () => ({
   ],
   style: { bow: 0.55 },
   caveat:
-    'Only compounds match, not the elements (chlorine gas and manganese metal have little in common). One ' +
-    'illustrative pair is shown per group pair: the period-3 element with its period-4 partner, plus Xe–Os.',
+    'Only compounds match, not the elements (chlorine gas and manganese metal have little in common). The ' +
+    'pairs are illustrations chosen here, one per group pair from 2/12 to 8/18: the period-3 element with its ' +
+    'period-4 partner, except Xe–Os because argon has no +8 compounds.',
 });
 
 // ---------------------------------------------------------------- knight's move
@@ -194,12 +196,17 @@ export const knightsMoveLayer: LayerBuilder = () => ({
   section: 'Chemistry',
   summary: 'Lower-right metals that resemble the element one period down and two groups right.',
   description:
-    'Laing (1999) named the pattern after the chess knight: among the metals in the lower right of the table, ' +
+    'Laing named the pattern after the chess knight: among the metals in the lower right of the table, ' +
     'an element often resembles the one a period down and two groups to the right. Rayner-Canham and Oldford ' +
-    '(2007) found that the systematic evidence lies in matching compounds in a shared oxidation state. In every ' +
-    "pair shown, that state is the lower element's inert-pair state, two below its group valence.",
+    '(2007) studied the two double pairs Cu–In–Bi and Zn–Sn–Po and found that the systematic evidence lies in ' +
+    "matching compounds in a shared oxidation state. In every pair shown, that state is the lower element's " +
+    'inert-pair state, two below its group valence.',
   sources: [
-    { label: 'M. Laing, "The knight\'s move in the periodic table", Educ. Chem. 36 (1999) 160–161' },
+    {
+      label: 'M. Laing, "The knight\'s move in the periodic table: a regularity amongst the d10 metals on the lower right-hand side", South. Braz. J. Chem. 1 (1993) 33–59',
+      url: 'https://doi.org/10.48141/sbjchem.v1.n1.1993.38_1993.pdf',
+    },
+    { label: 'M. Laing, "The Knight\'s Move in the periodic table", Educ. Chem. 36 (1999) 160–161' },
     {
       label: "G. Rayner-Canham & M. Oldford, \"The chemical 'Knight's Move' relationship: what is its significance?\", Found. Chem. 9 (2007) 119–125",
       url: 'https://doi.org/10.1007/s10698-007-9034-1',
@@ -207,6 +214,10 @@ export const knightsMoveLayer: LayerBuilder = () => ({
     {
       label: 'K. W. Bagnall, R. W. M. D\'Eye & J. H. Freeman, "The polonium halides. Part I. Polonium chlorides", J. Chem. Soc. (1955) 2320',
       url: 'https://doi.org/10.1039/jr9550002320',
+    },
+    {
+      label: 'S. A. Brown & P. L. Brown, The Aqueous Chemistry of Polonium and the Practical Application of its Thermochemistry, Elsevier (2019) (hexachloropolonate salts)',
+      url: 'https://doi.org/10.1016/C2018-0-05262-7',
     },
     GREENWOOD,
   ],
@@ -243,15 +254,16 @@ export const knightsMoveLayer: LayerBuilder = () => ({
           'Sn',
           'Po',
           '+4',
-          "tin's group valence and polonium's commonest state; both form hexachloro salts, (NH₄)₂SnCl₆ and (NH₄)₂PoCl₆.",
+          "tin's group valence and one of polonium's two principal states; both form hexachloro salts, " +
+            '(NH₄)₂SnCl₆ and (NH₄)₂PoCl₆.',
         ),
       ],
     },
   ],
   style: { bow: 0.55 },
   caveat:
-    'An empirical pattern with no accepted explanation; physical properties such as melting points show no ' +
-    'consistent match (Rayner-Canham & Oldford 2007).',
+    'An empirical pattern, not a law: physical properties such as melting points show no consistent match ' +
+    '(Rayner-Canham & Oldford 2007).',
 });
 
 // ---------------------------------------------------------------- lanthanide-contraction twins
@@ -262,7 +274,7 @@ interface Twin {
   d4: ElementSymbol;
   d5: ElementSymbol;
   /** Group-valence ions of the 4d and 5d metals with their Shannon (1976) radii, CN 6, pm. */
-  ions: readonly [string, number, string, number];
+  ions: readonly [readonly [string, number], readonly [string, number]];
   consequence: (ctx: BuildContext) => string;
 }
 
@@ -273,7 +285,7 @@ const TWINS: readonly Twin[] = [
     d3: 'Ti',
     d4: 'Zr',
     d5: 'Hf',
-    ions: ['Zr⁴⁺', 72, 'Hf⁴⁺', 71],
+    ions: [['Zr⁴⁺', 72], ['Hf⁴⁺', 71]],
     consequence: (ctx) =>
       `Hafnium hid in zirconium minerals until Coster and Hevesy found it by X-ray spectroscopy${inYear(element(ctx, 'Hf'))}.`,
   },
@@ -281,7 +293,7 @@ const TWINS: readonly Twin[] = [
     d3: 'V',
     d4: 'Nb',
     d5: 'Ta',
-    ions: ['Nb⁵⁺', 64, 'Ta⁵⁺', 64],
+    ions: [['Nb⁵⁺', 64], ['Ta⁵⁺', 64]],
     consequence: () =>
       'Wollaston (1809) judged them one element; Marignac (1866) separated them by crystallising K₂TaF₇ from ' +
       'more soluble K₂NbOF₅·H₂O.',
@@ -290,7 +302,7 @@ const TWINS: readonly Twin[] = [
     d3: 'Cr',
     d4: 'Mo',
     d5: 'W',
-    ions: ['Mo⁶⁺', 59, 'W⁶⁺', 60],
+    ions: [['Mo⁶⁺', 59], ['W⁶⁺', 60]],
     consequence: () => 'Scheelite CaWO₄ and powellite CaMoO₄ are isostructural and form a solid-solution series.',
   },
 ];
@@ -303,9 +315,9 @@ function covalent(ctx: BuildContext, symbol: ElementSymbol): number | null {
 function twinNote(ctx: BuildContext, t: Twin): string {
   const radii = [t.d3, t.d4, t.d5].map((s) => [s, covalent(ctx, s)] as const);
   const known = radii.every(([, r]) => r !== null);
-  const [ion4, r4, ion5, r5] = t.ions;
+  const [[ion4, r4], [ion5, r5]] = t.ions;
   const ionic = r4 === r5 ? `${ion4} and ${ion5} both ${r4} pm` : `${ion4} ${r4}, ${ion5} ${r5} pm`;
-  const covalentPart = known ? `Covalent radius (Cordero 2008): ${radii.map(([s, r]) => `${s} ${r}`).join(', ')} pm; ` : '';
+  const covalentPart = known ? `Covalent radii (Cordero 2008): ${radii.map(([s, r]) => `${s} ${r}`).join(', ')} pm; ` : '';
   return `${covalentPart}${ionic} (Shannon 1976, CN 6). ${t.consequence(ctx)}`;
 }
 

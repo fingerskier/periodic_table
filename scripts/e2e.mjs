@@ -9,7 +9,7 @@ let chromium;
 try {
   ({ chromium } = require('playwright'));
 } catch {
-  console.error('playwright is not installed; install it globally or run `npx playwright install chromium`.');
+  console.error('playwright is not resolvable from here; set NODE_PATH to a directory containing it, or `npm i -D playwright && npx playwright install chromium`.');
   process.exit(2);
 }
 
@@ -76,7 +76,8 @@ await page.mouse.move(box.x + box.width - 330, box.y + box.height / 2, { steps: 
 await page.mouse.up();
 await page.waitForTimeout(400);
 const after = (await state()).view.azimuth;
-check(after < before - 0.3, `dragging left from beside the cylinder rotates it (Δφ = ${(after - before).toFixed(2)})`);
+// Grab-the-surface: dragging left carries the front of the cylinder left, i.e. the camera azimuth grows.
+check(after > before + 0.3, `dragging left from beside the cylinder rotates it (Δφ = ${(after - before).toFixed(2)})`);
 
 // Search jumps to and pins an element.
 await page.locator('#search input').fill('iron');

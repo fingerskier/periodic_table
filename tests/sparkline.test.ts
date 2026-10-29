@@ -176,13 +176,37 @@ describe('sparklineSvg', () => {
     }
   });
 
-  it('plots log10 values when asked and drops non-positive ones', () => {
+  it('plots log10 values when asked and leaves non-positive ones off the axis', () => {
     const svg = sparklineSvg(points(1, 10, 100), { ...OPTS, log: true });
     const ys = markers(svg).map((m) => Number(m.cy));
     expect(ys[1]).toBeCloseTo((ys[0]! + ys[2]!) / 2, 1);
-    const withZero = sparklineSvg(points(0, 10, -5, 100), { ...OPTS, log: true });
+    const withZero = sparklineSvg(points(0, 10, -5, 100, null), { ...OPTS, log: true, format: String });
     expect(markers(withZero)).toHaveLength(2);
-    expect(titles(withZero)).toContain('E0: no data');
+    expect(tags(withZero, 'path')).toHaveLength(0);
+    // The value exists, so the tooltip gives it rather than claiming there is no data.
+    expect(titles(withZero)).toEqual(['E0: 0 (not on log scale)', 'E1: 10', 'E2: -5 (not on log scale)', 'E3: 100', 'E4: no data']);
+    expect(texts(withZero).sort()).toEqual(['10', '100']);
+  });
+
+  it('draws predicted values as hollow markers and says so in the tooltip', () => {
+    const svg = sparklineSvg([{ label: 'Rf', value: 6.0, predicted: true }, { label: 'Hf', value: 6.83 }], { ...OPTS, format: String });
+    const hollow = tags(svg, 'circle').filter((c) => c.stroke === SPARK_COLORS.line && c.fill === SPARK_COLORS.surface);
+    expect(hollow).toHaveLength(1);
+    expect(markers(svg)).toHaveLength(1);
+    expect(titles(svg)).toEqual(['Rf: 6 (predicted)', 'Hf: 6.83']);
+  });
+
+  it('uses the caller wording for missing values', () => {
+    const svg = sparklineSvg(points(null, 1766), { ...OPTS, missing: 'known since antiquity' });
+    expect(titles(svg)[0]).toBe('E0: known since antiquity');
+  });
+
+  it('drops characters that XML cannot carry, so the chart still parses', () => {
+    const svg = sparklineSvg([{ label: 'A\u0001\u001f\uFFFE\uD800', value: 1 }, { label: 'B', value: 2 }], { ...OPTS, title: 'T\u0000' });
+    expect(svg).not.toMatch(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF\uD800-\uDFFF]/);
+    expect(titles(svg)[0]).toBe('A: 1.00');
+    expect(tags(svg, 'svg')[0]!['aria-label']).toBe('T');
+    expect(balanced(svg)).toBe(true);
   });
 
   it('escapes every piece of caller text', () => {

@@ -59,11 +59,14 @@ export function propValue(e: ElementData, prop: NumericProp): number | null {
   return typeof v === 'number' && Number.isFinite(v) ? v : null;
 }
 
-/** Sparkline points for a run of elements (symbols as labels, missing data as null). */
+/** Sparkline points for a run of elements (symbols as labels, missing data as null, predicted values flagged). */
 export function trendPoints(byZ: ReadonlyMap<number, ElementData>, members: readonly number[], prop: NumericProp): SparkPoint[] {
   return members.map((z) => {
     const e = byZ.get(z);
-    return { label: e?.symbol ?? String(z), value: e ? propValue(e, prop) : null };
+    const value = e ? propValue(e, prop) : null;
+    const point: SparkPoint = { label: e?.symbol ?? String(z), value };
+    if (value !== null && e?.predicted.includes(prop)) point.predicted = true;
+    return point;
   });
 }
 
@@ -111,9 +114,14 @@ const NOTE_FIELDS: readonly (readonly [RegExp, keyof ElementData])[] = [
   [/densit/i, 'density'],
   [/configuration|\bconfig\b/i, 'config'],
   [/\bphase\b/i, 'phase'],
-  [/electronegativ|\bEN\b/, 'en'],
-  [/ioni[sz]ation|\bIE1?\b/, 'ie1'],
-  [/electron affinity|\bEA\b/, 'ea'],
+  // Words in any case ('Electron affinity is …'); abbreviations only in capitals, so prose
+  // such as 'en route' cannot match.
+  [/electronegativ/i, 'en'],
+  [/\bEN\b/, 'en'],
+  [/ioni[sz]ation/i, 'ie1'],
+  [/\bIE1?\b/, 'ie1'],
+  [/electron affinity/i, 'ea'],
+  [/\bEA\b/, 'ea'],
   [/atomic radius/i, 'atomicRadius'],
   [/covalent/i, 'covalentRadius'],
   [/van der waals|\bvdw\b/i, 'vdwRadius'],
@@ -123,10 +131,14 @@ const NOTE_FIELDS: readonly (readonly [RegExp, keyof ElementData])[] = [
   [/atomic weight|\bmass\b/i, 'mass'],
   [/goldschmidt/i, 'goldschmidt'],
   [/pettifor/i, 'pettifor'],
+  // 'Class contested', 'Classed as …', 'Counted as a lanthanide', but not 'no Goldschmidt class'.
+  [/(?<!goldschmidt )\bclass(?:ed)?\b|\bcounted as\b|\bcategor|\bsemiconduct/i, 'category'],
+  [/radioactiv/i, 'radioactive'],
+  [/\bIUPAC name\b|\bspelling\b/i, 'name'],
 ];
 
 export function noteFields(note: string): (keyof ElementData)[] {
-  return NOTE_FIELDS.filter(([re]) => re.test(note)).map(([, field]) => field);
+  return [...new Set(NOTE_FIELDS.filter(([re]) => re.test(note)).map(([, field]) => field))];
 }
 
 export interface SetEntry {
@@ -251,23 +263,27 @@ export function targetLabel(model: Model, t: Target): string {
   }
 }
 
-function announcement(model: Model, s: AppState, t: Target): string {
-  let text = targetLabel(model, t);
-  if (t.kind === 'element') {
-    const e = model.byZ.get(t.z);
-    if (e) text = `${e.name}, ${e.symbol}, atomic number ${e.z}`;
-  }
-  return s.pinned ? `Pinned: ${text}` : text;
+/** What the live region says when a pin is set: 'Pinned: Iron, Fe, atomic number 26'. */
+function announcement(model: Model, t: Target): string {
+  const e = t.kind === 'element' ? model.byZ.get(t.z) : undefined;
+  return `Pinned: ${e ? `${e.name}, ${e.symbol}, atomic number ${e.z}` : targetLabel(model, t)}`;
 }
 
 // ---------------------------------------------------------------- mounting
+
+/** A trend chart drawn once its slot is in the document, at the slot's own width. */
+interface Chart {
+  holder: HTMLElement;
+  draw(width: number): SVGSVGElement | null;
+  width: number;
+}
 
 interface View {
   ctx: UiContext;
   s: AppState;
   model: Model;
-  /** Intrinsic sparkline width, matched to the panel so labels render at their nominal size. */
-  chartWidth: number;
+  /** Filled while building; drawn by fitCharts() after insertion. */
+  charts: Chart[];
 }
 
 export function mountInspector(root: HTMLElement, ctx: UiContext): void {
@@ -280,7 +296,8 @@ export function mountInspector(root: HTMLElement, ctx: UiContext): void {
   replaceChildren(root, live, content);
 
   let shown: Target | null | undefined;
-  let shownPinned = false;
+  let shownPinned: Target | null = null;
+  let charts: Chart[] = [];
   let timer: ReturnType<typeof setTimeout> | undefined;
 
   const render = (): void => {
@@ -294,31 +311,54 @@ export function mountInspector(root: HTMLElement, ctx: UiContext): void {
     const focusKey = hadFocus ? focused.dataset.focusKey : undefined;
     const scroll = root.scrollTop;
 
+    const view: View = { ctx, s, model, charts: [] };
     content.dataset.view = target?.kind ?? 'intro';
-    replaceChildren(content, ...buildView({ ctx, s, model, chartWidth: chartWidth(content) }, target));
+    content.classList.toggle('is-pinned', s.pinned !== null);
+    replaceChildren(content, ...buildView(view, target));
+    charts = view.charts;
+    fitCharts(charts);
     root.scrollTop = sameView ? scroll : 0;
     if (hadFocus) restoreFocus(content, focusKey, sameView);
 
-    const pinned = s.pinned !== null;
-    if (!first && (!sameView || pinned !== shownPinned)) {
-      // Pointer leaving a tile is not news; releasing a pin is.
-      const text = target ? announcement(model, s, target) : shownPinned ? 'Selection released.' : '';
+    // Only pins are news: a hovered or focused tile already speaks its own name, and reading
+    // it again here would double every announcement.
+    if (!first && !sameTarget(s.pinned, shownPinned)) {
+      const text = s.pinned ? announcement(model, s.pinned) : 'Selection released.';
       clearTimeout(timer);
-      if (text) timer = setTimeout(() => { live.textContent = text; }, 300);
+      timer = setTimeout(() => { live.textContent = text; }, 300);
     }
     shown = target;
-    shownPinned = pinned;
+    shownPinned = s.pinned;
   };
 
   render();
   ctx.store.subscribe((s, prev) => {
     if (shouldRender(s, prev)) render();
   });
+  // Redraw charts when the panel changes width (window resize, desktop ↔ bottom sheet). In the
+  // next frame: resizing inside the callback would raise "ResizeObserver loop completed with
+  // undelivered notifications".
+  if (typeof ResizeObserver === 'function') {
+    let frame = 0;
+    new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => fitCharts(charts));
+    }).observe(content);
+  }
 }
 
-function chartWidth(content: HTMLElement): number {
-  const w = content.clientWidth - 32;
-  return w > 0 ? Math.round(Math.min(340, Math.max(220, w))) : 316;
+/**
+ * Draw each chart at the width of its slot, so its 11px labels are never scaled down (a fixed
+ * width shrank them to ~9px in the two-column bottom sheet). Unchanged widths are skipped.
+ */
+function fitCharts(charts: readonly Chart[]): void {
+  for (const chart of charts) {
+    const slot = chart.holder.clientWidth;
+    const width = slot > 0 ? Math.round(Math.min(640, Math.max(160, slot))) : 300;
+    if (chart.holder.firstChild && Math.abs(width - chart.width) < 2) continue;
+    chart.width = width;
+    replaceChildren(chart.holder, chart.draw(width));
+  }
 }
 
 /** Put focus back on the control with the same key, else on the view heading. */
@@ -376,8 +416,15 @@ function para(text: string, cls = 'insp-text'): HTMLElement {
   return h('p', { class: cls }, text);
 }
 
+const HEX_COLOR = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+
+/** Colours reach style attributes, so anything but a hex colour (the contract) is replaced. */
+function cssColor(color: string | undefined): string {
+  return color && HEX_COLOR.test(color) ? color : PHASE_COLORS.unknown;
+}
+
 function swatch(color: string): HTMLElement {
-  return h('span', { class: 'insp-swatch', style: `--c:${color}`, 'aria-hidden': 'true' });
+  return h('span', { class: 'insp-swatch', style: `--c:${cssColor(color)}`, 'aria-hidden': 'true' });
 }
 
 function linkButton(text: Kids, key: string, onclick: () => void, label?: string): HTMLElement {
@@ -428,7 +475,7 @@ function countChips(items: { color: string; label: string; count: number }[]): H
   return h(
     'ul',
     { class: 'insp-counts', role: 'list' },
-    items.map((c) => h('li', { class: 'insp-count' }, swatch(c.color), c.label, h('b', null, c.count))),
+    items.map((c) => h('li', { class: 'insp-count' }, swatch(c.color), c.label, ' ', h('b', null, c.count))),
   );
 }
 
@@ -470,6 +517,7 @@ function pinnedBar(v: View, pinned: Target): HTMLElement {
     'div',
     { class: 'insp-pinbar' },
     h('span', { class: 'insp-pin-tag' }, 'Pinned'),
+    ' ',
     h('span', { class: 'insp-pin-what' }, targetLabel(v.model, pinned)),
     h(
       'button',
@@ -499,8 +547,24 @@ function trendSelect(v: View, id: string): HTMLElement {
   return h('label', { class: 'insp-trend-ctl' }, h('span', { class: 'insp-k' }, 'Property'), select);
 }
 
+/** 'Ru 7.36 eV', or 'Hs 7.6 eV (predicted)' in the chart's spoken summary. */
 function extremeText(v: View, points: readonly SparkPoint[], x: Extreme): string {
-  return `${points[x.index]?.label ?? ''} ${formatPropValue(v.s.trendProp, x.value)}`;
+  const p = points[x.index];
+  return `${p?.label ?? ''} ${formatPropValue(v.s.trendProp, x.value)}${p?.predicted ? ' (predicted)' : ''}`;
+}
+
+/** The same, shown under the chart: '≈' marks a predicted value. */
+function extremeItem(v: View, points: readonly SparkPoint[], x: Extreme, label: string): HTMLElement {
+  const p = points[x.index];
+  return h(
+    'span',
+    null,
+    h('span', { class: 'insp-k' }, label),
+    ' ',
+    `${p?.label ?? ''} `,
+    ...(p?.predicted ? predictedMark() : []),
+    formatPropValue(v.s.trendProp, x.value),
+  );
 }
 
 function trendChart(v: View, members: readonly number[], caption: string, highlightZ?: number): HTMLElement {
@@ -508,34 +572,45 @@ function trendChart(v: View, members: readonly number[], caption: string, highli
   const meta = NUMERIC_PROP_BY_ID.get(prop);
   const log = !!meta?.log;
   const points = trendPoints(v.model.byZ, members, prop);
-  const ext = extremes(points, log);
-  const missing = points.filter((p) => p.value === null || (log && p.value <= 0)).length;
+  // The text states the true range; a log axis simply cannot plot values ≤ 0.
+  const ext = extremes(points);
+  const missing = points.filter((p) => p.value === null).length;
+  const offScale = log ? points.filter((p) => p.value !== null && p.value <= 0).length : 0;
+  // A null discovery year means known since antiquity, not unknown.
+  const ancient = prop === 'discoveryYear' ? 'known since antiquity' : undefined;
   const highlight = highlightZ === undefined ? -1 : members.indexOf(highlightZ);
   const what = `${meta?.label ?? prop}, ${caption.toLowerCase()}`;
   const title = ext
     ? `${what}: lowest ${extremeText(v, points, ext.min)}, highest ${extremeText(v, points, ext.max)}`
     : `${what}: no data`;
-  const svg = sparklineElement(points, {
-    width: v.chartWidth,
-    height: 76,
-    highlight: highlight >= 0 ? highlight : undefined,
-    log,
-    unit: meta?.unit,
-    format: (value) => formatPropValue(prop, value),
-    title,
+  const holder = h('div', { class: 'insp-spark' });
+  v.charts.push({
+    holder,
+    width: 0,
+    draw: (width) => sparklineElement(points, {
+      width,
+      height: 76,
+      highlight: highlight >= 0 ? highlight : undefined,
+      log,
+      unit: meta?.unit,
+      format: (value) => formatPropValue(prop, value),
+      missing: ancient,
+      title,
+    }),
   });
   return h(
     'figure',
     { class: 'insp-trend' },
     h('figcaption', { class: 'insp-trend-cap' }, caption, log ? h('span', { class: 'insp-muted' }, ' · log scale') : null),
-    svg,
+    holder,
     ext
       ? h(
           'p',
           { class: 'insp-extremes' },
-          h('span', null, h('span', { class: 'insp-k' }, 'Low'), extremeText(v, points, ext.min)),
-          h('span', null, h('span', { class: 'insp-k' }, 'High'), extremeText(v, points, ext.max)),
-          missing ? h('span', { class: 'insp-muted' }, `${missing} without data`) : null,
+          extremeItem(v, points, ext.min, 'Low'),
+          extremeItem(v, points, ext.max, 'High'),
+          missing ? h('span', { class: 'insp-muted' }, `${missing} ${ancient ?? 'without data'}`) : null,
+          offScale ? h('span', { class: 'insp-muted' }, `${offScale} ≤ 0, not on the log scale`) : null,
         )
       : null,
   );
@@ -620,7 +695,7 @@ function elementHeader(v: View, e: ElementData, refs: (field: string) => number[
     h(
       'div',
       { class: 'insp-head-text' },
-      heading(e.name, sr(`, ${e.symbol}`)),
+      heading(e.name, sr(`, ${e.symbol}`), ...footnoteRefs(refs('name'))),
       h(
         'p',
         { class: 'insp-meta' },
@@ -640,7 +715,13 @@ function elementHeader(v: View, e: ElementData, refs: (field: string) => number[
         'p',
         { class: mode === 'category' ? 'insp-cat is-colour' : 'insp-cat' },
         swatch(color),
-        cat?.label ?? e.category,
+        h(
+          'span',
+          null,
+          ...(e.predicted.includes('category') ? predictedMark() : []),
+          cat?.label ?? e.category,
+          ...footnoteRefs(refs('category')),
+        ),
         mode === 'category' ? sr(' (tile colour)') : null,
       ),
     ),
@@ -655,7 +736,11 @@ function elementView(v: View, z: number): Kid[] {
   const refs = (field: string): number[] => notes.filter((nt) => nt.fields.includes(field)).map((nt) => nt.n);
   const fact = (key: keyof ElementData & string, label: Kids, value: Kids | null, empty?: string): HTMLElement =>
     factRow({ key, label, value, predicted: e.predicted.includes(key), notes: refs(key), colour: v.s.colorMode === key, empty });
-  const anyPredicted = e.predicted.length > 0;
+  // The key line only when some ≈ is actually on screen (missing values carry no mark).
+  const anyPredicted = e.predicted.some((field) => {
+    const value = e[field as keyof ElementData] as unknown;
+    return value !== null && value !== undefined && value !== '' && !(Array.isArray(value) && value.length === 0);
+  });
 
   return [
     h('div', { class: 'insp-top' }, elementHeader(v, e, refs), positionStrip(v, cell)),
@@ -691,7 +776,8 @@ function elementView(v: View, z: number): Kid[] {
           'div',
           { class: 'insp-notes' },
           notes.length ? h('ol', null, notes.map((nt) => h('li', null, nt.text))) : null,
-          anyPredicted ? h('p', null, h('span', { class: 'insp-pred', 'aria-hidden': 'true' }, '≈'), ' marks a predicted or estimated value.') : null,
+          // Visual key only: screen readers already hear "predicted:" before each such value.
+          anyPredicted ? h('p', { 'aria-hidden': 'true' }, h('span', { class: 'insp-pred' }, '≈'), ' marks a predicted or estimated value.') : null,
         )
       : null,
     relationsSection(v, e),
@@ -824,6 +910,7 @@ function columnView(v: View, column: number): Kid[] {
     info.note ? para(info.note) : null,
     section(['Members', h('span', { class: 'insp-h3-count' }, info.members.length)], memberChips(v, info.members, 'member')),
     section('Trend', trendSelect(v, 'column'), trendChart(v, info.members, 'Down the column')),
+    sourcesList(info.sources ?? []),
   ];
 }
 
@@ -852,6 +939,7 @@ function periodView(v: View, period: number): Kid[] {
     section('Phase at 25 °C', countChips(phases)),
     section(['Members', h('span', { class: 'insp-h3-count' }, members.length)], memberChips(v, members, 'member')),
     section('Trend', trendSelect(v, 'period'), trendChart(v, members, 'Across the period')),
+    sourcesList(info.sources ?? []),
   ];
 }
 
@@ -859,6 +947,17 @@ function periodView(v: View, period: number): Kid[] {
 
 function unique(values: number[]): number[] {
   return [...new Set(values)];
+}
+
+/** A pin outlives switching its relation off; say so rather than describe something not drawn. */
+function hiddenNotice(v: View, layer: RelationLayer, item: RelationItem): HTMLElement | null {
+  if (isItemVisible(v.s, layer.id, item.id)) return null;
+  return para(
+    isLayerOn(v.s, layer.id)
+      ? `Not drawn: this item is hidden in “${layer.title}”.`
+      : `Not drawn: switch on “${layer.title}” in the relations panel to see it.`,
+    'insp-empty',
+  );
 }
 
 function chainNav(v: View, layer: RelationLayer, item: RelationSetChain, index: number): HTMLElement {
@@ -906,6 +1005,7 @@ function hubView(v: View, t: Extract<Target, { kind: 'hub' }>): Kid[] {
   }
   return [
     h('header', { class: 'insp-head-plain' }, layerEyebrow(layer, item.color), heading(title), subtitle),
+    hiddenNotice(v, layer, item),
     setNote ? para(setNote) : null,
     item.note ? para(item.note) : null,
     section(['Members', h('span', { class: 'insp-h3-count' }, members.length)], memberChips(v, members, 'member', captions)),
@@ -936,10 +1036,11 @@ function edgeView(v: View, t: Extract<Target, { kind: 'edge' }>): Kid[] {
       ),
       a && b ? h('p', { class: 'insp-meta' }, `${a.name} ${glyph} ${b.name}`) : null,
     ),
+    hiddenNotice(v, layer, item),
     edge.label ? para(edge.label, 'insp-edge-label') : null,
     edge.note ? para(edge.note) : null,
     layer.items.length > 1
-      ? h('p', { class: 'insp-text' }, h('span', { class: 'insp-k' }, 'Part of'), h('strong', null, item.label), item.note ? ` — ${item.note}` : null)
+      ? h('p', { class: 'insp-text' }, h('span', { class: 'insp-k' }, 'Part of'), ' ', h('strong', null, item.label), item.note ? ` — ${item.note}` : null)
       : item.note ? para(item.note) : null,
     ...layerAbout(layer),
   ];

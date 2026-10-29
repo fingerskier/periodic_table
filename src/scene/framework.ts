@@ -12,7 +12,7 @@ const SPOKE_SEGMENTS = 6;
 const ARC_SEGMENTS = 24;
 const FLOW_SPEED = 90; // world units per second
 /** Sets at most this large mark all their members as related when one member is the target. */
-const RELATED_SET_MAX = 12;
+const RELATED_SET_MAX = 7;
 /** Layers with at most this many hubs get text labels beside each hub. */
 const LABEL_MAX_HUBS = 20;
 const LABEL_HEIGHT = 58; // world units
@@ -183,16 +183,18 @@ export class Framework {
       return hub;
     };
 
+    let edgesIndex = 0;
     for (const item of layer.items) {
       if (!isItemVisible(state, layer.id, item.id)) continue;
       const color = item.color ?? layer.color;
+      const itemBow = item.kind === 'edges' ? Math.min(0.95, bow + (style.bowSpread ?? 0) * edgesIndex++) : bow;
       if (item.kind === 'set') {
         if (item.members.length === 0) continue;
         addSet(item, color, { kind: 'hub', layerId: layer.id, itemId: item.id });
       } else if (item.kind === 'edges') {
         item.edges.forEach((e, edgeIndex) => {
           if (!model.layout.cells.has(e.a) || !model.layout.cells.has(e.b)) return;
-          const pts = arcPoints(anchor(model, e.a), anchor(model, e.b), bow, ARC_SEGMENTS);
+          const pts = arcPoints(anchor(model, e.a), anchor(model, e.b), itemBow, ARC_SEGMENTS);
           pushPolyline(pts, color, { target: { kind: 'edge', layerId: layer.id, itemId: item.id, edgeIndex }, zs: [e.a, e.b] });
         });
       } else {

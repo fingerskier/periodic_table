@@ -12,8 +12,11 @@ import {
 } from './madelung';
 import { DATASET_SOURCE, formatRanges, symbolFor } from './structural';
 
-/** Ground-state configurations beyond lawrencium come from calculation, not measurement. */
-const LAST_MEASURED_Z = 103;
+/**
+ * Lawrencium. Ground states beyond it come from calculation alone; Lr's own 7p¹ is calculated
+ * too, but its measured ionization energy supports it (Sato et al. 2015).
+ */
+const LR = 103;
 
 function sortedCells(ctx: BuildContext): Cell[] {
   return [...ctx.layout.cells.values()].sort((a, b) => a.z - b.z);
@@ -102,13 +105,13 @@ export const madelungLayer: LayerBuilder = (ctx) => {
   };
 
   const exceptions = madelungExceptions(ctx.elements);
-  const measured = exceptions.filter((z) => z <= LAST_MEASURED_Z);
-  const predicted = exceptions.filter((z) => z > LAST_MEASURED_Z);
+  const upToLr = exceptions.filter((z) => z <= LR);
+  const predicted = exceptions.filter((z) => z > LR);
   const memberLabels: Record<number, string> = {};
   for (const z of exceptions) memberLabels[z] = deviationLabel(z, ctx.byZ.get(z)!.config);
   const beyond = predicted.length
-    ? ` Beyond Lr (Z > ${LAST_MEASURED_Z}) configurations are theoretical predictions, not measurements; those listed here (${predicted.map(sym).join(', ')}) follow the dataset.`
-    : ` Beyond Lr (Z > ${LAST_MEASURED_Z}) configurations are theoretical predictions, not measurements.`;
+    ? ` Beyond Lr (Z > ${LR}) configurations are theoretical predictions, not measurements; those listed here (${predicted.map(sym).join(', ')}) follow the dataset.`
+    : ` Beyond Lr (Z > ${LR}) configurations are theoretical predictions, not measurements.`;
   const exceptionSet: RelationSet = {
     kind: 'set',
     id: 'madelung-exceptions',
@@ -116,7 +119,7 @@ export const madelungLayer: LayerBuilder = (ctx) => {
     members: exceptions,
     color: '#9085e9',
     memberLabels,
-    note: `${measured.length} elements up to Lr whose ground state differs from the rule's prediction: ${measured.map(sym).join(', ')}.${beyond}`,
+    note: `${upToLr.length} elements up to Lr whose ground state differs from the rule's prediction: ${upToLr.map(sym).join(', ')}.${beyond}`,
   };
 
   return {
@@ -153,8 +156,9 @@ export const madelungLayer: LayerBuilder = (ctx) => {
     caveat:
       'The rule is an empirical summary of the order in which subshells are occupied along the table, not a ' +
       'ranking of orbital energies inside any one atom; ions often follow a different order (Fe²⁺ is [Ar] 3d⁶, ' +
-      `not [Ar] 3d⁴ 4s²). Up to Lr, ${measured.length} ground states deviate, usually by one or two electrons ` +
-      'moving between subshells close in energy. Configurations beyond Lr are calculated, not measured.',
+      `not [Ar] 3d⁴ 4s²). Up to Lr, ${upToLr.length} ground states deviate, usually by one or two electrons ` +
+      "moving between subshells close in energy. Lr's own 7p¹ is a calculation that its measured ionization " +
+      'energy supports (Sato et al. 2015); beyond Lr, configurations come from calculation alone.',
   };
 };
 

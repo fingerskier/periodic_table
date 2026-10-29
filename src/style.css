@@ -98,10 +98,11 @@ button, input, select { font: inherit; color: inherit; }
 }
 #stage.dragging { cursor: grabbing; }
 
+/* Top-left: the space above the header ring is empty, while the bottom holds period 7. */
 #legend {
   position: absolute;
   left: 12px;
-  bottom: 12px;
+  top: 12px;
   z-index: 4;
   max-width: calc(100% - 24px);
 }
@@ -117,7 +118,10 @@ button, input, select { font: inherit; color: inherit; }
   pointer-events: none;
   text-align: right;
   max-width: 60%;
+  transition: opacity 0.6s ease;
 }
+.hint.is-gone { opacity: 0; }
+@media (max-width: 1180px) { .hint { display: none; } }
 
 /* Narrow screens: stage on top, inspector as a bottom sheet, filters in a drawer. */
 @media (max-width: 960px) {
@@ -144,6 +148,12 @@ button, input, select { font: inherit; color: inherit; }
   }
   #app.filters-open #filters { transform: none; }
   .hint { display: none; }
+}
+
+/* WCAG 1.4.10 reflow: the top bar must fit at 320px. */
+@media (max-width: 400px) {
+  #topbar { gap: 8px; padding: 0 10px; }
+  .brand { font-size: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

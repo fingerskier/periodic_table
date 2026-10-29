@@ -54,11 +54,22 @@ function stripZeros(text: string): string {
   return out === '-0' ? '0' : out;
 }
 
-/** '1811 K (1538 °C)': kelvin as given to at most 2 decimals, Celsius to whole degrees. */
+/**
+ * '1811.15 K (1538 °C)', '301.65 K (28.5 °C)': kelvin to at most 2 decimals, and Celsius
+ * converted from that figure and rounded to the same number of decimals, so a value stored
+ * as °C + 273.15 reads back exactly. Integer hundredths avoid float drift at the half-way
+ * points (301.65 − 273.15 is 28.499999…), and halves round away from zero.
+ */
 export function formatTemperature(kelvin: number | null | undefined): string {
   if (kelvin === null || kelvin === undefined || !Number.isFinite(kelvin)) return NO_VALUE;
-  const celsius = Math.round(kelvin - 273.15) || 0; // `|| 0` folds -0 into 0
-  return `${trimmedFixed(kelvin, 2)}${UNIT_SPACE}K (${signed(String(celsius))}${UNIT_SPACE}°C)`;
+  const centi = Math.round(kelvin * 100);
+  const k = stripZeros((centi / 100).toFixed(2));
+  const decimals = k.split('.')[1]?.length ?? 0;
+  const step = 10 ** (2 - decimals);
+  const celsius = centi - 27315;
+  const rounded = Math.sign(celsius) * Math.round(Math.abs(celsius) / step) * step;
+  const c = stripZeros((rounded / 100).toFixed(decimals));
+  return `${signed(k)}${UNIT_SPACE}K (${signed(c)}${UNIT_SPACE}°C)`;
 }
 
 export interface NumberFormat {
@@ -78,16 +89,19 @@ function groupedInteger(value: number): string {
   return Math.round(value) < 0 ? MINUS + grouped : grouped;
 }
 
-/** Mantissa × 10ⁿ with `digits` significant figures: 1.23 × 10⁶, 8.2 × 10⁻⁵. */
+/**
+ * Mantissa × 10ⁿ with `digits` significant figures: 1.23 × 10⁶, 8.2 × 10⁻⁵. toExponential does
+ * the rounding (including the carry in 9.999e6 → 1.00e7) without dividing by 10ⁿ, which
+ * overflows for subnormal values.
+ */
 function scientific(value: number, digits: number, trim: boolean): string {
-  let exponent = Math.floor(Math.log10(Math.abs(value)));
-  let mantissa = Number((value / 10 ** exponent).toPrecision(digits));
-  if (Math.abs(mantissa) >= 10) {
-    mantissa /= 10;
-    exponent += 1;
-  }
-  const m = mantissa.toPrecision(digits);
-  return `${signed(trim ? stripZeros(m) : m)}${UNIT_SPACE}×${UNIT_SPACE}10${toSuperscript(String(exponent))}`;
+  const [m = '', e = '0'] = value.toExponential(digits - 1).split('e');
+  return `${signed(trim ? stripZeros(m) : m)}${UNIT_SPACE}×${UNIT_SPACE}10${toSuperscript(String(Number(e)))}`;
+}
+
+/** toPrecision/toFixed throw outside these ranges. */
+function clampInt(n: number, lo: number, hi: number): number {
+  return Math.min(hi, Math.max(lo, Math.round(Number.isFinite(n) ? n : lo)));
 }
 
 function significant(value: number, digits: number, trim: boolean): string {
@@ -105,7 +119,9 @@ function significant(value: number, digits: number, trim: boolean): string {
  */
 export function formatNumber(value: number | null | undefined, opts: NumberFormat = {}): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return NO_VALUE;
-  const { digits = 4, decimals, unit, trim = true } = opts;
+  const { unit, trim = true } = opts;
+  const digits = clampInt(opts.digits ?? 4, 1, 21);
+  const decimals = opts.decimals === undefined ? undefined : clampInt(opts.decimals, 0, 20);
   const abs = Math.abs(value);
   let body: string;
   if (abs !== 0 && (abs < 1e-3 || abs >= 1e6)) body = scientific(value, digits, trim);
@@ -150,8 +166,9 @@ export function formatCompact(value: number | null | undefined, digits = 3): str
   if (value === null || value === undefined || !Number.isFinite(value)) return NO_VALUE;
   const abs = Math.abs(value);
   if (abs === 0) return '0';
-  if (abs >= 1e4 || abs < 1e-2) return scientific(value, digits, true);
-  return significant(value, digits, true);
+  const d = clampInt(digits, 1, 21);
+  if (abs >= 1e4 || abs < 1e-2) return scientific(value, d, true);
+  return significant(value, d, true);
 }
 
 /** Discovery year; null means known since antiquity. Negative years are BCE. */

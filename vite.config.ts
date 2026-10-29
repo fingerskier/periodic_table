@@ -6,5 +6,7 @@ export default defineConfig({
   build: {
     target: 'es2022',
     sourcemap: true,
+    // three.js alone is ~600 kB minified; one cacheable bundle is fine for a single-page app.
+    chunkSizeWarningLimit: 1000,
   },
 });

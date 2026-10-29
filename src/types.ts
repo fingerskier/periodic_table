@@ -147,6 +147,8 @@ export interface ColumnInfo {
   note: string;
   /** Atomic numbers, top to bottom (layout-dependent). */
   members: number[];
+  /** Citations behind the labels, name and note. */
+  sources?: Source[];
 }
 
 export interface PeriodInfo {
@@ -155,6 +157,8 @@ export interface PeriodInfo {
   /** Subshells filled across the period in Madelung order, e.g. ["4s", "3d", "4p"]. */
   subshells: string[];
   note: string;
+  /** Citations behind the note. */
+  sources?: Source[];
 }
 
 // ---------------------------------------------------------------- relations
@@ -219,6 +223,8 @@ export interface RelationStyle {
   hubScale?: number;
   /** Fraction of the way from the wall to the axis at which set hubs sit (0..1). Default 0.45. */
   hubDepth?: number;
+  /** Added to `bow` for each successive 'edges' item, so parallel series sharing endpoints separate. */
+  bowSpread?: number;
 }
 
 export interface RelationLayer {
@@ -284,7 +290,9 @@ export type LegendFocus =
   | { kind: 'category'; id: CategoryId }
   | { kind: 'block'; id: Block }
   | { kind: 'phase'; id: Phase | 'unknown' }
-  | { kind: 'range'; prop: NumericProp; lo: number; hi: number };
+  | { kind: 'range'; prop: NumericProp; lo: number; hi: number }
+  /** Elements with no usable value for a numeric colour mode (null, or non-positive on a log scale). */
+  | { kind: 'missing'; prop: NumericProp };
 
 /** Everything derived from data + convention; rebuilt when the convention changes. */
 export interface Model {

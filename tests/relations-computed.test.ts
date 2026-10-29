@@ -79,6 +79,11 @@ function concatSorted(lists: number[][]): number[] {
   return lists.flat().sort((a, b) => a - b);
 }
 
+/** Dataset form to display form: "[Rn] 5f14 7s2 7p1" → "[Rn] 5f¹⁴ 7s² 7p¹". */
+function superscriptCounts(config: string): string {
+  return config.replace(/([spdf])(\d+)/g, (_, l: string, d: string) => l + [...d].map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[Number(c)]).join(''));
+}
+
 // ---------------------------------------------------------------- Madelung helpers
 
 describe('madelung helpers', () => {
@@ -125,6 +130,40 @@ describe('madelung helpers', () => {
     expect(parseConfiguration('  ')).toEqual(new Map());
   });
 
+  it('reads superscript counts without separating spaces, since they cannot run into the next n', () => {
+    expect(parseConfiguration('[Ar]3d⁵4s¹')).toEqual(parseConfiguration('[Ar] 3d5 4s1'));
+    expect(parseConfiguration('[Xe]4f¹⁴5d¹⁰6s²')).toEqual(parseConfiguration('[Xe] 4f14 5d10 6s2'));
+    expect(parseConfiguration('1s²2s²2p⁶')).toEqual(madelungConfiguration(z('Ne')));
+    expect(parseConfiguration('[Ar] 3d¹⁰4s2')).toEqual(parseConfiguration('[Ar] 3d10 4s2'));
+  });
+
+  it('reads the tricky ground states: Pd without 5s, Lr with 7p, bare H and He, cores standing in for 1s', () => {
+    const pd = parseConfiguration('[Kr] 4d10');
+    expect(electronCount(pd)).toBe(46);
+    expect(pd.get('4d')).toBe(10);
+    expect(pd.has('5s')).toBe(false);
+    expect(differingSubshells(pd, madelungConfiguration(46))).toEqual(['4d', '5s']);
+    const lr = parseConfiguration('[Rn] 5f14 7s2 7p1');
+    expect(electronCount(lr)).toBe(103);
+    expect([lr.get('5f'), lr.get('7s'), lr.get('7p'), lr.has('6d')]).toEqual([14, 2, 1, false]);
+    expect(differingSubshells(lr, madelungConfiguration(103))).toEqual(['6d', '7p']);
+    expect(parseConfiguration('1s1')).toEqual(madelungConfiguration(1));
+    expect(parseConfiguration('1s2')).toEqual(madelungConfiguration(2));
+    // A core supplies every inner subshell, 1s included; with no core nothing is implied.
+    expect(parseConfiguration('[He] 2s1')).toEqual(madelungConfiguration(3));
+    expect(parseConfiguration('[Rn] 7s1').get('1s')).toBe(2);
+    expect(electronCount(parseConfiguration('[Rn] 7s1'))).toBe(87);
+    expect(parseConfiguration('2s1')).toEqual(new Map([['2s', 1]]));
+  });
+
+  it('hands out fresh maps, so a caller cannot corrupt the cached noble-gas cores', () => {
+    const first = parseConfiguration('[Ar]');
+    first.set('1s', 99);
+    first.delete('3p');
+    expect(parseConfiguration('[Ar]')).toEqual(madelungConfiguration(18));
+    expect(parseConfiguration('[Kr] 5s1').get('1s')).toBe(2);
+  });
+
   it('expands each noble-gas core to that gas’s Madelung configuration', () => {
     for (const gas of ['He', 'Ne', 'Ar', 'Kr', 'Xe', 'Rn']) {
       expect(parseConfiguration(`[${gas}]`)).toEqual(madelungConfiguration(z(gas)));
@@ -132,7 +171,12 @@ describe('madelung helpers', () => {
   });
 
   it('rejects malformed configurations', () => {
-    for (const bad of ['[Zz] 1s2', '[Og] 8s1', '[Ar] 3d11', '2d1', '[Ar] 4s2 4s1', '[Ne] 2p1', '3x2', 'banana', '[Ar] 3d5,4s1']) {
+    const malformed = [
+      '[Zz] 1s2', '[Og] 8s1', '[Ar] 3d11', '2d1', '[Ar] 4s2 4s1', '[Ne] 2p1', '3x2', 'banana', '[Ar] 3d5,4s1',
+      // Plain-digit counts run into the next subshell's n; mixed digit styles are not a count.
+      '[Ar] 3d54s1', '3d104s2', '[Ar] 3d1⁰ 4s2', '[Ar] 3d⁵1 4s1',
+    ];
+    for (const bad of malformed) {
       expect(() => parseConfiguration(bad), bad).toThrow();
     }
   });
@@ -236,6 +280,43 @@ describe.each(CONVENTIONS)('computed layers (%s convention)', (convention) => {
     expect(sets[0]!.members).toContain(z('He'));
   });
 
+  it('blocks: the caveat quotes dataset ground states and names the misfits of this convention', () => {
+    const caveat = blocksLayer(ctx).caveat ?? '';
+    const quoted = [...caveat.matchAll(/\b([A-Z][a-z]?) \((\[[A-Z][a-z]\][^,)]*)/g)];
+    expect(quoted.length).toBeGreaterThanOrEqual(3);
+    for (const [, symbol, config] of quoted) {
+      expect(parseConfiguration(config!), symbol).toEqual(parseConfiguration(BY_Z.get(z(symbol!))!.config));
+    }
+    expect(caveat).toContain(superscriptCounts(BY_Z.get(z('Lr'))!.config));
+    // Each element the caveat says sits in the f-block without the expected f electron does so here.
+    const inF = convention === 'Lu' ? ['La', 'Ac', 'Th'] : ['Th', 'Lu', 'Lr'];
+    for (const s of inF) {
+      expect(caveat).toMatch(new RegExp(`\\b${s} \\(`));
+      expect(cell(z(s)).block, s).toBe('f');
+    }
+    if (convention === 'Lu') {
+      expect(cell(z('Lr')).block).toBe('d');
+      expect(caveat).toMatch(/Lr, d-block here/);
+    } else {
+      // La is d-block here and its 5d¹ 6s² agrees with that, so it must not be listed as a misfit.
+      expect(caveat).not.toMatch(/\bLa \(/);
+      expect(cell(z('La')).block).toBe('d');
+    }
+  });
+
+  it('categories: the caveat follows the predicted-class flags; the description files every halogen', () => {
+    const layer = categoriesLayer(ctx);
+    const flagged = ELEMENTS.filter((e) => e.predicted.includes('category')).map((e) => e.z);
+    if (flagged.length) expect(layer.caveat).toContain(`(${formatRanges(flagged, symbolOf)})`);
+    const unflagged = categoriesLayer({ ...ctx, elements: ELEMENTS.map((e) => ({ ...e, predicted: [] })) });
+    expect(unflagged.caveat).not.toMatch(/marked predicted/);
+    const sentence = /Halogens[^.]*\./.exec(layer.description)?.[0] ?? '';
+    for (const hz of layout.membersOfColumn(layout.columnOfGroup(17))) {
+      const cls = CATEGORIES.find((c) => c.id === BY_Z.get(hz)!.category)!;
+      expect(sentence).toMatch(new RegExp(`\\b${symbolOf(hz)}\\b[^.]*\\b${cls.label.toLowerCase()}`));
+    }
+  });
+
   it('categories: one set per class present, in palette order, partitioning all 118', () => {
     const sets = setsOf(categoriesLayer(ctx));
     const present = CATEGORIES.filter((c) => ELEMENTS.some((e) => e.category === c.id));
@@ -280,15 +361,19 @@ describe.each(CONVENTIONS)('computed layers (%s convention)', (convention) => {
       for (const m of s.members) expect(subshellForCell(cell(m))).toBe(s.label);
     }
     const members = (name: string) => chain.sets.find((s) => s.label === name)!.members;
+    const span = (from: number, to: number) => Array.from({ length: to - from + 1 }, (_, i) => from + i);
     expect(members('1s')).toEqual(zs('H', 'He'));
+    // La/Lu and Ac/Lr trade places between the f hubs and the d hubs with the convention.
     if (convention === 'Lu') {
-      expect(members('4f')[0]).toBe(z('La'));
-      expect(members('5d')[0]).toBe(z('Lu'));
-      expect(members('6d')[0]).toBe(z('Lr'));
+      expect(members('4f')).toEqual(span(z('La'), z('Yb')));
+      expect(members('5d')).toEqual(span(z('Lu'), z('Hg')));
+      expect(members('5f')).toEqual(span(z('Ac'), z('No')));
+      expect(members('6d')).toEqual(span(z('Lr'), z('Cn')));
     } else {
-      expect(members('4f')[0]).toBe(z('Ce'));
-      expect(members('5d')[0]).toBe(z('La'));
-      expect(members('6d')[0]).toBe(z('Ac'));
+      expect(members('4f')).toEqual(span(z('Ce'), z('Lu')));
+      expect(members('5d')).toEqual([z('La'), ...span(z('Hf'), z('Hg'))]);
+      expect(members('5f')).toEqual(span(z('Th'), z('Lr')));
+      expect(members('6d')).toEqual([z('Ac'), ...span(z('Rf'), z('Cn'))]);
     }
   });
 
@@ -301,7 +386,10 @@ describe.each(CONVENTIONS)('computed layers (%s convention)', (convention) => {
     expect(set.note).toMatch(/predictions/);
     for (const m of set.members) expect(set.memberLabels?.[m]).toMatch(/, not /);
     expect(set.memberLabels?.[z('Cr')]).toBe('3d⁵ 4s¹, not 3d⁴ 4s²');
+    expect(set.memberLabels?.[z('Pd')]).toBe('4d¹⁰, not 4d⁸ 5s²');
     expect(set.memberLabels?.[z('Lr')]).toBe('7p¹, not 6d¹');
+    // Lr's 7p¹ is calculated (supported by its measured ionization energy), so the caveat must not imply a measurement.
+    expect(madelungLayer(ctx).caveat).toMatch(/Lr's own 7p¹ is a calculation/);
   });
 
   it('pettifor: one directed path visiting each element on the scale once, in order', () => {

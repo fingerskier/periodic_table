@@ -6,15 +6,15 @@
   "mass": 1.008,
   "massIsMassNumber": false,
   "category": "reactive-nonmetal",
-  "config": "1s",
+  "config": "1s1",
   "en": 2.2,
   "ie1": 13.598434599702,
   "ea": 0.754195,
   "atomicRadius": 25.0,
   "covalentRadius": 31.0,
   "vdwRadius": 120.0,
-  "mp": 13.989999999999952,
-  "bp": 20.270999999999987,
+  "mp": 13.99,
+  "bp": 20.271,
   "density": 8.2e-05,
   "phase": "gas",
   "oxidationStates": [
@@ -29,7 +29,7 @@
   "abundanceCrust": 1400.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [1.00784, 1.00811]; 1.008 is the conventional value (CIAAW)."
   ]
  },
  {
@@ -42,24 +42,25 @@
   "config": "1s2",
   "en": null,
   "ie1": 24.587389011,
-  "ea": -19.7,
-  "atomicRadius": 120.0,
-  "covalentRadius": 28.000000000000004,
+  "ea": null,
+  "atomicRadius": null,
+  "covalentRadius": 28.0,
   "vdwRadius": 143.0,
   "mp": null,
-  "bp": 4.22199999999998,
+  "bp": 4.222,
   "density": 0.000164,
   "phase": "gas",
   "oxidationStates": [],
   "discoveryYear": 1895,
-  "discoverers": "Sir William Ramsey, Nils Langet, P.T.Cleve",
+  "discoverers": "William Ramsay; Per Teodor Cleve and Abraham Langlet",
   "radioactive": false,
   "goldschmidt": "atmophile",
   "pettifor": 1,
   "abundanceCrust": 0.008,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "No mp: helium does not solidify at 101.325 kPa (solid helium needs about 2.5 MPa).",
+   "Discovered in the solar spectrum in 1868 (Janssen, Lockyer); the year shown is its isolation."
   ]
  },
  {
@@ -69,7 +70,7 @@
   "mass": 6.94,
   "massIsMassNumber": false,
   "category": "alkali-metal",
-  "config": "[He] 2s",
+  "config": "[He] 2s1",
   "en": 0.98,
   "ie1": 5.391714996,
   "ea": 0.618049,
@@ -84,14 +85,14 @@
    1
   ],
   "discoveryYear": 1817,
-  "discoverers": "Johann Arfwedson",
+  "discoverers": "Johan August Arfwedson",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 12,
   "abundanceCrust": 20.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [6.938, 6.997]; 6.94 is the conventional value (CIAAW)."
   ]
  },
  {
@@ -104,7 +105,7 @@
   "config": "[He] 2s2",
   "en": 1.57,
   "ie1": 9.322699,
-  "ea": -2.4,
+  "ea": null,
   "atomicRadius": 105.0,
   "covalentRadius": 96.0,
   "vdwRadius": 198.0,
@@ -116,15 +117,13 @@
    2
   ],
   "discoveryYear": 1798,
-  "discoverers": "Fredrich Wöhler, A.A.Bussy",
+  "discoverers": "Louis-Nicolas Vauquelin",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 77,
   "abundanceCrust": 2.8,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 5,
@@ -133,7 +132,7 @@
   "mass": 10.81,
   "massIsMassNumber": false,
   "category": "metalloid",
-  "config": "[He] 2s2 2p",
+  "config": "[He] 2s2 2p1",
   "en": 2.04,
   "ie1": 8.298019,
   "ea": 0.279723,
@@ -148,14 +147,14 @@
    3
   ],
   "discoveryYear": 1808,
-  "discoverers": "Sir H. Davy, J.L. Gay-Lussac, L.J. Thénard",
+  "discoverers": "Humphry Davy; Joseph Louis Gay-Lussac and Louis Jacques Thénard",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 86,
   "abundanceCrust": 10.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [10.806, 10.821]; 10.81 is the conventional value (CIAAW)."
   ]
  },
  {
@@ -175,20 +174,22 @@
   "mp": null,
   "bp": 4098.15,
   "density": 2.2,
-  "phase": null,
+  "phase": "solid",
   "oxidationStates": [
    -4,
    4
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "atmophile",
   "pettifor": 95,
   "abundanceCrust": 200.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [12.0096, 12.0116]; 12.011 is the conventional value (CIAAW).",
+   "Covalent radius is the mean of Cordero et al.’s sp³, sp² and sp values (76, 73 and 69 pm).",
+   "bp is a sublimation point at 1 atm (graphite); it melts only under pressure (triple point 4762 K, 10.3 MPa)."
   ]
  },
  {
@@ -201,12 +202,12 @@
   "config": "[He] 2s2 2p3",
   "en": 3.04,
   "ie1": 14.53413,
-  "ea": -1.4,
+  "ea": -0.07,
   "atomicRadius": 65.0,
   "covalentRadius": 71.0,
   "vdwRadius": 166.0,
-  "mp": 63.14999999999998,
-  "bp": 77.35499999999999,
+  "mp": 63.15,
+  "bp": 77.355,
   "density": 0.001145,
   "phase": "gas",
   "oxidationStates": [
@@ -222,7 +223,8 @@
   "abundanceCrust": 19.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [14.00643, 14.00728]; 14.007 is the conventional value (CIAAW).",
+   "Negative electron affinity: the N⁻ anion is unbound."
   ]
  },
  {
@@ -239,40 +241,40 @@
   "atomicRadius": 60.0,
   "covalentRadius": 66.0,
   "vdwRadius": 150.0,
-  "mp": 54.359999999999985,
-  "bp": 90.18799999999999,
-  "density": 0.0013080000000000001,
+  "mp": 54.36,
+  "bp": 90.188,
+  "density": 0.001308,
   "phase": "gas",
   "oxidationStates": [
    -2
   ],
   "discoveryYear": 1774,
-  "discoverers": "Joseph Priestly, Carl Wilhelm Scheele",
+  "discoverers": "Joseph Priestley, Carl Wilhelm Scheele",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 101,
   "abundanceCrust": 461000.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [15.99903, 15.99977]; 15.999 is the conventional value (CIAAW)."
   ]
  },
  {
   "z": 9,
   "symbol": "F",
   "name": "Fluorine",
-  "mass": 18.998403163,
+  "mass": 18.998403162,
   "massIsMassNumber": false,
   "category": "reactive-nonmetal",
   "config": "[He] 2s2 2p5",
   "en": 3.98,
   "ie1": 17.42282,
-  "ea": 3.4011897000000006,
+  "ea": 3.4011897,
   "atomicRadius": 50.0,
-  "covalentRadius": 56.99999999999999,
+  "covalentRadius": 57.0,
   "vdwRadius": 146.0,
-  "mp": 53.47999999999999,
-  "bp": 85.03999999999996,
+  "mp": 53.48,
+  "bp": 85.04,
   "density": 0.001553,
   "phase": "gas",
   "oxidationStates": [
@@ -285,9 +287,7 @@
   "pettifor": 102,
   "abundanceCrust": 585.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 10,
@@ -300,24 +300,22 @@
   "en": null,
   "ie1": 21.564541,
   "ea": null,
-  "atomicRadius": 160.0,
-  "covalentRadius": 57.99999999999999,
+  "atomicRadius": null,
+  "covalentRadius": 58.0,
   "vdwRadius": 158.0,
-  "mp": 24.559999999999974,
-  "bp": 27.103999999999985,
+  "mp": 24.56,
+  "bp": 27.104,
   "density": 0.000825,
   "phase": "gas",
   "oxidationStates": [],
   "discoveryYear": 1898,
-  "discoverers": "Sir William Ramsey, M.W. Travers",
+  "discoverers": "William Ramsay, Morris W. Travers",
   "radioactive": false,
   "goldschmidt": "atmophile",
   "pettifor": 2,
   "abundanceCrust": 0.005,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 11,
@@ -326,30 +324,28 @@
   "mass": 22.98976928,
   "massIsMassNumber": false,
   "category": "alkali-metal",
-  "config": "[Ne] 3s",
+  "config": "[Ne] 3s1",
   "en": 0.93,
   "ie1": 5.13907696,
   "ea": 0.547926,
   "atomicRadius": 180.0,
   "covalentRadius": 166.0,
   "vdwRadius": 250.0,
-  "mp": 370.94399999999996,
-  "bp": 1156.0900000000001,
+  "mp": 370.944,
+  "bp": 1156.09,
   "density": 0.97,
   "phase": "solid",
   "oxidationStates": [
    1
   ],
   "discoveryYear": 1807,
-  "discoverers": "Sir Humphrey Davy",
+  "discoverers": "Humphry Davy",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 11,
   "abundanceCrust": 23600.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 12,
@@ -373,24 +369,24 @@
    2
   ],
   "discoveryYear": 1808,
-  "discoverers": "Sir Humphrey Davy",
+  "discoverers": "Humphry Davy",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 73,
   "abundanceCrust": 23300.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [24.304, 24.307]; 24.305 is the conventional value (CIAAW)."
   ]
  },
  {
   "z": 13,
   "symbol": "Al",
-  "name": "Aluminum",
-  "mass": 26.9815385,
+  "name": "Aluminium",
+  "mass": 26.9815384,
   "massIsMassNumber": false,
   "category": "post-transition-metal",
-  "config": "[Ne] 3s2 3p",
+  "config": "[Ne] 3s2 3p1",
   "en": 1.61,
   "ie1": 5.985769,
   "ea": 0.43283,
@@ -405,14 +401,14 @@
    3
   ],
   "discoveryYear": 1825,
-  "discoverers": "Hans Christian Oersted",
+  "discoverers": "Hans Christian Ørsted",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 80,
   "abundanceCrust": 82300.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "IUPAC name aluminium; US spelling aluminum."
   ]
  },
  {
@@ -427,7 +423,7 @@
   "ie1": 8.15168,
   "ea": 1.3895211,
   "atomicRadius": 110.0,
-  "covalentRadius": 111.00000000000001,
+  "covalentRadius": 111.0,
   "vdwRadius": 219.0,
   "mp": 1687.15,
   "bp": 3538.15,
@@ -438,14 +434,14 @@
    4
   ],
   "discoveryYear": 1824,
-  "discoverers": "Jöns Berzelius",
+  "discoverers": "Jöns Jacob Berzelius",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 85,
   "abundanceCrust": 282000.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [28.084, 28.086]; 28.085 is the conventional value (CIAAW)."
   ]
  },
  {
@@ -462,7 +458,7 @@
   "atomicRadius": 100.0,
   "covalentRadius": 107.0,
   "vdwRadius": 190.0,
-  "mp": 317.29999999999995,
+  "mp": 317.3,
   "bp": 553.65,
   "density": 1.823,
   "phase": "solid",
@@ -479,7 +475,7 @@
   "abundanceCrust": 1050.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "mp, bp and density are for white phosphorus."
   ]
  },
  {
@@ -496,7 +492,7 @@
   "atomicRadius": 100.0,
   "covalentRadius": 105.0,
   "vdwRadius": 189.0,
-  "mp": 368.34999999999997,
+  "mp": 388.36,
   "bp": 717.76,
   "density": 2.07,
   "phase": "solid",
@@ -507,14 +503,15 @@
    6
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 94,
   "abundanceCrust": 350.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [32.059, 32.076]; 32.06 is the conventional value (CIAAW).",
+   "mp is for monoclinic sulfur (rhombic S converts to it at 368.35 K); density is for rhombic S."
   ]
  },
  {
@@ -531,8 +528,8 @@
   "atomicRadius": 100.0,
   "covalentRadius": 102.0,
   "vdwRadius": 182.0,
-  "mp": 171.64999999999998,
-  "bp": 239.10999999999999,
+  "mp": 171.65,
+  "bp": 239.11,
   "density": 0.002898,
   "phase": "gas",
   "oxidationStates": [
@@ -550,37 +547,37 @@
   "abundanceCrust": 145.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [35.446, 35.457]; 35.45 is the conventional value (CIAAW)."
   ]
  },
  {
   "z": 18,
   "symbol": "Ar",
   "name": "Argon",
-  "mass": 39.948,
+  "mass": 39.95,
   "massIsMassNumber": false,
   "category": "noble-gas",
   "config": "[Ne] 3s2 3p6",
   "en": null,
   "ie1": 15.7596119,
-  "ea": -11.5,
-  "atomicRadius": 71.0,
+  "ea": null,
+  "atomicRadius": null,
   "covalentRadius": 106.0,
   "vdwRadius": 194.0,
-  "mp": 83.80999999999997,
-  "bp": 87.30199999999996,
+  "mp": 83.81,
+  "bp": 87.302,
   "density": 0.001633,
   "phase": "gas",
   "oxidationStates": [],
   "discoveryYear": 1894,
-  "discoverers": "Sir William Ramsey, Baron Rayleigh",
+  "discoverers": "Lord Rayleigh, William Ramsay",
   "radioactive": false,
   "goldschmidt": "atmophile",
   "pettifor": 3,
   "abundanceCrust": 3.5,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [39.792, 39.963]; 39.95 is the abridged value (CIAAW)."
   ]
  },
  {
@@ -590,29 +587,29 @@
   "mass": 39.0983,
   "massIsMassNumber": false,
   "category": "alkali-metal",
-  "config": "[Ar] 4s",
+  "config": "[Ar] 4s1",
   "en": 0.82,
   "ie1": 4.34066373,
   "ea": 0.50147,
   "atomicRadius": 220.0,
-  "covalentRadius": 202.99999999999997,
+  "covalentRadius": 203.0,
   "vdwRadius": 273.0,
   "mp": 336.65,
   "bp": 1032.15,
-  "density": 0.89,
+  "density": 0.859,
   "phase": "solid",
   "oxidationStates": [
    1
   ],
   "discoveryYear": 1807,
-  "discoverers": "Sir Humphrey Davy",
+  "discoverers": "Humphry Davy",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 10,
   "abundanceCrust": 20900.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Density is the X-ray value at 20 °C; the CRC Handbook lists 0.89 g/cm³."
   ]
  },
  {
@@ -637,24 +634,22 @@
    2
   ],
   "discoveryYear": 1808,
-  "discoverers": "Sir Humphrey Davy",
+  "discoverers": "Humphry Davy",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 16,
   "abundanceCrust": 41500.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 21,
   "symbol": "Sc",
   "name": "Scandium",
-  "mass": 44.955908,
+  "mass": 44.955907,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Ar] 3d 4s2",
+  "config": "[Ar] 3d1 4s2",
   "en": 1.36,
   "ie1": 6.56149,
   "ea": 0.188,
@@ -669,15 +664,13 @@
    3
   ],
   "discoveryYear": 1879,
-  "discoverers": "Lars Nilson",
+  "discoverers": "Lars Fredrik Nilson",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 20,
   "abundanceCrust": 22.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 22,
@@ -707,9 +700,7 @@
   "pettifor": 51,
   "abundanceCrust": 5650.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 23,
@@ -732,15 +723,15 @@
   "oxidationStates": [
    5
   ],
-  "discoveryYear": 1830,
-  "discoverers": "Nils Sefström",
+  "discoveryYear": 1801,
+  "discoverers": "Andrés Manuel del Río",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 54,
   "abundanceCrust": 120.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Discovered in 1801 by del Río, who withdrew the claim; rediscovered and named by Nils Sefström in 1830."
   ]
  },
  {
@@ -750,10 +741,10 @@
   "mass": 51.9961,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Ar] 3d5 4s",
+  "config": "[Ar] 3d5 4s1",
   "en": 1.66,
   "ie1": 6.76651,
-  "ea": 0.6659999999999999,
+  "ea": 0.666,
   "atomicRadius": 140.0,
   "covalentRadius": 139.0,
   "vdwRadius": 245.0,
@@ -766,21 +757,19 @@
    6
   ],
   "discoveryYear": 1797,
-  "discoverers": "Louis Vauquelin",
+  "discoverers": "Louis-Nicolas Vauquelin",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 57,
   "abundanceCrust": 102.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 25,
   "symbol": "Mn",
   "name": "Manganese",
-  "mass": 54.938044,
+  "mass": 54.938043,
   "massIsMassNumber": false,
   "category": "transition-metal",
   "config": "[Ar] 3d5 4s2",
@@ -800,14 +789,14 @@
    7
   ],
   "discoveryYear": 1774,
-  "discoverers": "Johann Gahn",
+  "discoverers": "Johan Gottlieb Gahn",
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 60,
   "abundanceCrust": 950.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Covalent radius is the mean of Cordero et al.’s low- and high-spin values (139 and 161 pm)."
   ]
  },
  {
@@ -833,14 +822,14 @@
    3
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 61,
   "abundanceCrust": 56300.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Covalent radius is the mean of Cordero et al.’s low- and high-spin values (132 and 152 pm)."
   ]
  },
  {
@@ -866,14 +855,14 @@
    3
   ],
   "discoveryYear": 1739,
-  "discoverers": "George Brandt",
+  "discoverers": "Georg Brandt",
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 64,
   "abundanceCrust": 25.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Covalent radius is the mean of Cordero et al.’s low- and high-spin values (126 and 150 pm)."
   ]
  },
  {
@@ -898,15 +887,13 @@
    2
   ],
   "discoveryYear": 1751,
-  "discoverers": "Axel Cronstedt",
+  "discoverers": "Axel Fredrik Cronstedt",
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 67,
   "abundanceCrust": 84.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 29,
@@ -915,7 +902,7 @@
   "mass": 63.546,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Ar] 3d10 4s",
+  "config": "[Ar] 3d10 4s1",
   "en": 1.9,
   "ie1": 7.72638,
   "ea": 1.235,
@@ -930,15 +917,13 @@
    2
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 72,
   "abundanceCrust": 60.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 30,
@@ -954,7 +939,7 @@
   "atomicRadius": 135.0,
   "covalentRadius": 122.0,
   "vdwRadius": 239.0,
-  "mp": 692.6769999999999,
+  "mp": 692.677,
   "bp": 1180.15,
   "density": 7.134,
   "phase": "solid",
@@ -962,15 +947,13 @@
    2
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 76,
   "abundanceCrust": 70.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 31,
@@ -979,14 +962,14 @@
   "mass": 69.723,
   "massIsMassNumber": false,
   "category": "post-transition-metal",
-  "config": "[Ar] 3d10 4s2 4p",
+  "config": "[Ar] 3d10 4s2 4p1",
   "en": 1.81,
   "ie1": 5.999302,
-  "ea": 0.43,
+  "ea": 0.3012,
   "atomicRadius": 130.0,
   "covalentRadius": 122.0,
   "vdwRadius": 232.0,
-  "mp": 302.91459999999995,
+  "mp": 302.9146,
   "bp": 2502.15,
   "density": 5.91,
   "phase": "solid",
@@ -1000,9 +983,7 @@
   "pettifor": 81,
   "abundanceCrust": 19.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 32,
@@ -1034,9 +1015,7 @@
   "pettifor": 84,
   "abundanceCrust": 1.5,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 33,
@@ -1052,7 +1031,7 @@
   "atomicRadius": 115.0,
   "covalentRadius": 119.0,
   "vdwRadius": 188.0,
-  "mp": 1090.15,
+  "mp": null,
   "bp": 889.15,
   "density": 5.75,
   "phase": "solid",
@@ -1062,14 +1041,14 @@
    5
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 89,
   "abundanceCrust": 1.8,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "bp is a sublimation point at 1 atm (grey arsenic); it melts only under pressure (triple point 1090 K, 3.7 MPa)."
   ]
  },
  {
@@ -1086,7 +1065,7 @@
   "atomicRadius": 115.0,
   "covalentRadius": 120.0,
   "vdwRadius": 182.0,
-  "mp": 453.15,
+  "mp": 493.95,
   "bp": 958.15,
   "density": 4.809,
   "phase": "solid",
@@ -1096,15 +1075,15 @@
    4,
    6
   ],
-  "discoveryYear": 1818,
-  "discoverers": "Jöns Berzelius",
+  "discoveryYear": 1817,
+  "discoverers": "Jöns Jacob Berzelius, Johan Gottlieb Gahn",
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 93,
   "abundanceCrust": 0.05,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "mp, bp and density are for grey (trigonal) selenium."
   ]
  },
  {
@@ -1117,7 +1096,7 @@
   "config": "[Ar] 3d10 4s2 4p5",
   "en": 2.96,
   "ie1": 11.81381,
-  "ea": 3.3635882000000006,
+  "ea": 3.3635882,
   "atomicRadius": 115.0,
   "covalentRadius": 120.0,
   "vdwRadius": 186.0,
@@ -1132,14 +1111,14 @@
    5
   ],
   "discoveryYear": 1826,
-  "discoverers": "Antoine J. Balard",
+  "discoverers": "Antoine Jérôme Balard",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 98,
   "abundanceCrust": 2.4,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [79.901, 79.907]; 79.904 is the conventional value (CIAAW)."
   ]
  },
  {
@@ -1154,25 +1133,23 @@
   "ie1": 13.9996055,
   "ea": null,
   "atomicRadius": null,
-  "covalentRadius": 115.99999999999999,
+  "covalentRadius": 116.0,
   "vdwRadius": 207.0,
-  "mp": 115.77999999999997,
-  "bp": 119.73499999999999,
-  "density": 0.0034249999999999997,
+  "mp": 115.78,
+  "bp": 119.735,
+  "density": 0.003425,
   "phase": "gas",
   "oxidationStates": [
    2
   ],
   "discoveryYear": 1898,
-  "discoverers": "Sir William Ramsey, M.W. Travers",
+  "discoverers": "William Ramsay, Morris W. Travers",
   "radioactive": false,
   "goldschmidt": "atmophile",
   "pettifor": 4,
   "abundanceCrust": 0.0001,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 37,
@@ -1181,12 +1158,12 @@
   "mass": 85.4678,
   "massIsMassNumber": false,
   "category": "alkali-metal",
-  "config": "[Kr] 5s",
+  "config": "[Kr] 5s1",
   "en": 0.82,
   "ie1": 4.1771281,
-  "ea": 0.48591999999999996,
+  "ea": 0.48592,
   "atomicRadius": 235.0,
-  "covalentRadius": 220.00000000000003,
+  "covalentRadius": 220.0,
   "vdwRadius": 321.0,
   "mp": 312.45,
   "bp": 961.15,
@@ -1196,15 +1173,13 @@
    1
   ],
   "discoveryYear": 1861,
-  "discoverers": "R. Bunsen, G. Kirchoff",
+  "discoverers": "Robert Bunsen, Gustav Kirchhoff",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 9,
   "abundanceCrust": 90.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 38,
@@ -1228,24 +1203,22 @@
    2
   ],
   "discoveryYear": 1790,
-  "discoverers": "A. Crawford",
+  "discoverers": "Adair Crawford",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 15,
   "abundanceCrust": 370.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 39,
   "symbol": "Y",
   "name": "Yttrium",
-  "mass": 88.90584,
+  "mass": 88.905838,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Kr] 4d 5s2",
+  "config": "[Kr] 4d1 5s2",
   "en": 1.22,
   "ie1": 6.21726,
   "ea": 0.307,
@@ -1259,22 +1232,20 @@
   "oxidationStates": [
    3
   ],
-  "discoveryYear": 1789,
-  "discoverers": "Johann Gadolin",
+  "discoveryYear": 1794,
+  "discoverers": "Johan Gadolin",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 19,
   "abundanceCrust": 33.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 40,
   "symbol": "Zr",
   "name": "Zirconium",
-  "mass": 91.224,
+  "mass": 91.222,
   "massIsMassNumber": false,
   "category": "transition-metal",
   "config": "[Kr] 4d2 5s2",
@@ -1292,15 +1263,13 @@
    4
   ],
   "discoveryYear": 1789,
-  "discoverers": "Martin Klaproth",
+  "discoverers": "Martin Heinrich Klaproth",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 49,
   "abundanceCrust": 165.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 41,
@@ -1309,7 +1278,7 @@
   "mass": 92.90637,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Kr] 4d4 5s",
+  "config": "[Kr] 4d4 5s1",
   "en": 1.6,
   "ie1": 6.75885,
   "ea": 0.917406,
@@ -1324,15 +1293,13 @@
    5
   ],
   "discoveryYear": 1801,
-  "discoverers": "Charles Hatchet",
+  "discoverers": "Charles Hatchett",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 52,
   "abundanceCrust": 20.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 42,
@@ -1341,7 +1308,7 @@
   "mass": 95.95,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Kr] 4d5 5s",
+  "config": "[Kr] 4d5 5s1",
   "en": 2.16,
   "ie1": 7.09243,
   "ea": 0.748,
@@ -1363,16 +1330,14 @@
   "pettifor": 55,
   "abundanceCrust": 1.2,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 43,
   "symbol": "Tc",
   "name": "Technetium",
-  "mass": 97.90721,
-  "massIsMassNumber": false,
+  "mass": 97,
+  "massIsMassNumber": true,
   "category": "transition-metal",
   "config": "[Kr] 4d5 5s2",
   "en": 2.1,
@@ -1383,21 +1348,25 @@
   "vdwRadius": 244.0,
   "mp": 2430.15,
   "bp": 4535.15,
-  "density": 11.0,
+  "density": 11.5,
   "phase": "solid",
   "oxidationStates": [
    4,
    7
   ],
   "discoveryYear": 1937,
-  "discoverers": "Carlo Perrier, Émillo Segrè",
+  "discoverers": "Carlo Perrier, Emilio Segrè",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 58,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "ea"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Mass number: Tc-97 (4.21 Myr) and Tc-98 (4.2 Myr) half-lives overlap within uncertainty; many tables show [98].",
+   "Electron affinity is an estimate (±0.2 eV): the Tc⁻ anion has not been measured.",
+   "Density is for ⁹⁹Tc metal, the only isotope available in bulk."
   ]
  },
  {
@@ -1407,7 +1376,7 @@
   "mass": 101.07,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Kr] 4d7 5s",
+  "config": "[Kr] 4d7 5s1",
   "en": 2.2,
   "ie1": 7.3605,
   "ea": 1.05,
@@ -1423,24 +1392,22 @@
    4
   ],
   "discoveryYear": 1844,
-  "discoverers": "Karl Klaus",
+  "discoverers": "Karl Ernst Claus",
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 63,
   "abundanceCrust": 0.001,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 45,
   "symbol": "Rh",
   "name": "Rhodium",
-  "mass": 102.9055,
+  "mass": 102.90549,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Kr] 4d8 5s",
+  "config": "[Kr] 4d8 5s1",
   "en": 2.28,
   "ie1": 7.4589,
   "ea": 1.137,
@@ -1455,15 +1422,13 @@
    3
   ],
   "discoveryYear": 1803,
-  "discoverers": "William Wollaston",
+  "discoverers": "William Hyde Wollaston",
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 66,
   "abundanceCrust": 0.001,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 46,
@@ -1479,7 +1444,7 @@
   "atomicRadius": 140.0,
   "covalentRadius": 139.0,
   "vdwRadius": 215.0,
-  "mp": 1827.9499999999998,
+  "mp": 1827.95,
   "bp": 3236.15,
   "density": 12.0,
   "phase": "solid",
@@ -1488,15 +1453,13 @@
    4
   ],
   "discoveryYear": 1803,
-  "discoverers": "William Wollaston",
+  "discoverers": "William Hyde Wollaston",
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 69,
   "abundanceCrust": 0.015,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 47,
@@ -1505,14 +1468,14 @@
   "mass": 107.8682,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Kr] 4d10 5s",
+  "config": "[Kr] 4d10 5s1",
   "en": 1.93,
   "ie1": 7.576234,
-  "ea": 1.3019999999999998,
+  "ea": 1.302,
   "atomicRadius": 160.0,
   "covalentRadius": 145.0,
   "vdwRadius": 253.0,
-  "mp": 1234.9299999999998,
+  "mp": 1234.93,
   "bp": 2435.15,
   "density": 10.5,
   "phase": "solid",
@@ -1520,15 +1483,13 @@
    1
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 71,
   "abundanceCrust": 0.075,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 48,
@@ -1552,15 +1513,13 @@
    2
   ],
   "discoveryYear": 1817,
-  "discoverers": "Fredrich Stromeyer",
+  "discoverers": "Friedrich Stromeyer",
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 75,
   "abundanceCrust": 0.15,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 49,
@@ -1569,10 +1528,10 @@
   "mass": 114.818,
   "massIsMassNumber": false,
   "category": "post-transition-metal",
-  "config": "[Kr] 4d10 5s2 5p",
+  "config": "[Kr] 4d10 5s2 5p1",
   "en": 1.78,
   "ie1": 5.7863558,
-  "ea": 0.3,
+  "ea": 0.38392,
   "atomicRadius": 155.0,
   "covalentRadius": 142.0,
   "vdwRadius": 243.0,
@@ -1584,15 +1543,13 @@
    3
   ],
   "discoveryYear": 1863,
-  "discoverers": "Ferdinand Reich, T. Richter",
+  "discoverers": "Ferdinand Reich, Hieronymus Theodor Richter",
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 79,
   "abundanceCrust": 0.25,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 50,
@@ -1608,24 +1565,24 @@
   "atomicRadius": 145.0,
   "covalentRadius": 139.0,
   "vdwRadius": 242.0,
-  "mp": 286.34999999999997,
+  "mp": 505.078,
   "bp": 2859.15,
   "density": 7.287,
-  "phase": "liquid",
+  "phase": "solid",
   "oxidationStates": [
    -4,
    2,
    4
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 83,
   "abundanceCrust": 2.3,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "mp is for white (β) tin; grey (α) tin converts to white above 286.35 K."
   ]
  },
  {
@@ -1652,15 +1609,13 @@
    5
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 88,
   "abundanceCrust": 0.2,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 52,
@@ -1672,7 +1627,7 @@
   "config": "[Kr] 4d10 5s2 5p4",
   "en": 2.1,
   "ie1": 9.009808,
-  "ea": 1.9708759999999999,
+  "ea": 1.970876,
   "atomicRadius": 140.0,
   "covalentRadius": 138.0,
   "vdwRadius": 199.0,
@@ -1687,15 +1642,13 @@
    6
   ],
   "discoveryYear": 1782,
-  "discoverers": "Franz Müller von Reichenstein",
+  "discoverers": "Franz-Joseph Müller von Reichenstein",
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 92,
   "abundanceCrust": 0.001,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 53,
@@ -1711,8 +1664,8 @@
   "atomicRadius": 140.0,
   "covalentRadius": 139.0,
   "vdwRadius": 204.0,
-  "mp": 386.84999999999997,
-  "bp": 457.54999999999995,
+  "mp": 386.85,
+  "bp": 457.55,
   "density": 4.933,
   "phase": "solid",
   "oxidationStates": [
@@ -1729,9 +1682,7 @@
   "pettifor": 97,
   "abundanceCrust": 0.45,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 54,
@@ -1743,13 +1694,13 @@
   "config": "[Kr] 4d10 5s2 5p6",
   "en": 2.6,
   "ie1": 12.1298437,
-  "ea": -0.055999999999999994,
+  "ea": null,
   "atomicRadius": null,
   "covalentRadius": 140.0,
   "vdwRadius": 228.0,
-  "mp": 161.39999999999998,
+  "mp": 161.4,
   "bp": 165.051,
-  "density": 0.005365999999999999,
+  "density": 0.005366,
   "phase": "gas",
   "oxidationStates": [
    2,
@@ -1757,27 +1708,25 @@
    6
   ],
   "discoveryYear": 1898,
-  "discoverers": "Sir William Ramsay; M. W. Travers",
+  "discoverers": "William Ramsay, Morris W. Travers",
   "radioactive": false,
   "goldschmidt": "atmophile",
   "pettifor": 5,
-  "abundanceCrust": 2.9999999999999997e-05,
+  "abundanceCrust": 3e-05,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 55,
   "symbol": "Cs",
-  "name": "Cesium",
+  "name": "Caesium",
   "mass": 132.90545196,
   "massIsMassNumber": false,
   "category": "alkali-metal",
-  "config": "[Xe] 6s",
+  "config": "[Xe] 6s1",
   "en": 0.79,
   "ie1": 3.89390572743,
-  "ea": 0.47162600000000005,
+  "ea": 0.471626,
   "atomicRadius": 260.0,
   "covalentRadius": 244.0,
   "vdwRadius": 348.0,
@@ -1789,14 +1738,14 @@
    1
   ],
   "discoveryYear": 1860,
-  "discoverers": "Gustov Kirchoff, Robert Bunsen",
+  "discoverers": "Robert Bunsen, Gustav Kirchhoff",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 8,
   "abundanceCrust": 3.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "IUPAC name caesium; US spelling cesium."
   ]
  },
  {
@@ -1821,15 +1770,13 @@
    2
   ],
   "discoveryYear": 1808,
-  "discoverers": "Sir Humphrey Davy",
+  "discoverers": "Humphry Davy",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 14,
   "abundanceCrust": 425.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 57,
@@ -1838,12 +1785,12 @@
   "mass": 138.90547,
   "massIsMassNumber": false,
   "category": "lanthanide",
-  "config": "[Xe] 5d 6s2",
+  "config": "[Xe] 5d1 6s2",
   "en": 1.1,
   "ie1": 5.5769,
-  "ea": 0.47,
+  "ea": 0.557553,
   "atomicRadius": 195.0,
-  "covalentRadius": 206.99999999999997,
+  "covalentRadius": 207.0,
   "vdwRadius": 298.0,
   "mp": 1193.15,
   "bp": 3737.15,
@@ -1853,15 +1800,13 @@
    3
   ],
   "discoveryYear": 1839,
-  "discoverers": "Carl Mosander",
+  "discoverers": "Carl Gustaf Mosander",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 33,
   "abundanceCrust": 39.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 58,
@@ -1870,7 +1815,7 @@
   "mass": 140.116,
   "massIsMassNumber": false,
   "category": "lanthanide",
-  "config": "[Xe] 4f 5d 6s2",
+  "config": "[Xe] 4f1 5d1 6s2",
   "en": 1.12,
   "ie1": 5.5386,
   "ea": 0.65,
@@ -1886,15 +1831,13 @@
    4
   ],
   "discoveryYear": 1803,
-  "discoverers": "W. von Hisinger, J. Berzelius, M. Klaproth",
+  "discoverers": "Jöns Jacob Berzelius and Wilhelm Hisinger; Martin Heinrich Klaproth",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 32,
   "abundanceCrust": 66.5,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 59,
@@ -1906,9 +1849,9 @@
   "config": "[Xe] 4f3 6s2",
   "en": 1.13,
   "ie1": 5.4702,
-  "ea": 0.9620000000000001,
+  "ea": 0.10923,
   "atomicRadius": 185.0,
-  "covalentRadius": 202.99999999999997,
+  "covalentRadius": 203.0,
   "vdwRadius": 292.0,
   "mp": 1204.15,
   "bp": 3793.15,
@@ -1918,15 +1861,15 @@
    3
   ],
   "discoveryYear": 1885,
-  "discoverers": "C.F. Aver von Welsbach",
+  "discoverers": "Carl Auer von Welsbach",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 31,
   "abundanceCrust": 9.2,
-  "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "predicted": [
+   "ie1"
+  ],
+  "notes": []
  },
  {
   "z": 60,
@@ -1938,9 +1881,9 @@
   "config": "[Xe] 4f4 6s2",
   "en": 1.14,
   "ie1": 5.525,
-  "ea": 1.916,
+  "ea": 0.09748,
   "atomicRadius": 185.0,
-  "covalentRadius": 200.99999999999997,
+  "covalentRadius": 201.0,
   "vdwRadius": 295.0,
   "mp": 1289.15,
   "bp": 3347.15,
@@ -1949,23 +1892,21 @@
   "oxidationStates": [
    3
   ],
-  "discoveryYear": 1925,
-  "discoverers": "C.F. Aver von Welsbach",
+  "discoveryYear": 1885,
+  "discoverers": "Carl Auer von Welsbach",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 30,
   "abundanceCrust": 41.5,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 61,
   "symbol": "Pm",
   "name": "Promethium",
-  "mass": 144.91276,
-  "massIsMassNumber": false,
+  "mass": 145,
+  "massIsMassNumber": true,
   "category": "lanthanide",
   "config": "[Xe] 4f5 6s2",
   "en": null,
@@ -1982,15 +1923,13 @@
    3
   ],
   "discoveryYear": 1945,
-  "discoverers": "J.A. Marinsky, L.E. Glendenin, C.D. Coryell",
+  "discoverers": "Jacob A. Marinsky, Lawrence E. Glendenin, Charles D. Coryell",
   "radioactive": true,
   "goldschmidt": "lithophile",
   "pettifor": 29,
   "abundanceCrust": null,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 62,
@@ -2020,9 +1959,7 @@
   "pettifor": 28,
   "abundanceCrust": 7.05,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 63,
@@ -2034,7 +1971,7 @@
   "config": "[Xe] 4f7 6s2",
   "en": null,
   "ie1": 5.670385,
-  "ea": 0.8640000000000001,
+  "ea": 0.116,
   "atomicRadius": 185.0,
   "covalentRadius": 198.0,
   "vdwRadius": 287.0,
@@ -2053,18 +1990,16 @@
   "pettifor": 18,
   "abundanceCrust": 2.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 64,
   "symbol": "Gd",
   "name": "Gadolinium",
-  "mass": 157.25,
+  "mass": 157.249,
   "massIsMassNumber": false,
   "category": "lanthanide",
-  "config": "[Xe] 4f7 5d 6s2",
+  "config": "[Xe] 4f7 5d1 6s2",
   "en": 1.2,
   "ie1": 6.1498,
   "ea": null,
@@ -2079,27 +2014,25 @@
    3
   ],
   "discoveryYear": 1880,
-  "discoverers": "Jean de Marignac",
+  "discoverers": "Jean Charles Galissard de Marignac",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 27,
   "abundanceCrust": 6.2,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 65,
   "symbol": "Tb",
   "name": "Terbium",
-  "mass": 158.92535,
+  "mass": 158.925354,
   "massIsMassNumber": false,
   "category": "lanthanide",
   "config": "[Xe] 4f9 6s2",
   "en": null,
   "ie1": 5.8638,
-  "ea": 1.165,
+  "ea": 0.13131,
   "atomicRadius": 175.0,
   "covalentRadius": 194.0,
   "vdwRadius": 279.0,
@@ -2111,15 +2044,13 @@
    3
   ],
   "discoveryYear": 1843,
-  "discoverers": "Carl Mosander",
+  "discoverers": "Carl Gustaf Mosander",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 26,
   "abundanceCrust": 1.2,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 66,
@@ -2131,7 +2062,7 @@
   "config": "[Xe] 4f10 6s2",
   "en": 1.22,
   "ie1": 5.939061,
-  "ea": 0.35200000000000004,
+  "ea": null,
   "atomicRadius": 175.0,
   "covalentRadius": 192.0,
   "vdwRadius": 287.0,
@@ -2150,14 +2081,14 @@
   "abundanceCrust": 5.2,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Electron affinity omitted: the often-quoted 0.352 eV is not a direct measurement."
   ]
  },
  {
   "z": 67,
   "symbol": "Ho",
   "name": "Holmium",
-  "mass": 164.93033,
+  "mass": 164.930329,
   "massIsMassNumber": false,
   "category": "lanthanide",
   "config": "[Xe] 4f11 6s2",
@@ -2175,15 +2106,13 @@
    3
   ],
   "discoveryYear": 1878,
-  "discoverers": "J.L. Soret",
+  "discoverers": "Marc Delafontaine, Jacques-Louis Soret",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 24,
   "abundanceCrust": 1.3,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 68,
@@ -2207,27 +2136,25 @@
    3
   ],
   "discoveryYear": 1843,
-  "discoverers": "Carl Mosander",
+  "discoverers": "Carl Gustaf Mosander",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 23,
   "abundanceCrust": 3.5,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 69,
   "symbol": "Tm",
   "name": "Thulium",
-  "mass": 168.93422,
+  "mass": 168.934219,
   "massIsMassNumber": false,
   "category": "lanthanide",
   "config": "[Xe] 4f13 6s2",
   "en": 1.25,
   "ie1": 6.184402,
-  "ea": 1.0290000000000001,
+  "ea": 1.029,
   "atomicRadius": 175.0,
   "covalentRadius": 190.0,
   "vdwRadius": 279.0,
@@ -2239,15 +2166,13 @@
    3
   ],
   "discoveryYear": 1879,
-  "discoverers": "Per Theodor Cleve",
+  "discoverers": "Per Teodor Cleve",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 22,
   "abundanceCrust": 0.52,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 70,
@@ -2271,27 +2196,29 @@
    3
   ],
   "discoveryYear": 1878,
-  "discoverers": "Jean de Marignac",
+  "discoverers": "Jean Charles Galissard de Marignac",
   "radioactive": false,
   "goldschmidt": "lithophile",
   "pettifor": 17,
   "abundanceCrust": 3.2,
-  "predicted": [],
+  "predicted": [
+   "ea"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Electron affinity is a calculated estimate, not a measurement."
   ]
  },
  {
   "z": 71,
   "symbol": "Lu",
   "name": "Lutetium",
-  "mass": 174.9668,
+  "mass": 174.96669,
   "massIsMassNumber": false,
   "category": "lanthanide",
-  "config": "[Xe] 4f14 5d 6s2",
+  "config": "[Xe] 4f14 5d1 6s2",
   "en": 1.0,
   "ie1": 5.425871,
-  "ea": 0.34,
+  "ea": 0.23882,
   "atomicRadius": 175.0,
   "covalentRadius": 187.0,
   "vdwRadius": 274.0,
@@ -2310,20 +2237,20 @@
   "abundanceCrust": 0.8,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Counted as a lanthanide: IUPAC lanthanoids are La-Lu (Red Book 2005, IR-3.5)."
   ]
  },
  {
   "z": 72,
   "symbol": "Hf",
   "name": "Hafnium",
-  "mass": 178.49,
+  "mass": 178.486,
   "massIsMassNumber": false,
   "category": "transition-metal",
   "config": "[Xe] 4f14 5d2 6s2",
   "en": 1.3,
   "ie1": 6.82507,
-  "ea": 0.013999999999999999,
+  "ea": 0.178,
   "atomicRadius": 155.0,
   "covalentRadius": 175.0,
   "vdwRadius": 263.0,
@@ -2341,9 +2268,7 @@
   "pettifor": 50,
   "abundanceCrust": 3.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 73,
@@ -2373,9 +2298,7 @@
   "pettifor": 53,
   "abundanceCrust": 2.0,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 74,
@@ -2406,9 +2329,7 @@
   "pettifor": 56,
   "abundanceCrust": 1.25,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 75,
@@ -2420,7 +2341,7 @@
   "config": "[Xe] 4f14 5d5 6s2",
   "en": 1.9,
   "ie1": 7.83352,
-  "ea": 0.15,
+  "ea": 0.060396,
   "atomicRadius": 135.0,
   "covalentRadius": 151.0,
   "vdwRadius": 249.0,
@@ -2438,9 +2359,7 @@
   "pettifor": 59,
   "abundanceCrust": 0.0007,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 76,
@@ -2452,7 +2371,7 @@
   "config": "[Xe] 4f14 5d6 6s2",
   "en": 2.2,
   "ie1": 8.43823,
-  "ea": 1.1,
+  "ea": 1.0778,
   "atomicRadius": 130.0,
   "covalentRadius": 144.0,
   "vdwRadius": 248.0,
@@ -2464,15 +2383,13 @@
    4
   ],
   "discoveryYear": 1804,
-  "discoverers": "Smithson Tenant",
+  "discoverers": "Smithson Tennant",
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 62,
   "abundanceCrust": 0.0015,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 77,
@@ -2497,15 +2414,13 @@
    4
   ],
   "discoveryYear": 1804,
-  "discoverers": "S.Tenant, A.F.Fourcory, L.N.Vauquelin, H.V.Collet-Descoltils",
+  "discoverers": "Smithson Tennant; Antoine Fourcroy, Louis-Nicolas Vauquelin, Hippolyte-Victor Collet-Descotils",
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 65,
   "abundanceCrust": 0.001,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 78,
@@ -2514,7 +2429,7 @@
   "mass": 195.084,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Xe] 4f14 5d9 6s",
+  "config": "[Xe] 4f14 5d9 6s1",
   "en": 2.2,
   "ie1": 8.95883,
   "ea": 2.128,
@@ -2530,24 +2445,22 @@
    4
   ],
   "discoveryYear": 1735,
-  "discoverers": "Julius Scaliger",
+  "discoverers": "Antonio de Ulloa",
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 68,
   "abundanceCrust": 0.005,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 79,
   "symbol": "Au",
   "name": "Gold",
-  "mass": 196.966569,
+  "mass": 196.96657,
   "massIsMassNumber": false,
   "category": "transition-metal",
-  "config": "[Xe] 4f14 5d10 6s",
+  "config": "[Xe] 4f14 5d10 6s1",
   "en": 2.4,
   "ie1": 9.225554,
   "ea": 2.30863,
@@ -2562,15 +2475,13 @@
    3
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "siderophile",
   "pettifor": 70,
   "abundanceCrust": 0.004,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 80,
@@ -2586,7 +2497,7 @@
   "atomicRadius": 150.0,
   "covalentRadius": 132.0,
   "vdwRadius": 245.0,
-  "mp": 234.32099999999997,
+  "mp": 234.321,
   "bp": 629.769,
   "density": 13.5336,
   "phase": "liquid",
@@ -2595,15 +2506,13 @@
    2
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 74,
   "abundanceCrust": 0.085,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 81,
@@ -2612,10 +2521,10 @@
   "mass": 204.38,
   "massIsMassNumber": false,
   "category": "post-transition-metal",
-  "config": "[Xe] 4f14 5d10 6s2 6p",
+  "config": "[Xe] 4f14 5d10 6s2 6p1",
   "en": 1.8,
   "ie1": 6.1082873,
-  "ea": 0.377,
+  "ea": 0.320053,
   "atomicRadius": 190.0,
   "covalentRadius": 145.0,
   "vdwRadius": 247.0,
@@ -2628,14 +2537,14 @@
    3
   ],
   "discoveryYear": 1861,
-  "discoverers": "Sir William Crookes",
+  "discoverers": "William Crookes",
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 78,
   "abundanceCrust": 0.85,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [204.382, 204.385]; 204.38 is the conventional value (CIAAW)."
   ]
  },
  {
@@ -2661,14 +2570,14 @@
    4
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 82,
   "abundanceCrust": 14.0,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Standard atomic weight is the interval [206.14, 207.94]; 207.2 is the abridged value (CIAAW)."
   ]
  },
  {
@@ -2685,7 +2594,7 @@
   "atomicRadius": 160.0,
   "covalentRadius": 148.0,
   "vdwRadius": 254.0,
-  "mp": 544.5519999999999,
+  "mp": 544.552,
   "bp": 1837.15,
   "density": 9.79,
   "phase": "solid",
@@ -2693,27 +2602,27 @@
    3
   ],
   "discoveryYear": null,
-  "discoverers": "Known to the ancients.",
+  "discoverers": null,
   "radioactive": false,
   "goldschmidt": "chalcophile",
   "pettifor": 87,
   "abundanceCrust": 0.0085,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "²⁰⁹Bi is alpha-radioactive (half-life about 2×10¹⁹ years; de Marcillac et al. 2003) but is treated as stable."
   ]
  },
  {
   "z": 84,
   "symbol": "Po",
   "name": "Polonium",
-  "mass": 209.0,
+  "mass": 209,
   "massIsMassNumber": true,
-  "category": "metalloid",
+  "category": "post-transition-metal",
   "config": "[Xe] 4f14 5d10 6s2 6p4",
   "en": 2.0,
   "ie1": 8.41807,
-  "ea": 1.9,
+  "ea": null,
   "atomicRadius": 190.0,
   "covalentRadius": 140.0,
   "vdwRadius": null,
@@ -2729,52 +2638,62 @@
   "discoveryYear": 1898,
   "discoverers": "Pierre and Marie Curie",
   "radioactive": true,
-  "goldschmidt": "synthetic",
+  "goldschmidt": null,
   "pettifor": 91,
   "abundanceCrust": 2e-10,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Classed as a post-transition metal (a metallic solid); some tables list it as a metalloid.",
+   "Electron affinity has not been measured.",
+   "Occurs naturally as a U/Th decay-series member; no Goldschmidt class assigned."
   ]
  },
  {
   "z": 85,
   "symbol": "At",
   "name": "Astatine",
-  "mass": 210.0,
+  "mass": 210,
   "massIsMassNumber": true,
-  "category": "reactive-nonmetal",
+  "category": "metalloid",
   "config": "[Xe] 4f14 5d10 6s2 6p5",
   "en": 2.2,
   "ie1": 9.31751,
-  "ea": 2.8,
+  "ea": 2.41578,
   "atomicRadius": null,
   "covalentRadius": 150.0,
   "vdwRadius": null,
   "mp": 575.15,
   "bp": null,
-  "density": 7.0,
+  "density": 8.91,
   "phase": "solid",
   "oxidationStates": [
    -1,
    1
   ],
   "discoveryYear": 1940,
-  "discoverers": "D.R.Corson, K.R.MacKenzie, E.Segré",
+  "discoverers": "Dale R. Corson, Kenneth R. MacKenzie, Emilio Segrè",
   "radioactive": true,
-  "goldschmidt": "synthetic",
+  "goldschmidt": null,
   "pettifor": 96,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "en",
+   "mp",
+   "density",
+   "phase"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Class contested: tracer chemistry shows both halide-like At⁻ and cationic At⁺; bulk At has never been made and is predicted to be metallic (Hermann et al. 2013).",
+   "Never isolated in bulk: mp, density and phase are estimates.",
+   "Occurs naturally as a U/Th decay-series member; no Goldschmidt class assigned."
   ]
  },
  {
   "z": 86,
   "symbol": "Rn",
   "name": "Radon",
-  "mass": 222.0,
+  "mass": 222,
   "massIsMassNumber": true,
   "category": "noble-gas",
   "config": "[Xe] 4f14 5d10 6s2 6p6",
@@ -2784,30 +2703,31 @@
   "atomicRadius": null,
   "covalentRadius": 150.0,
   "vdwRadius": 240.0,
-  "mp": 202.14999999999998,
+  "mp": 202.15,
   "bp": 211.45,
   "density": 0.009074,
   "phase": "gas",
   "oxidationStates": [],
-  "discoveryYear": 1898,
-  "discoverers": "Fredrich Ernst Dorn",
+  "discoveryYear": 1899,
+  "discoverers": "Ernest Rutherford, Robert B. Owens",
   "radioactive": true,
-  "goldschmidt": "synthetic",
+  "goldschmidt": null,
   "pettifor": 6,
   "abundanceCrust": 4e-13,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Discovered as thorium emanation (1899); Friedrich Dorn’s 1900 radium emanation is often cited instead.",
+   "Occurs naturally as a U/Th decay-series member; no Goldschmidt class assigned."
   ]
  },
  {
   "z": 87,
   "symbol": "Fr",
   "name": "Francium",
-  "mass": 223.0,
+  "mass": 223,
   "massIsMassNumber": true,
   "category": "alkali-metal",
-  "config": "[Rn] 7s",
+  "config": "[Rn] 7s1",
   "en": 0.7,
   "ie1": 4.0727411,
   "ea": 0.486,
@@ -2816,27 +2736,32 @@
   "vdwRadius": null,
   "mp": 294.15,
   "bp": null,
-  "density": 1.87,
-  "phase": "liquid",
+  "density": null,
+  "phase": null,
   "oxidationStates": [
    1
   ],
   "discoveryYear": 1939,
-  "discoverers": "Marguerite Derey",
+  "discoverers": "Marguerite Perey",
   "radioactive": true,
-  "goldschmidt": "synthetic",
+  "goldschmidt": null,
   "pettifor": 7,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "en",
+   "ea",
+   "mp"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Never isolated in bulk: mp is an estimate near room temperature, so the phase is unknown.",
+   "Occurs naturally as a U/Th decay-series member; no Goldschmidt class assigned."
   ]
  },
  {
   "z": 88,
   "symbol": "Ra",
   "name": "Radium",
-  "mass": 226.0,
+  "mass": 226,
   "massIsMassNumber": true,
   "category": "alkaline-earth-metal",
   "config": "[Rn] 7s2",
@@ -2848,30 +2773,32 @@
   "vdwRadius": null,
   "mp": 969.15,
   "bp": null,
-  "density": 5.0,
+  "density": 5.5,
   "phase": "solid",
   "oxidationStates": [
    2
   ],
   "discoveryYear": 1898,
-  "discoverers": "Pierre and Marie Curie",
+  "discoverers": "Pierre Curie, Marie Curie, Gustave Bémont",
   "radioactive": true,
   "goldschmidt": "lithophile",
   "pettifor": 13,
   "abundanceCrust": 9e-07,
-  "predicted": [],
+  "predicted": [
+   "ea"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Density is the X-ray value from the bcc lattice (a = 514.8 pm)."
   ]
  },
  {
   "z": 89,
   "symbol": "Ac",
   "name": "Actinium",
-  "mass": 227.0,
+  "mass": 227,
   "massIsMassNumber": true,
   "category": "actinide",
-  "config": "[Rn] 6d 7s2",
+  "config": "[Rn] 6d1 7s2",
   "en": 1.1,
   "ie1": 5.380235,
   "ea": 0.35,
@@ -2888,12 +2815,15 @@
   "discoveryYear": 1899,
   "discoverers": "André Debierne",
   "radioactive": true,
-  "goldschmidt": "synthetic",
+  "goldschmidt": null,
   "pettifor": 48,
   "abundanceCrust": 5.5e-10,
-  "predicted": [],
+  "predicted": [
+   "ea"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Discovery credit is disputed: Debierne’s 1899 samples are questioned, and Friedrich Giesel isolated actinium independently in 1902.",
+   "Occurs naturally as a U/Th decay-series member; no Goldschmidt class assigned."
   ]
  },
  {
@@ -2906,7 +2836,7 @@
   "config": "[Rn] 6d2 7s2",
   "en": 1.3,
   "ie1": 6.3067,
-  "ea": null,
+  "ea": 0.60769,
   "atomicRadius": 180.0,
   "covalentRadius": 206.0,
   "vdwRadius": 293.0,
@@ -2918,15 +2848,13 @@
    4
   ],
   "discoveryYear": 1828,
-  "discoverers": "Jöns Berzelius",
+  "discoverers": "Jöns Jacob Berzelius",
   "radioactive": true,
   "goldschmidt": "lithophile",
   "pettifor": 47,
   "abundanceCrust": 9.6,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 91,
@@ -2935,7 +2863,7 @@
   "mass": 231.03588,
   "massIsMassNumber": false,
   "category": "actinide",
-  "config": "[Rn] 5f2 6d 7s2",
+  "config": "[Rn] 5f2 6d1 7s2",
   "en": 1.5,
   "ie1": 5.89,
   "ea": null,
@@ -2949,15 +2877,17 @@
   "oxidationStates": [
    5
   ],
-  "discoveryYear": 1917,
-  "discoverers": "Fredrich Soddy, John Cranston, Otto Hahn, Lise Meitner",
+  "discoveryYear": 1913,
+  "discoverers": "Kasimir Fajans, Oswald Helmuth Göhring",
   "radioactive": true,
   "goldschmidt": "lithophile",
   "pettifor": 46,
   "abundanceCrust": 1.4e-06,
-  "predicted": [],
+  "predicted": [
+   "ie1"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Discovered as ²³⁴ᵐPa (1913); long-lived ²³¹Pa was found in 1917-18 by Hahn and Meitner and by Soddy and Cranston."
   ]
  },
  {
@@ -2967,7 +2897,7 @@
   "mass": 238.02891,
   "massIsMassNumber": false,
   "category": "actinide",
-  "config": "[Rn] 5f3 6d 7s2",
+  "config": "[Rn] 5f3 6d1 7s2",
   "en": 1.7,
   "ie1": 6.19405,
   "ea": null,
@@ -2982,24 +2912,22 @@
    6
   ],
   "discoveryYear": 1789,
-  "discoverers": "Martin Klaproth",
+  "discoverers": "Martin Heinrich Klaproth",
   "radioactive": true,
   "goldschmidt": "lithophile",
   "pettifor": 45,
   "abundanceCrust": 2.7,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 93,
   "symbol": "Np",
   "name": "Neptunium",
-  "mass": 237.0,
+  "mass": 237,
   "massIsMassNumber": true,
   "category": "actinide",
-  "config": "[Rn] 5f4 6d 7s2",
+  "config": "[Rn] 5f4 6d1 7s2",
   "en": 1.3,
   "ie1": 6.26554,
   "ea": null,
@@ -3014,21 +2942,19 @@
    5
   ],
   "discoveryYear": 1940,
-  "discoverers": "E.M. McMillan, P.H. Abelson",
+  "discoverers": "Edwin M. McMillan, Philip H. Abelson",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 44,
   "abundanceCrust": null,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 94,
   "symbol": "Pu",
   "name": "Plutonium",
-  "mass": 244.0,
+  "mass": 244,
   "massIsMassNumber": true,
   "category": "actinide",
   "config": "[Rn] 5f6 7s2",
@@ -3046,21 +2972,19 @@
    4
   ],
   "discoveryYear": 1940,
-  "discoverers": "G.T.Seaborg, J.W.Kennedy, E.M.McMillan, A.C.Wohl",
+  "discoverers": "Glenn T. Seaborg, Edwin M. McMillan, Joseph W. Kennedy, Arthur C. Wahl",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 43,
   "abundanceCrust": null,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 95,
   "symbol": "Am",
   "name": "Americium",
-  "mass": 243.0,
+  "mass": 243,
   "massIsMassNumber": true,
   "category": "actinide",
   "config": "[Rn] 5f7 7s2",
@@ -3072,30 +2996,30 @@
   "vdwRadius": 283.0,
   "mp": 1449.15,
   "bp": null,
-  "density": 12.0,
+  "density": 13.67,
   "phase": "solid",
   "oxidationStates": [
    3
   ],
-  "discoveryYear": 1945,
-  "discoverers": "G.T.Seaborg, R.A.James, L.O.Morgan, A.Ghiorso",
+  "discoveryYear": 1944,
+  "discoverers": "Glenn T. Seaborg, Ralph A. James, Leon O. Morgan, Albert Ghiorso",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 42,
   "abundanceCrust": null,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Density is the X-ray value for dhcp ²⁴¹Am; the CRC Handbook lists 12 g/cm³."
   ]
  },
  {
   "z": 96,
   "symbol": "Cm",
   "name": "Curium",
-  "mass": 247.0,
+  "mass": 247,
   "massIsMassNumber": true,
   "category": "actinide",
-  "config": "[Rn] 5f7 6d 7s2",
+  "config": "[Rn] 5f7 6d1 7s2",
   "en": null,
   "ie1": 5.992241,
   "ea": null,
@@ -3110,21 +3034,19 @@
    3
   ],
   "discoveryYear": 1944,
-  "discoverers": "G.T.Seaborg, R.A.James, A.Ghiorso",
+  "discoverers": "Glenn T. Seaborg, Ralph A. James, Albert Ghiorso",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 41,
   "abundanceCrust": null,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 97,
   "symbol": "Bk",
   "name": "Berkelium",
-  "mass": 247.0,
+  "mass": 247,
   "massIsMassNumber": true,
   "category": "actinide",
   "config": "[Rn] 5f9 7s2",
@@ -3142,21 +3064,19 @@
    3
   ],
   "discoveryYear": 1949,
-  "discoverers": "G.T.Seaborg, S.G.Tompson, A.Ghiorso",
+  "discoverers": "Stanley G. Thompson, Albert Ghiorso, Glenn T. Seaborg",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 40,
   "abundanceCrust": null,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 98,
   "symbol": "Cf",
   "name": "Californium",
-  "mass": 251.0,
+  "mass": 251,
   "massIsMassNumber": true,
   "category": "actinide",
   "config": "[Rn] 5f10 7s2",
@@ -3174,21 +3094,19 @@
    3
   ],
   "discoveryYear": 1950,
-  "discoverers": "G.T.Seaborg, S.G.Tompson, A.Ghiorso, K.Street Jr.",
+  "discoverers": "Stanley G. Thompson, Kenneth Street Jr., Albert Ghiorso, Glenn T. Seaborg",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 39,
   "abundanceCrust": null,
   "predicted": [],
-  "notes": [
-   "TEMPORARY development extraction"
-  ]
+  "notes": []
  },
  {
   "z": 99,
   "symbol": "Es",
   "name": "Einsteinium",
-  "mass": 252.0,
+  "mass": 252,
   "massIsMassNumber": true,
   "category": "actinide",
   "config": "[Rn] 5f11 7s2",
@@ -3206,21 +3124,21 @@
    3
   ],
   "discoveryYear": 1952,
-  "discoverers": "Argonne, Los Alamos, U of Calif",
+  "discoverers": "Albert Ghiorso et al. (Berkeley, Argonne, Los Alamos)",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 38,
   "abundanceCrust": null,
   "predicted": [],
   "notes": [
-   "TEMPORARY development extraction"
+   "Density is the X-ray value for fcc ²⁵³Es metal (a = 575 pm; Haire & Baybarz 1979)."
   ]
  },
  {
   "z": 100,
   "symbol": "Fm",
   "name": "Fermium",
-  "mass": 257.0,
+  "mass": 257,
   "massIsMassNumber": true,
   "category": "actinide",
   "config": "[Rn] 5f12 7s2",
@@ -3238,21 +3156,26 @@
    3
   ],
   "discoveryYear": 1953,
-  "discoverers": "Argonne, Los Alamos, U of Calif",
+  "discoverers": "Albert Ghiorso et al. (Berkeley, Argonne, Los Alamos)",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 37,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "ie1",
+   "mp",
+   "density",
+   "phase"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Surface-ionization measurement gives IE1 = 6.52 ± 0.13 eV (Sato et al. 2018), consistent with this value."
   ]
  },
  {
   "z": 101,
   "symbol": "Md",
   "name": "Mendelevium",
-  "mass": 258.0,
+  "mass": 258,
   "massIsMassNumber": true,
   "category": "actinide",
   "config": "[Rn] 5f13 7s2",
@@ -3270,21 +3193,26 @@
    3
   ],
   "discoveryYear": 1955,
-  "discoverers": "G.T.Seaborg, S.G.Tompson, A.Ghiorso, K.Street Jr.",
+  "discoverers": "Albert Ghiorso, Bernard G. Harvey, Gregory R. Choppin, Stanley G. Thompson, Glenn T. Seaborg",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 36,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "ie1",
+   "mp",
+   "density",
+   "phase"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Surface-ionization measurement gives IE1 = 6.59 ± 0.13 eV (Sato et al. 2018), consistent with this value."
   ]
  },
  {
   "z": 102,
   "symbol": "No",
   "name": "Nobelium",
-  "mass": 259.0,
+  "mass": 259,
   "massIsMassNumber": true,
   "category": "actinide",
   "config": "[Rn] 5f14 7s2",
@@ -3299,24 +3227,30 @@
   "density": 9.9,
   "phase": "solid",
   "oxidationStates": [
+   2,
    3
   ],
-  "discoveryYear": 1957,
-  "discoverers": "Nobel Institute for Physics",
+  "discoveryYear": 1966,
+  "discoverers": "Joint Institute for Nuclear Research, Dubna",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 35,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "mp",
+   "density",
+   "phase"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Oxidation state +2 is the most stable in water, unusual among actinides.",
+   "A 1957 Stockholm discovery claim was not confirmed; IUPAC/IUPAP credited Dubna (1966)."
   ]
  },
  {
   "z": 103,
   "symbol": "Lr",
   "name": "Lawrencium",
-  "mass": 262.0,
+  "mass": 266,
   "massIsMassNumber": true,
   "category": "actinide",
   "config": "[Rn] 5f14 7s2 7p1",
@@ -3328,27 +3262,33 @@
   "vdwRadius": null,
   "mp": 1900.15,
   "bp": null,
-  "density": 15.6,
+  "density": null,
   "phase": "solid",
   "oxidationStates": [
    3
   ],
   "discoveryYear": 1961,
-  "discoverers": "A.Ghiorso, T.Sikkeland, A.E.Larsh, R.M.Latimer",
+  "discoverers": "Albert Ghiorso, Torbjørn Sikkeland, Almon E. Larsh, Robert M. Latimer",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": 34,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "config",
+   "mp",
+   "phase"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Counted as an actinide: IUPAC actinoids are Ac-Lr (Red Book 2005, IR-3.5).",
+   "The 7p1 configuration is predicted; the measured ionization energy (Sato et al. 2015) supports it.",
+   "IUPAC/IUPAP (1993) shared the discovery credit between Berkeley and Dubna."
   ]
  },
  {
   "z": 104,
   "symbol": "Rf",
   "name": "Rutherfordium",
-  "mass": 267.0,
+  "mass": 267,
   "massIsMassNumber": true,
   "category": "transition-metal",
   "config": "[Rn] 5f14 6d2 7s2",
@@ -3360,27 +3300,31 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 23.3,
+  "density": null,
   "phase": null,
   "oxidationStates": [
    4
   ],
   "discoveryYear": 1969,
-  "discoverers": "A. Ghiorso, et al",
+  "discoverers": "Albert Ghiorso et al. (Berkeley)",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "config",
+   "ie1"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "IUPAC/IUPAP (1993) shared the discovery credit between Berkeley and Dubna.",
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 105,
   "symbol": "Db",
   "name": "Dubnium",
-  "mass": 268.0,
+  "mass": 268,
   "massIsMassNumber": true,
   "category": "transition-metal",
   "config": "[Rn] 5f14 6d3 7s2",
@@ -3392,25 +3336,29 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 29.3,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 1970,
-  "discoverers": "A. Ghiorso, et al",
+  "discoverers": "Albert Ghiorso et al. (Berkeley)",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "config",
+   "ie1"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "IUPAC/IUPAP (1993) shared the discovery credit between Berkeley and Dubna.",
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 106,
   "symbol": "Sg",
   "name": "Seaborgium",
-  "mass": 271.0,
+  "mass": 269,
   "massIsMassNumber": true,
   "category": "transition-metal",
   "config": "[Rn] 5f14 6d4 7s2",
@@ -3422,25 +3370,28 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 35.0,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 1974,
-  "discoverers": "Soviet Nuclear Research/ U. of Cal at Berkeley",
+  "discoverers": "Albert Ghiorso et al. (Berkeley and Livermore)",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "config",
+   "ie1"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 107,
   "symbol": "Bh",
   "name": "Bohrium",
-  "mass": 274.0,
+  "mass": 270,
   "massIsMassNumber": true,
   "category": "transition-metal",
   "config": "[Rn] 5f14 6d5 7s2",
@@ -3452,25 +3403,28 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 37.1,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
-  "discoveryYear": 1976,
-  "discoverers": "Heavy Ion Research Laboratory (HIRL)",
+  "discoveryYear": 1981,
+  "discoverers": "GSI, Darmstadt",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "config",
+   "ie1"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 108,
   "symbol": "Hs",
   "name": "Hassium",
-  "mass": 269.0,
+  "mass": 270,
   "massIsMassNumber": true,
   "category": "transition-metal",
   "config": "[Rn] 5f14 6d6 7s2",
@@ -3482,25 +3436,29 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 40.7,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 1984,
-  "discoverers": "Heavy Ion Research Laboratory (HIRL)",
+  "discoverers": "GSI, Darmstadt",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "config",
+   "ie1"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Mass number: Hs-269 (15 s) and Hs-270 (9 s) half-lives overlap within uncertainty (NUBASE2020).",
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 109,
   "symbol": "Mt",
   "name": "Meitnerium",
-  "mass": 276.0,
+  "mass": 278,
   "massIsMassNumber": true,
   "category": "transition-metal",
   "config": "[Rn] 5f14 6d7 7s2",
@@ -3512,28 +3470,32 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 37.4,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 1982,
-  "discoverers": "Heavy Ion Research Laboratory (HIRL)",
+  "discoverers": "GSI, Darmstadt",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Mass number: Mt-277 (9 s) and Mt-278 (6 s) half-lives overlap within uncertainty (NUBASE2020).",
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 110,
   "symbol": "Ds",
   "name": "Darmstadtium",
-  "mass": 281.0,
+  "mass": 281,
   "massIsMassNumber": true,
   "category": "transition-metal",
-  "config": "[Rn] 5f14 6d9 7s1",
+  "config": "[Rn] 5f14 6d8 7s2",
   "en": null,
   "ie1": null,
   "ea": null,
@@ -3542,28 +3504,32 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 34.8,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 1994,
-  "discoverers": "Heavy Ion Research Laboratory (HIRL)",
+  "discoverers": "GSI, Darmstadt",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Configuration from relativistic calculations (6d8 7s2), not the 6d9 7s1 Pt analogy.",
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 111,
   "symbol": "Rg",
   "name": "Roentgenium",
-  "mass": 281.0,
+  "mass": 282,
   "massIsMassNumber": true,
   "category": "transition-metal",
-  "config": "[Rn] 5f14 6d10 7s1",
+  "config": "[Rn] 5f14 6d9 7s2",
   "en": null,
   "ie1": null,
   "ea": null,
@@ -3572,25 +3538,29 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 28.7,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 1994,
-  "discoverers": "Heavy Ion Research Laboratory (HIRL)",
+  "discoverers": "GSI, Darmstadt",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Configuration from relativistic calculations (6d9 7s2), not the 6d10 7s1 Au analogy.",
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 112,
   "symbol": "Cn",
   "name": "Copernicium",
-  "mass": 285.0,
+  "mass": 285,
   "massIsMassNumber": true,
   "category": "transition-metal",
   "config": "[Rn] 5f14 6d10 7s2",
@@ -3602,25 +3572,28 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 14.0,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 1996,
-  "discoverers": "GSI Helmholtz Centre for Heavy Ion Research",
+  "discoverers": "GSI, Darmstadt",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 113,
   "symbol": "Nh",
   "name": "Nihonium",
-  "mass": 286.0,
+  "mass": 286,
   "massIsMassNumber": true,
   "category": "post-transition-metal",
   "config": "[Rn] 5f14 6d10 7s2 7p1",
@@ -3632,25 +3605,29 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 16.0,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
-  "discoveryYear": 2015,
+  "discoveryYear": 2004,
   "discoverers": "RIKEN",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "First atom made in 2004; IUPAC/IUPAP credited the discovery in 2015.",
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 114,
   "symbol": "Fl",
   "name": "Flerovium",
-  "mass": 289.0,
+  "mass": 289,
   "massIsMassNumber": true,
   "category": "post-transition-metal",
   "config": "[Rn] 5f14 6d10 7s2 7p2",
@@ -3662,25 +3639,28 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 9.928,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 1998,
-  "discoverers": "Joint Institute for Nuclear Research",
+  "discoverers": "Joint Institute for Nuclear Research and Lawrence Livermore National Laboratory",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 115,
   "symbol": "Mc",
   "name": "Moscovium",
-  "mass": 288.0,
+  "mass": 290,
   "massIsMassNumber": true,
   "category": "post-transition-metal",
   "config": "[Rn] 5f14 6d10 7s2 7p3",
@@ -3692,25 +3672,28 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 13.5,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 2003,
-  "discoverers": "Joint Institute for Nuclear Research",
+  "discoverers": "Joint Institute for Nuclear Research and Lawrence Livermore National Laboratory",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 116,
   "symbol": "Lv",
   "name": "Livermorium",
-  "mass": 293.0,
+  "mass": 293,
   "massIsMassNumber": true,
   "category": "post-transition-metal",
   "config": "[Rn] 5f14 6d10 7s2 7p4",
@@ -3722,27 +3705,30 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 12.9,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 2000,
-  "discoverers": "Lawrence Livermore National Laboratory",
+  "discoverers": "Joint Institute for Nuclear Research and Lawrence Livermore National Laboratory",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 117,
   "symbol": "Ts",
   "name": "Tennessine",
-  "mass": 294.0,
+  "mass": 294,
   "massIsMassNumber": true,
-  "category": "reactive-nonmetal",
+  "category": "post-transition-metal",
   "config": "[Rn] 5f14 6d10 7s2 7p5",
   "en": null,
   "ie1": null,
@@ -3752,48 +3738,57 @@
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 7.2,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 2010,
-  "discoverers": "Joint Institute for Nuclear Research/Oak Ridge National Laboratory",
+  "discoverers": "Joint Institute for Nuclear Research, Oak Ridge National Laboratory and partners",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Class predicted: Ts has never been studied chemically; relativistic effects and the rise in metallic character down group 17 point to a metal rather than a halogen-like nonmetal.",
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
  {
   "z": 118,
   "symbol": "Og",
   "name": "Oganesson",
-  "mass": 294.0,
+  "mass": 294,
   "massIsMassNumber": true,
   "category": "noble-gas",
   "config": "[Rn] 5f14 6d10 7s2 7p6",
   "en": null,
   "ie1": null,
-  "ea": 0.055999999999999994,
+  "ea": 0.056,
   "atomicRadius": null,
   "covalentRadius": null,
   "vdwRadius": null,
   "mp": null,
   "bp": null,
-  "density": 7.0,
+  "density": null,
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 2002,
-  "discoverers": "Joint Institute for Nuclear Research",
+  "discoverers": "Joint Institute for Nuclear Research and Lawrence Livermore National Laboratory",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
   "abundanceCrust": null,
-  "predicted": [],
+  "predicted": [
+   "category",
+   "config",
+   "ea"
+  ],
   "notes": [
-   "TEMPORARY development extraction"
+   "Group 18, but predicted to be a semiconducting solid at room temperature (Smits et al. 2020).",
+   "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  }
 ]

@@ -53,10 +53,10 @@ export const dobereinerLayer: LayerBuilder = (ctx) => ({
   section: 'History',
   summary: 'Triads of analogous elements whose middle member has about the mean atomic weight of the other two.',
   description:
-    'In 1817 Döbereiner noticed that the combining weight of strontia (SrO) was the mean of those of lime ' +
-    '(CaO) and baryta (BaO), as Wurzer reported that year. In 1829 he published further triads of analogous ' +
-    "elements in which the middle member's atomic weight is close to the mean of the outer two: an early hint " +
-    'of periodicity. The notes redo his test with modern standard atomic weights.',
+    'In 1817 Döbereiner noticed that the combining weight of strontia (SrO) was almost exactly the mean of ' +
+    'those of lime (CaO) and baryta (BaO), as Wurzer reported that year. In 1829 he published further triads ' +
+    "of analogous elements in which the middle member's atomic weight is close to the mean of the outer two: " +
+    'an early hint of periodicity. The notes redo his test with modern standard atomic weights.',
   sources: [
     {
       label: 'J. W. Döbereiner, "Versuch zu einer Gruppirung der elementaren Stoffe nach ihrer Analogie", Ann. Phys. Chem. 91 (1829) 301–307',
@@ -74,8 +74,9 @@ export const dobereinerLayer: LayerBuilder = (ctx) => ({
   color: '#c98500',
   items: TRIADS.map(({ triad, family }) => triadSet(ctx, triad, family)),
   caveat:
-    'Most elements fit no triad. The near-means reflect equal steps in atomic number down a group, which ' +
-    'Döbereiner could not know; his own atomic weights also differed from modern values.',
+    'Most elements fit no triad. The near-means follow from equal steps in atomic number down a group, with ' +
+    'atomic weight rising roughly in step with Z, which Döbereiner could not know; his own atomic weights also ' +
+    'differed from modern values.',
 });
 
 // ---------------------------------------------------------------- Mendeleev's predictions
@@ -157,10 +158,10 @@ export const mendeleevPredictionsLayer: LayerBuilder = (ctx) => {
     summary: 'Forecasts of 1871, drawn from each known analogue to the element later found.',
     description:
       `In ${PREDICTION_YEAR} Mendeleev used gaps in his table to forecast three unknown elements in detail, ` +
-      "naming each with the Sanskrit 'eka' (one) after the known element one place above it: eka-boron, " +
-      `eka-aluminium and eka-silicon. ${within}: ${list}. Arcs run from the analogue to the element ` +
+      "naming each with the Sanskrit 'eka' (one) after the known element one place above it in his table: " +
+      `eka-boron, eka-aluminium and eka-silicon. ${within}: ${list}. Arcs run from the analogue to the element ` +
       "predicted, and measured values are this dataset's. Scandium sat under boron in Mendeleev's group III " +
-      'but belongs to group 3 of the 18-column table, so that arc crosses the d-block.',
+      'but belongs to group 3 of the 18-column table, so that arc runs from group 13 back to group 3.',
     sources: [
       {
         label: 'D. Mendelejeff, "Die periodische Gesetzmässigkeit der chemischen Elemente", Ann. Chem. Pharm., Supplementband 8 (1871) 133–229',

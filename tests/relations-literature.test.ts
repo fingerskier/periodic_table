@@ -167,6 +167,7 @@ describe.each<Group3Convention>(['Lu', 'La'])('literature relation layers (%s co
     const urls = (id: string) => layer(id).sources.map((s) => s.url ?? '');
     expect(urls('n-plus-10')).toContain('https://doi.org/10.1007/s10698-012-9169-6');
     expect(urls('knights-move')).toContain('https://doi.org/10.1007/s10698-007-9034-1');
+    expect(urls('knights-move')).toContain('https://doi.org/10.48141/sbjchem.v1.n1.1993.38_1993.pdf');
     expect(urls('dobereiner')).toContain('https://doi.org/10.1002/andp.18290910217');
     expect(layer('mendeleev').sources.some((s) => s.label.includes('Supplementband 8 (1871)'))).toBe(true);
   });
@@ -195,10 +196,32 @@ describe.each<Group3Convention>(['Lu', 'La'])('literature relation layers (%s co
     }
   });
 
-  it('pairs group n with group n + 10', () => {
+  it("gives each knight's-move pair the lower element's inert-pair state, two below its group valence", () => {
+    for (const e of edgesOf(layer('knights-move'))) {
+      const state = Number(/\(\+(\d)\)$/u.exec(e.label ?? '')?.[1]);
+      // The lower element is in the p-block, where the group valence is group − 10.
+      expect(state, e.label).toBe(groupOf(L, e.b) - 10 - 2);
+      expect(e.note, e.label).toMatch(new RegExp(`^Shared \\+${state} state: `));
+    }
+  });
+
+  it('pairs group n with group n + 10 and names the true groups', () => {
     const edges = edgesOf(layer('n-plus-10'));
     expect(edges.length).toBeGreaterThanOrEqual(6);
-    for (const e of edges) expect(groupOf(L, e.b) - groupOf(L, e.a)).toBe(10);
+    for (const e of edges) {
+      expect(groupOf(L, e.b) - groupOf(L, e.a)).toBe(10);
+      expect(e.label).toContain(`(groups ${groupOf(L, e.a)}, ${groupOf(L, e.b)})`);
+    }
+  });
+
+  it('backs the diagonal "about half" charge-to-radius claim with the radii it quotes', () => {
+    const m = /\((\d+) and (\d+) pm\) Li⁺ has about half the charge-to-radius ratio of Mg²⁺/u.exec(
+      layer('diagonal').description,
+    );
+    expect(m).not.toBeNull();
+    const ratio = 1 / Number(m![1]) / (2 / Number(m![2]));
+    expect(ratio).toBeGreaterThan(0.4);
+    expect(ratio).toBeLessThan(0.6);
   });
 
   it('pairs each lanthanide-contraction twin as 4d over 5d in one group, quoting dataset radii', () => {
@@ -246,6 +269,42 @@ describe.each<Group3Convention>(['Lu', 'La'])('literature relation layers (%s co
     }
   });
 
+  it('straddles the seam as the isoelectronic description says', () => {
+    for (const set of setsOf(layer('isoelectronic'))) {
+      const gas = cellOf(L, set.anchor!);
+      expect(gas.column, set.id).toBe(32);
+      for (const member of set.members) {
+        const { charge } = parseIon(set.memberLabels![member]!);
+        const c = cellOf(L, member);
+        // Anions other than H⁻ close the noble gas's period; s-block cations open the next one.
+        if (charge < 0 && member !== z('H')) expect([c.period, c.column >= 27 && c.column < 32]).toEqual([gas.period, true]);
+        if (charge > 0 && c.block === 's') expect([c.period, c.column <= 2]).toEqual([gas.period + 1, true]);
+      }
+    }
+  });
+
+  it('quotes ionic radii that fall as nuclear charge rises within each isoelectronic set', () => {
+    for (const set of setsOf(layer('isoelectronic'))) {
+      const quoted = [...(set.note ?? '').matchAll(/([A-Z][a-z]?[⁰¹²³⁴⁵⁶⁷⁸⁹]*[⁺⁻]) (\d+(?:\.\d+)?)/gu)].map((m) => ({
+        z: z(parseIon(m[1]!).symbol),
+        r: Number(m[2]),
+      }));
+      expect(quoted.length, set.id).toBeGreaterThanOrEqual(2);
+      for (const q of quoted) expect(set.members, set.id).toContain(q.z);
+      quoted.sort((a, b) => a.z - b.z);
+      for (let i = 1; i < quoted.length; i++) expect(quoted[i]!.r, set.id).toBeLessThan(quoted[i - 1]!.r);
+    }
+  });
+
+  it('leaves out every ion the isoelectronic description says it excludes', () => {
+    const built = layer('isoelectronic');
+    const labels = setsOf(built).flatMap((s) => Object.values(s.memberLabels ?? {}));
+    for (const excluded of ['B³⁺', 'C⁴⁻', 'Ti⁴⁺', 'Zr⁴⁺', 'Ce⁴⁺', 'Po²⁻', 'At⁻']) {
+      expect(built.description).toContain(excluded);
+      expect(labels).not.toContain(excluded);
+    }
+  });
+
   it('keeps each Döbereiner middle mass within 2% of the mean of the outer two', () => {
     const sets = setsOf(layer('dobereiner'));
     expect(sets).toHaveLength(4);
@@ -278,6 +337,8 @@ describe.each<Group3Convention>(['Lu', 'La'])('literature relation layers (%s co
       expect(e.note).toContain(String(predicted.discoveryYear));
       expect(e.note).toContain(predicted.mass.toFixed(2));
     }
+    const years = edges.map((e) => BY_Z.get(e.b)!.discoveryYear!);
+    expect(layer('mendeleev').description).toContain(`within ${Math.max(...years) - 1871} years`);
   });
 });
 

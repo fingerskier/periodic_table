@@ -108,15 +108,23 @@ function coreCounts(symbol: string, source: string): SubshellCounts {
   return counts;
 }
 
-const TOKEN = /\s*(?:\[([A-Z][a-z]?)\]|(\d)([spdf])(\d*))\s*/y;
+// A count is plain or superscript digits, never both. Superscripts are read as written, so
+// "3d⁵4s¹" needs no space; plain digits do ("3d54s1" reads as 3d⁵⁴ and is rejected).
+const TOKEN = /\s*(?:\[([A-Z][a-z]?)\]|(\d)([spdf])(\d+|[⁰¹²³⁴⁵⁶⁷⁸⁹]+)?)\s*/y;
+
+function readCount(digits: string | undefined): number {
+  if (digits === undefined) return 1;
+  return Number(digits.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, (c) => String(SUPERSCRIPT_DIGITS.indexOf(c))));
+}
 
 /**
  * Expand a configuration such as "[Ar] 3d5 4s1" into subshell counts (Madelung order). Cores
  * [He] [Ne] [Ar] [Kr] [Xe] [Rn] are expanded, a bare subshell means one electron ("4s" = 4s¹),
- * and superscript digits are accepted. Malformed input throws, so bad data fails loudly.
+ * and superscript counts are accepted ("[Ar] 3d⁵ 4s¹", "[Ar]3d⁵4s¹"). Nothing is implied: without
+ * a core, inner subshells such as 1s count only if written. Malformed input throws.
  */
 export function parseConfiguration(config: string): SubshellCounts {
-  const text = config.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, (c) => String(SUPERSCRIPT_DIGITS.indexOf(c))).trim();
+  const text = config.trim();
   const counts: SubshellCounts = new Map();
   const seen = new Set<string>();
   const add = (name: string, count: number) => {
@@ -137,7 +145,7 @@ export function parseConfiguration(config: string): SubshellCounts {
     }
     const s = makeSubshell(Number(m[2]), LETTERS.indexOf(m[3] as Block));
     if (s.l >= s.n) throw new Error(`No ${s.name} subshell (in "${config}")`);
-    const count = m[4] === '' ? 1 : Number(m[4]);
+    const count = readCount(m[4]);
     if (count > s.capacity) throw new Error(`${s.name} holds at most ${s.capacity} electrons (in "${config}")`);
     add(s.name, count);
   }

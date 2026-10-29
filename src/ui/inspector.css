@@ -136,6 +136,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* Keyboard focus scrolled into view must clear the sticky bar (WCAG 2.4.11). */
+.insp.is-pinned :is(a[href], button, select, [tabindex]) { scroll-margin-top: 52px; }
 
 /* ------------------------------------------------------------ headers */
 
@@ -405,6 +407,7 @@
 .insp-trend-ctl { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .insp-trend { min-width: 0; margin: 0; }
 .insp-trend-cap { margin-bottom: 2px; color: var(--text-2); font-size: 12px; }
+/* Charts are drawn at their slot's width (see fitCharts); max-width only guards transients. */
 .insp-trend svg { display: block; max-width: 100%; height: auto; }
 .insp .insp-extremes {
   display: flex;
@@ -426,7 +429,8 @@
 .insp-edge-glyph { color: var(--muted); font-weight: 400; }
 .insp .insp-edge-label { font-size: 14px; font-weight: 600; }
 
-.insp-sources { display: grid; gap: 3px; font-size: 12.5px; }
+/* 6px between rows keeps neighbouring links' 24px target circles apart (WCAG 2.5.8). */
+.insp-sources { display: grid; gap: 6px; font-size: 12.5px; }
 .insp-sources a {
   color: var(--insp-link);
   text-decoration: underline;

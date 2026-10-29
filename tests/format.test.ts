@@ -66,20 +66,30 @@ describe('formatMass', () => {
 });
 
 describe('formatTemperature', () => {
-  it('gives kelvin and whole-degree Celsius', () => {
+  it('gives Celsius to the precision of the kelvin shown', () => {
     expect(formatTemperature(1811)).toBe(`1811${U}K (1538${U}°C)`);
+    expect(formatTemperature(4.2)).toBe(`4.2${U}K (${MINUS}269${U}°C)`);
   });
 
-  it('keeps up to two kelvin decimals, trimmed', () => {
+  it('reads back values stored as °C + 273.15 exactly', () => {
     expect(formatTemperature(1811.15)).toBe(`1811.15${U}K (1538${U}°C)`);
-    expect(formatTemperature(234.321)).toBe(`234.32${U}K (${MINUS}39${U}°C)`);
-    expect(formatTemperature(13.989999999999952)).toBe(`13.99${U}K (${MINUS}259${U}°C)`);
-    expect(formatTemperature(4.2)).toBe(`4.2${U}K (${MINUS}269${U}°C)`);
+    expect(formatTemperature(453.65)).toBe(`453.65${U}K (180.5${U}°C)`);
+    expect(formatTemperature(171.65)).toBe(`171.65${U}K (${MINUS}101.5${U}°C)`);
+    // 301.65 − 273.15 is 28.499999… in floating point.
+    expect(formatTemperature(301.65)).toBe(`301.65${U}K (28.5${U}°C)`);
+    expect(formatTemperature(13.989999999999952)).toBe(`13.99${U}K (${MINUS}259.16${U}°C)`);
+  });
+
+  it('keeps at most two kelvin decimals and rounds Celsius halves away from zero', () => {
+    expect(formatTemperature(234.321)).toBe(`234.32${U}K (${MINUS}38.83${U}°C)`);
+    expect(formatTemperature(302.9146)).toBe(`302.91${U}K (29.76${U}°C)`);
+    expect(formatTemperature(272.9)).toBe(`272.9${U}K (${MINUS}0.3${U}°C)`);
+    expect(formatTemperature(273.6)).toBe(`273.6${U}K (0.5${U}°C)`);
   });
 
   it('never prints a negative zero', () => {
     expect(formatTemperature(273.15)).toBe(`273.15${U}K (0${U}°C)`);
-    expect(formatTemperature(272.9)).toBe(`272.9${U}K (0${U}°C)`);
+    expect(formatTemperature(273)).toBe(`273${U}K (0${U}°C)`);
   });
 
   it('shows a dash for missing values', () => {
@@ -145,6 +155,14 @@ describe('formatNumber', () => {
     expect(formatNumber(null)).toBe(NO_VALUE);
     expect(formatNumber(undefined, { unit: 'pm' })).toBe(NO_VALUE);
     expect(formatNumber(Number.POSITIVE_INFINITY)).toBe(NO_VALUE);
+  });
+
+  it('copes with extreme magnitudes and out-of-range options', () => {
+    expect(formatNumber(5e-324)).toBe(`4.941${U}×${U}10⁻³²⁴`);
+    expect(formatNumber(1e21)).toBe(`1${U}×${U}10²¹`);
+    expect(formatNumber(0.5, { digits: 0 })).toBe('0.5');
+    expect(formatNumber(2.25, { decimals: -1 })).toBe('2');
+    expect(formatCompact(0.5, 0)).toBe('0.5');
   });
 });
 
