@@ -92,6 +92,11 @@ export class SceneApp {
     return this.model;
   }
 
+  /** Number of relation layers currently drawn (for tests). */
+  drawnLayerCount(): number {
+    return this.framework.visibleLayerCount;
+  }
+
   // ------------------------------------------------------------- state → visuals
 
   private onState(s: AppState, prev: AppState): void {
@@ -251,8 +256,9 @@ export class SceneApp {
       case 'ArrowUp':
       case 'ArrowDown': {
         const dir = ev.key === 'ArrowUp' ? -1 : 1;
+        // Down tips the top toward the viewer, like dragging down.
         if (z !== null) this.focusNeighbour(z, 0, dir);
-        else this.controls.tilt(dir * -0.12);
+        else this.controls.tilt(dir * 0.12);
         break;
       }
       case '+':

@@ -39,7 +39,7 @@ export function initialState(layers: readonly RelationLayer[]): AppState {
     layers: Object.fromEntries(layers.map((l) => [l.id, { on: !!l.defaultOn, hiddenItems: [] }])),
     colorMode: 'category',
     convention: 'Lu',
-    wallOpacity: 0.86,
+    wallOpacity: 0.62,
     autoRotate: true,
     trendProp: 'ie1',
     legendFocus: null,

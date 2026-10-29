@@ -13,6 +13,44 @@ const ARC_SEGMENTS = 24;
 const FLOW_SPEED = 90; // world units per second
 /** Sets at most this large mark all their members as related when one member is the target. */
 const RELATED_SET_MAX = 12;
+/** Layers with at most this many hubs get text labels beside each hub. */
+const LABEL_MAX_HUBS = 20;
+const LABEL_HEIGHT = 58; // world units
+
+const labelCache = new Map<string, { texture: THREE.CanvasTexture; aspect: number }>();
+
+/** A pill-shaped text label texture (cached by text + colour). */
+function labelTexture(text: string, color: string): { texture: THREE.CanvasTexture; aspect: number } {
+  const key = `${text}|${color}`;
+  const hit = labelCache.get(key);
+  if (hit) return hit;
+  const px = 44;
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d')!;
+  ctx.font = `600 ${px}px system-ui, -apple-system, 'Segoe UI', sans-serif`;
+  const w = Math.ceil(ctx.measureText(text).width) + px;
+  canvas.width = w;
+  canvas.height = Math.round(px * 1.6);
+  ctx.font = `600 ${px}px system-ui, -apple-system, 'Segoe UI', sans-serif`;
+  const r = canvas.height / 2;
+  ctx.fillStyle = 'rgba(11, 15, 24, 0.82)';
+  ctx.beginPath();
+  ctx.roundRect(1, 1, w - 2, canvas.height - 2, r);
+  ctx.fill();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  ctx.fillStyle = '#f0efec';
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'center';
+  ctx.fillText(text, w / 2, canvas.height / 2 + 1);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  const out = { texture, aspect: w / canvas.height };
+  labelCache.set(key, out);
+  return out;
+}
 
 /** What a drawn segment belongs to, for picking and highlighting. */
 interface SegRef {
@@ -70,7 +108,7 @@ export class Framework {
   readonly group = new THREE.Group();
   private meshes: LayerMesh[] = [];
   private overlay: LineSegments2 | null = null;
-  private overlayMaterial = new LineMaterial({ linewidth: 3.4, vertexColors: true, transparent: true, depthWrite: false, fog: true });
+  private overlayMaterial = new LineMaterial({ linewidth: 3.4, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: true });
   private hubGeo = new THREE.SphereGeometry(1, 18, 12);
   private flowOffset = 0;
   private dimmed = false;
@@ -106,6 +144,9 @@ export class Framework {
       m.hubs?.dispose();
       (m.hubs?.material as THREE.Material | undefined)?.dispose();
     }
+    for (const child of this.group.children) {
+      if (child instanceof THREE.Sprite) child.material.dispose(); // textures stay cached
+    }
     this.meshes = [];
     this.group.clear();
     this.clearOverlay();
@@ -118,7 +159,7 @@ export class Framework {
     const pos: number[] = [];
     const col: number[] = [];
     const segRanges: LayerMesh['segRanges'] = [];
-    const hubs: { at: Vec3; color: THREE.Color; ref: HubRef }[] = [];
+    const hubs: { at: Vec3; color: THREE.Color; ref: HubRef; label: string; css: string }[] = [];
     const tmp = new THREE.Color();
 
     const pushPolyline = (pts: Vec3[], color: string, ref: SegRef) => {
@@ -132,13 +173,13 @@ export class Framework {
       segRanges.push({ ref, start, count: pts.length - 1 });
     };
 
-    const addSet = (set: { members: number[]; anchor?: number }, color: string, target: Target): Vec3 => {
+    const addSet = (set: { members: number[]; anchor?: number; label: string }, color: string, target: Target): Vec3 => {
       const hub = setHub(model, set, depth);
       for (const m of set.members) {
         if (m === set.anchor) continue;
         pushPolyline(spokePoints(hub, anchor(model, m)), color, { target, zs: [m] });
       }
-      hubs.push({ at: hub, color: new THREE.Color(color), ref: { target, members: set.members } });
+      hubs.push({ at: hub, color: new THREE.Color(color), ref: { target, members: set.members }, label: set.label, css: color });
       return hub;
     };
 
@@ -169,10 +210,11 @@ export class Framework {
 
     const flow = !!style.flow;
     const material = new LineMaterial({
-      linewidth: 1.7,
+      linewidth: 1.8,
       vertexColors: true,
       transparent: true,
       opacity: 0.85,
+      blending: THREE.AdditiveBlending,
       depthWrite: false,
       fog: true,
       dashed: flow,
@@ -206,6 +248,17 @@ export class Framework {
       if (hubMesh.instanceColor) hubMesh.instanceColor.needsUpdate = true;
       hubMesh.computeBoundingSphere();
       this.group.add(hubMesh);
+      if (hubs.length <= LABEL_MAX_HUBS) {
+        for (const hub of hubs) {
+          const { texture, aspect } = labelTexture(hub.label, hub.css);
+          const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, fog: true }));
+          sprite.scale.set(LABEL_HEIGHT * aspect, LABEL_HEIGHT, 1);
+          sprite.center.set(-0.12, 0.5);
+          sprite.position.set(hub.at[0], hub.at[1], hub.at[2]);
+          sprite.renderOrder = 3;
+          this.group.add(sprite);
+        }
+      }
     }
 
     return {

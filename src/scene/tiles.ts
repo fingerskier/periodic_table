@@ -13,6 +13,8 @@ export interface TileColors {
   fill: string;
   /** Text colour. */
   ink: string;
+  /** False when `ink` is dark (light fill). */
+  lightInk?: boolean;
 }
 
 interface Tile {
@@ -177,6 +179,8 @@ export class Tiles {
       t.el.style.setProperty('--accent', c.accent);
       t.el.style.background = hexToRgba(c.fill, opacity);
       t.el.style.color = c.ink;
+      // The legibility shadow only helps light text; on light fills it would smear dark text.
+      t.el.style.textShadow = c.lightInk === false ? 'none' : '';
     }
   }
 

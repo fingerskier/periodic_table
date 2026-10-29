@@ -27,7 +27,8 @@ export type FrameHook = (dt: number, now: number) => boolean | void;
  */
 export class Stage {
   readonly host: HTMLElement;
-  readonly gl: THREE.WebGLRenderer;
+  /** Null when WebGL is unavailable: tiles (CSS3D) still work, the framework and far wall do not. */
+  readonly gl: THREE.WebGLRenderer | null;
   readonly css: CSS3DRenderer;
   readonly scene = new THREE.Scene();
   readonly cssScene = new THREE.Scene();
@@ -44,14 +45,21 @@ export class Stage {
 
   constructor(host: HTMLElement) {
     this.host = host;
-    this.gl = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
-    this.gl.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    this.gl.setClearColor(SCENE_BG, 1);
-    this.gl.domElement.className = 'gl-layer';
-    this.gl.domElement.setAttribute('aria-hidden', 'true');
+    let gl: THREE.WebGLRenderer | null = null;
+    try {
+      gl = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+      gl.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      gl.setClearColor(SCENE_BG, 1);
+      gl.domElement.className = 'gl-layer';
+      gl.domElement.setAttribute('aria-hidden', 'true');
+    } catch (err) {
+      console.warn('WebGL unavailable; relations are disabled.', err);
+    }
+    this.gl = gl;
     this.css = new CSS3DRenderer();
     this.css.domElement.className = 'css-layer';
-    host.prepend(this.gl.domElement, this.css.domElement);
+    host.prepend(this.css.domElement);
+    if (gl) host.prepend(gl.domElement);
     this.scene.fog = new THREE.Fog(SCENE_BG, 3000, 9000);
     new ResizeObserver(() => this.resize()).observe(host);
     this.resize();
@@ -61,14 +69,17 @@ export class Stage {
     const r = this.host.getBoundingClientRect();
     this.width = Math.max(1, Math.round(r.width));
     this.height = Math.max(1, Math.round(r.height));
-    this.gl.setSize(this.width, this.height, false);
-    this.gl.domElement.style.width = `${this.width}px`;
-    this.gl.domElement.style.height = `${this.height}px`;
+    if (this.gl) {
+      this.gl.setSize(this.width, this.height, false);
+      this.gl.domElement.style.width = `${this.width}px`;
+      this.gl.domElement.style.height = `${this.height}px`;
+    }
     this.css.setSize(this.width, this.height);
     this.camera.aspect = this.width / this.height;
     // Fit the cylinder (radius R, wall + header height) with a margin in both directions.
     const halfV = (HEADER_Y + 60 - WALL_BOTTOM) / 2 + 40;
-    const halfH = RADIUS * 1.06;
+    // Narrow stages need room left of the silhouette for the period labels.
+    const halfH = RADIUS * (this.width < 640 ? 1.2 : 1.06);
     const tv = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
     const th = tv * this.camera.aspect;
     this.fitDistance = Math.max(halfV / tv, halfH / th) + RADIUS;
@@ -144,7 +155,7 @@ export class Stage {
         this.cssDirty = false;
       }
       if (this.glDirty) {
-        this.gl.render(this.scene, this.camera);
+        this.gl?.render(this.scene, this.camera);
         this.glDirty = false;
         for (const fn of this.afterRender) fn();
       }

@@ -53,7 +53,8 @@ export function tileColors(model: Model, mode: ColorMode): Map<number, TileColor
     const x = log ? Math.log10(v) : v;
     const t = dom[1] > dom[0] ? (x - dom[0]) / (dom[1] - dom[0]) : 0.5;
     const fill = rampColor(t);
-    out.set(e.z, { accent: mix(fill, '#ffffff', 0.25), fill, ink: inkFor(fill) });
+    const ink = inkFor(fill);
+    out.set(e.z, { accent: mix(fill, '#ffffff', 0.25), fill, ink, lightInk: ink === TEXT.primary });
   }
   return out;
 }
