@@ -1,5 +1,5 @@
 import { COLUMN_ANGLE } from '../layout/cylinder';
-import { DEFAULT_VIEW, type Stage, type View } from './stage';
+import { DEFAULT_VIEW, PITCH_LIMITS, ZOOM_LIMITS, type Stage, type View } from './stage';
 
 const DRAG_THRESHOLD = 5; // px before a press becomes a drag
 const FRICTION = 4.2; // 1/s, exponential decay of spin velocity
@@ -56,7 +56,11 @@ export class Controls {
   /** Animate toward a pose; unspecified fields keep their value. */
   animateTo(v: Partial<View>): void {
     this.velocity = 0;
-    this.target = { ...this.target, ...v };
+    const next = { ...this.target, ...v };
+    // Targets beyond the stage's clamps could never be reached, so the tween would never settle.
+    if (next.pitch !== undefined) next.pitch = Math.min(PITCH_LIMITS[1], Math.max(PITCH_LIMITS[0], next.pitch));
+    if (next.zoom !== undefined) next.zoom = Math.min(ZOOM_LIMITS[1], Math.max(ZOOM_LIMITS[0], next.zoom));
+    this.target = next;
   }
 
   rotateColumns(n: number): void {
