@@ -87,11 +87,15 @@ export const NUMERIC_PROP_BY_ID: ReadonlyMap<NumericProp, NumericPropMeta> = new
   NUMERIC_PROPS.map((p) => [p.id, p]),
 );
 
+/** Index of the ramp step nearest to t in [0, 1]. */
+export function rampIndex(t: number): number {
+  const clamped = Math.min(1, Math.max(0, Number.isFinite(t) ? t : 0));
+  return Math.round(clamped * (SEQUENTIAL_RAMP.length - 1));
+}
+
 /** Map t in [0, 1] to the sequential ramp (nearest step; the ramp is the documented set). */
 export function rampColor(t: number): string {
-  const clamped = Math.min(1, Math.max(0, Number.isFinite(t) ? t : 0));
-  const i = Math.round(clamped * (SEQUENTIAL_RAMP.length - 1));
-  return SEQUENTIAL_RAMP[i]!;
+  return SEQUENTIAL_RAMP[rampIndex(t)]!;
 }
 
 /** WCAG relative luminance of a #rrggbb colour. */

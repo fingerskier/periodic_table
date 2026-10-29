@@ -1,6 +1,6 @@
 import type { Cell, ColorMode, ElementData, LegendFocus, Model, NumericProp } from '../types';
 import {
-  BLOCK_COLORS, CATEGORY_BY_ID, inkFor, mix, NO_DATA_COLOR, NUMERIC_PROP_BY_ID, PHASE_COLORS, rampColor, SCENE_BG, TEXT,
+  BLOCK_COLORS, CATEGORY_BY_ID, mix, NO_DATA_COLOR, NUMERIC_PROP_BY_ID, PHASE_COLORS, rampColor, rampIndex, SCENE_BG,
 } from '../ui/palette';
 import type { TileColors } from './tiles';
 
@@ -8,7 +8,7 @@ import type { TileColors } from './tiles';
 const TINT = 0.5;
 
 function tinted(accent: string): TileColors {
-  return { accent, fill: mix(accent, SCENE_BG, TINT), ink: TEXT.primary };
+  return { accent, fill: mix(accent, SCENE_BG, TINT) };
 }
 
 export function numericValue(e: ElementData, prop: NumericProp): number | null {
@@ -30,6 +30,16 @@ export function domainOf(elements: readonly ElementData[], prop: NumericProp): [
   return lo <= hi ? [lo, hi] : null;
 }
 
+/** Position in [0, 1] of a value within the domain (log10 space for log-scaled properties). */
+function rampT(v: number, prop: NumericProp, dom: [number, number]): number {
+  const x = NUMERIC_PROP_BY_ID.get(prop)?.log ? Math.log10(v) : v;
+  return dom[1] > dom[0] ? (x - dom[0]) / (dom[1] - dom[0]) : 0.5;
+}
+
+function hasValue(v: number | null, prop: NumericProp): v is number {
+  return v !== null && !(NUMERIC_PROP_BY_ID.get(prop)?.log && v <= 0);
+}
+
 export function tileColors(model: Model, mode: ColorMode): Map<number, TileColors> {
   const out = new Map<number, TileColors>();
   if (mode === 'category' || mode === 'block' || mode === 'phase') {
@@ -42,37 +52,40 @@ export function tileColors(model: Model, mode: ColorMode): Map<number, TileColor
     }
     return out;
   }
-  const log = !!NUMERIC_PROP_BY_ID.get(mode)?.log;
   const dom = domainOf(model.elements, mode);
   for (const e of model.elements) {
     const v = numericValue(e, mode);
-    if (v === null || !dom || (log && v <= 0)) {
-      out.set(e.z, { accent: '#3a4152', fill: NO_DATA_COLOR, ink: TEXT.muted });
+    if (!dom || !hasValue(v, mode)) {
+      out.set(e.z, { accent: '#3a4152', fill: NO_DATA_COLOR, muted: true });
       continue;
     }
-    const x = log ? Math.log10(v) : v;
-    const t = dom[1] > dom[0] ? (x - dom[0]) / (dom[1] - dom[0]) : 0.5;
-    const fill = rampColor(t);
-    const ink = inkFor(fill);
-    out.set(e.z, { accent: mix(fill, '#ffffff', 0.25), fill, ink, lightInk: ink === TEXT.primary });
+    const fill = rampColor(rampT(v, mode, dom));
+    out.set(e.z, { accent: mix(fill, '#ffffff', 0.25), fill });
   }
   return out;
 }
 
-/** Does an element match the legend entry under the pointer? */
-export function matchesLegend(e: ElementData, cell: Cell, focus: LegendFocus): boolean {
+/**
+ * Does an element match the legend entry under the pointer? Ramp bins match by the step a tile is
+ * actually painted with (same rounding as tileColors), so an edge value never lights up in two
+ * neighbouring bins. `elements` supplies the colour domain for ramp bins.
+ */
+export function matchesLegend(e: ElementData, cell: Cell, focus: LegendFocus, elements: readonly ElementData[] = []): boolean {
   switch (focus.kind) {
     case 'category': return e.category === focus.id;
     case 'block': return cell.block === focus.id;
     case 'phase': return (e.phase ?? 'unknown') === focus.id;
     case 'range': {
       const v = numericValue(e, focus.prop);
-      // Inclusive at both ends so the domain maximum still lands in the top bin.
-      return v !== null && v >= focus.lo && v <= focus.hi;
+      if (!hasValue(v, focus.prop)) return false;
+      const dom = domainOf(elements, focus.prop);
+      if (!dom) return v >= focus.lo && v <= focus.hi;
+      const mid = NUMERIC_PROP_BY_ID.get(focus.prop)?.log && focus.lo > 0 && focus.hi > 0
+        ? Math.sqrt(focus.lo * focus.hi)
+        : (focus.lo + focus.hi) / 2;
+      return rampIndex(rampT(v, focus.prop, dom)) === rampIndex(rampT(mid, focus.prop, dom));
     }
-    case 'missing': {
-      const v = numericValue(e, focus.prop);
-      return v === null || (!!NUMERIC_PROP_BY_ID.get(focus.prop)?.log && v <= 0);
-    }
+    case 'missing':
+      return !hasValue(numericValue(e, focus.prop), focus.prop);
   }
 }

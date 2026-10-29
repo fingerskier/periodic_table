@@ -38,6 +38,19 @@ button, input, select { font: inherit; color: inherit; }
 
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  z-index: 50;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--panel-3);
+  color: var(--text);
+  text-decoration: none;
+}
+.skip-link:focus { top: 8px; }
+
 #app {
   display: grid;
   height: 100dvh;
@@ -88,7 +101,8 @@ button, input, select { font: inherit; color: inherit; }
 #stage {
   grid-area: stage;
   position: relative;
-  overflow: hidden;
+  /* clip, not hidden: focusing a tile must never scroll the stage (tiles would slide off the wall). */
+  overflow: clip;
   min-height: 0;
   touch-action: none;
   user-select: none;
@@ -110,14 +124,15 @@ button, input, select { font: inherit; color: inherit; }
 .hint {
   position: absolute;
   right: 12px;
-  bottom: 10px;
+  top: 14px;
   margin: 0;
   z-index: 3;
   font-size: 12px;
   color: var(--muted);
   pointer-events: none;
   text-align: right;
-  max-width: 60%;
+  /* Beside the legend (top-left), in the band the camera fit already keeps clear. */
+  max-width: calc(100% - 470px);
   transition: opacity 0.6s ease;
 }
 .hint.is-gone { opacity: 0; }
@@ -131,7 +146,8 @@ button, input, select { font: inherit; color: inherit; }
     grid-template-areas: 'top' 'stage' 'inspector';
   }
   #inspector {
-    max-height: 38dvh;
+    /* A fixed height: a content-sized sheet would resize (and refit) the cylinder on every hover. */
+    height: 38dvh;
     border-left: 0;
     border-top: 1px solid var(--line);
   }

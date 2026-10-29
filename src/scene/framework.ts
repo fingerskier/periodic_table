@@ -13,44 +13,8 @@ const ARC_SEGMENTS = 24;
 const FLOW_SPEED = 90; // world units per second
 /** Sets at most this large mark all their members as related when one member is the target. */
 const RELATED_SET_MAX = 7;
-/** Layers with at most this many hubs get text labels beside each hub. */
-const LABEL_MAX_HUBS = 20;
-const LABEL_HEIGHT = 58; // world units
-
-const labelCache = new Map<string, { texture: THREE.CanvasTexture; aspect: number }>();
-
-/** A pill-shaped text label texture (cached by text + colour). */
-function labelTexture(text: string, color: string): { texture: THREE.CanvasTexture; aspect: number } {
-  const key = `${text}|${color}`;
-  const hit = labelCache.get(key);
-  if (hit) return hit;
-  const px = 44;
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d')!;
-  ctx.font = `600 ${px}px system-ui, -apple-system, 'Segoe UI', sans-serif`;
-  const w = Math.ceil(ctx.measureText(text).width) + px;
-  canvas.width = w;
-  canvas.height = Math.round(px * 1.6);
-  ctx.font = `600 ${px}px system-ui, -apple-system, 'Segoe UI', sans-serif`;
-  const r = canvas.height / 2;
-  ctx.fillStyle = 'rgba(11, 15, 24, 0.82)';
-  ctx.beginPath();
-  ctx.roundRect(1, 1, w - 2, canvas.height - 2, r);
-  ctx.fill();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 3;
-  ctx.stroke();
-  ctx.fillStyle = '#f0efec';
-  ctx.textBaseline = 'middle';
-  ctx.textAlign = 'center';
-  ctx.fillText(text, w / 2, canvas.height / 2 + 1);
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 4;
-  const out = { texture, aspect: w / canvas.height };
-  labelCache.set(key, out);
-  return out;
-}
+/** A hub is picked when the pointer is within this many CSS px of its projected centre. */
+const HUB_PICK_PX = 10;
 
 /** What a drawn segment belongs to, for picking and highlighting. */
 interface SegRef {
@@ -62,6 +26,7 @@ interface SegRef {
 interface HubRef {
   target: Target;
   members: number[];
+  at: Vec3;
 }
 
 interface LayerMesh {
@@ -144,9 +109,6 @@ export class Framework {
       m.hubs?.dispose();
       (m.hubs?.material as THREE.Material | undefined)?.dispose();
     }
-    for (const child of this.group.children) {
-      if (child instanceof THREE.Sprite) child.material.dispose(); // textures stay cached
-    }
     this.meshes = [];
     this.group.clear();
     this.clearOverlay();
@@ -159,7 +121,7 @@ export class Framework {
     const pos: number[] = [];
     const col: number[] = [];
     const segRanges: LayerMesh['segRanges'] = [];
-    const hubs: { at: Vec3; color: THREE.Color; ref: HubRef; label: string; css: string }[] = [];
+    const hubs: { color: THREE.Color; ref: HubRef }[] = [];
     const tmp = new THREE.Color();
 
     const pushPolyline = (pts: Vec3[], color: string, ref: SegRef) => {
@@ -173,13 +135,15 @@ export class Framework {
       segRanges.push({ ref, start, count: pts.length - 1 });
     };
 
-    const addSet = (set: { members: number[]; anchor?: number; label: string }, color: string, target: Target): Vec3 => {
+    const addSet = (set: { members: number[]; anchor?: number }, color: string, target: Target): Vec3 => {
       const hub = setHub(model, set, depth);
       for (const m of set.members) {
         if (m === set.anchor) continue;
-        pushPolyline(spokePoints(hub, anchor(model, m)), color, { target, zs: [m] });
+        // An anchored hub sits behind its anchor, so the anchor counts as touching every spoke.
+        const zs = set.anchor !== undefined ? [m, set.anchor] : [m];
+        pushPolyline(spokePoints(hub, anchor(model, m)), color, { target, zs });
       }
-      hubs.push({ at: hub, color: new THREE.Color(color), ref: { target, members: set.members }, label: set.label, css: color });
+      hubs.push({ color: new THREE.Color(color), ref: { target, members: set.members, at: hub } });
       return hub;
     };
 
@@ -242,7 +206,7 @@ export class Framework {
       const m = new THREE.Matrix4();
       const scale = HUB_RADIUS * (style.hubScale ?? 1);
       hubs.forEach((hub, i) => {
-        m.makeScale(scale, scale, scale).setPosition(hub.at[0], hub.at[1], hub.at[2]);
+        m.makeScale(scale, scale, scale).setPosition(hub.ref.at[0], hub.ref.at[1], hub.ref.at[2]);
         hubMesh!.setMatrixAt(i, m);
         hubMesh!.setColorAt(i, hub.color);
       });
@@ -250,17 +214,6 @@ export class Framework {
       if (hubMesh.instanceColor) hubMesh.instanceColor.needsUpdate = true;
       hubMesh.computeBoundingSphere();
       this.group.add(hubMesh);
-      if (hubs.length <= LABEL_MAX_HUBS) {
-        for (const hub of hubs) {
-          const { texture, aspect } = labelTexture(hub.label, hub.css);
-          const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, fog: true }));
-          sprite.scale.set(LABEL_HEIGHT * aspect, LABEL_HEIGHT, 1);
-          sprite.center.set(-0.12, 0.5);
-          sprite.position.set(hub.at[0], hub.at[1], hub.at[2]);
-          sprite.renderOrder = 3;
-          this.group.add(sprite);
-        }
-      }
     }
 
     return {
@@ -324,16 +277,39 @@ export class Framework {
     return related;
   }
 
-  /** Hubs first (small, deliberate targets), then line segments within a few pixels. */
-  pick(raycaster: THREE.Raycaster): Target | null {
-    const hubMeshes = this.meshes.filter((m) => m.hubs);
-    let best: { d: number; t: Target } | null = null;
-    for (const m of hubMeshes) {
-      const hits = raycaster.intersectObject(m.hubs!, false);
-      const hit = hits[0];
-      if (hit && hit.instanceId !== undefined && (!best || hit.distance < best.d)) best = { d: hit.distance, t: m.hubRefs[hit.instanceId]!.target };
+  /** World position of a hub target's sphere, if it is drawn. */
+  hubPosition(target: Target): Vec3 | null {
+    if (target.kind !== 'hub') return null;
+    for (const m of this.meshes) {
+      for (const hub of m.hubRefs) {
+        const t = hub.target;
+        if (t.kind === 'hub' && t.layerId === target.layerId && t.itemId === target.itemId && t.setId === target.setId) return hub.at;
+      }
     }
-    if (best) return best.t;
+    return null;
+  }
+
+  /**
+   * The hub drawn nearest the pointer (stage-local px), within a few pixels. Hubs sit inside the
+   * cylinder, usually behind a tile, so this is tested before the tile under the pointer: the
+   * small radius keeps the rest of that tile hoverable.
+   */
+  pickHub(x: number, y: number): Target | null {
+    let best: { d: number; t: Target } | null = null;
+    for (const m of this.meshes) {
+      for (const hub of m.hubRefs) {
+        const p = this.stage.project(hub.at[0], hub.at[1], hub.at[2]);
+        if (p.behind) continue;
+        const d = Math.hypot(p.x - x, p.y - y);
+        if (d <= HUB_PICK_PX && (!best || d < best.d)) best = { d, t: hub.target };
+      }
+    }
+    return best?.t ?? null;
+  }
+
+  /** Line segments within a few pixels of the ray (edges and spokes). */
+  pick(raycaster: THREE.Raycaster): Target | null {
+    let best: { d: number; t: Target } | null = null;
     raycaster.params.Line2 = { threshold: 5 };
     for (const m of this.meshes) {
       if (!m.positions.length) continue;

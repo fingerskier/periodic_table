@@ -1,5 +1,6 @@
 // End-to-end smoke test in a real browser (WebGL via SwiftShader).
-// Usage: npm run build && npx vite preview --port 4173 & node scripts/e2e.mjs [url] [screenshotDir]
+// Usage: `npm run build && npm run preview` in one terminal (serves :4173), then
+// `npm run e2e -- [url] [screenshotDir]` in another once the server is up.
 // Needs the `playwright` package and a Chromium it can launch (not a project dependency).
 import { createRequire } from 'node:module';
 import { mkdirSync } from 'node:fs';
@@ -9,7 +10,7 @@ let chromium;
 try {
   ({ chromium } = require('playwright'));
 } catch {
-  console.error('playwright is not resolvable from here; set NODE_PATH to a directory containing it, or `npm i -D playwright && npx playwright install chromium`.');
+  console.error('playwright is not resolvable from here: `npm install --no-save playwright && npx playwright install chromium`, or set NODE_PATH to a global install.');
   process.exit(2);
 }
 

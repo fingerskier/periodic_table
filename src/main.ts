@@ -10,18 +10,24 @@ import { mountInspector } from './ui/inspector';
 import { mountLegend } from './ui/legend';
 import { mountSearch } from './ui/search';
 import { mountToolbar } from './ui/toolbar';
-import { applyHash, formatHash, parseHash } from './url';
+import { applyHash, formatHash, parseHash, type HashState } from './url';
 
 const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
-const fromHash = parseHash(location.hash, (s) => BY_SYMBOL.get(s)?.z);
-const start = applyHash({ ...initialState(buildModel('Lu').layers), autoRotate: !reduceMotion }, fromHash);
+const toZ = (s: string) => BY_SYMBOL.get(s)?.z;
+const start = applyHash({ ...initialState(buildModel('Lu').layers), autoRotate: !reduceMotion }, parseHash(location.hash, toZ));
 // A shared link opens on its selection, so don't spin it away.
 if (start.pinned) start.autoRotate = false;
 const store = createStore(start);
 
-const scene = new SceneApp(document.getElementById('stage')!, store);
-if (start.pinned?.kind === 'element') scene.faceElement(start.pinned.z);
-else if (start.pinned?.kind === 'column') scene.faceColumn(start.pinned.column);
+const stageEl = document.getElementById('stage')!;
+const scene = new SceneApp(stageEl, store);
+
+/** Face whatever a link pinned. */
+function facePinned(h: HashState): void {
+  if (h.pinned?.kind === 'element') scene.faceElement(h.pinned.z);
+  else if (h.pinned?.kind === 'column') scene.faceColumn(h.pinned.column);
+}
+facePinned(parseHash(location.hash, toZ));
 
 const ctx: UiContext = {
   store,
@@ -43,21 +49,57 @@ mount('legend', mountLegend);
 mount('search', mountSearch);
 mount('toolbar', mountToolbar);
 
-// Keep the URL shareable without flooding history.
+// Keep the cylinder clear of the legend in the top-left corner (it folds and unfolds).
+const legend = document.getElementById('legend');
+if (legend) {
+  const reserve = () => {
+    const l = legend.getBoundingClientRect();
+    const s = stageEl.getBoundingClientRect();
+    scene.stage.setInsets({ top: l.height ? Math.max(0, l.bottom - s.top) : 0 });
+  };
+  new ResizeObserver(reserve).observe(legend);
+  reserve();
+}
+
+// Keep the URL shareable without flooding history; a pasted or edited link applies in place.
 let hashTimer = 0;
+let writtenHash = location.hash;
 store.subscribe((s, prev) => {
   if (s.pinned === prev.pinned && s.layers === prev.layers && s.colorMode === prev.colorMode && s.convention === prev.convention) return;
   window.clearTimeout(hashTimer);
   hashTimer = window.setTimeout(() => {
     const next = formatHash(store.get(), symbolOf);
     if (next !== location.hash) history.replaceState(null, '', next);
+    writtenHash = location.hash;
   }, 250);
+});
+window.addEventListener('hashchange', () => {
+  if (location.hash === writtenHash) return;
+  window.clearTimeout(hashTimer);
+  const h = parseHash(location.hash, toZ);
+  const next = applyHash(store.get(), h);
+  // The hash omits defaults, so absent fields mean the default, not "keep what is there".
+  store.set({
+    pinned: h.pinned ?? null,
+    layers: next.layers,
+    colorMode: h.colorMode ?? 'category',
+    convention: h.convention ?? 'Lu',
+    autoRotate: false,
+  });
+  facePinned(h);
+  writtenHash = location.hash;
+});
+
+// Skip link: straight into the table's roving focus.
+document.querySelector('.skip-link')?.addEventListener('click', (ev) => {
+  ev.preventDefault();
+  scene.focusTable();
 });
 
 // The usage hint retires after the first real interaction.
 const hint = document.getElementById('hint');
 const retire = () => hint?.classList.add('is-gone');
-document.getElementById('stage')?.addEventListener('pointerdown', retire, { once: true });
+stageEl.addEventListener('pointerdown', retire, { once: true });
 store.subscribe((s, prev) => { if (s.pinned && !prev.pinned) retire(); });
 
 // Debug/test handle (used by scripts/e2e.mjs).

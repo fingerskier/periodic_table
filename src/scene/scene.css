@@ -66,9 +66,6 @@
   opacity: 0.72;
 }
 
-.tile.is-back,
-.col-head.is-back { pointer-events: none; }
-
 .tile:hover,
 .tile.is-hl { box-shadow: inset 0 0 0 3px var(--accent), 0 0 34px -4px var(--accent); }
 .tile.is-active {
@@ -79,6 +76,8 @@
 .tile.is-rel { box-shadow: inset 0 0 0 3px #fff, 0 0 26px -6px #fff; }
 .tile.is-dim { opacity: 0.26; filter: saturate(0.35); }
 .tile:focus-visible { outline: 4px solid var(--focus); outline-offset: 6px; }
+/* Keyboard focus must stay visible even on a tile dimmed by another selection. */
+.tile.is-dim:focus-visible { opacity: 1; filter: none; }
 
 .col-head {
   border-radius: 12px;
@@ -100,6 +99,9 @@
 .col-head.is-hl { background: rgba(57, 135, 229, 0.28); box-shadow: inset 0 0 0 2px #3987e5; }
 .col-head.is-active { background: rgba(57, 135, 229, 0.5); box-shadow: inset 0 0 0 3px #86b6ef; color: #fff; }
 .col-head:focus-visible { outline: 4px solid var(--focus); outline-offset: 4px; }
+/* A taller invisible hit area (mostly above the ring, where nothing else is) for small screens. */
+.col-head { position: relative; }
+.col-head::before { content: ''; position: absolute; left: 0; right: 0; top: -64px; bottom: -10px; }
 
 /* Period labels pinned to the cylinder's left silhouette (rows are rings, so they never rotate). */
 .row-labels {
@@ -143,7 +145,29 @@
   background: var(--line-2);
 }
 
-@media (max-width: 640px) {
-  .row-label { height: 24px; padding: 0 8px; font-size: 12px; }
-  .row-label .rl-cap { display: none; }
+/* Small stages: number-only labels (decided from the stage size in RowLabels). */
+.row-labels.is-compact .row-label { height: 24px; padding: 0 8px; font-size: 12px; }
+.row-labels.is-compact .row-label .rl-cap { display: none; }
+/* Parked at the stage edge when zoomed in: let the tiles behind show through. */
+.row-label.is-clamped:not(:hover):not(:focus-visible):not(.is-active) { opacity: 0.55; }
+
+/* Name of the hub under the pointer or pinned, drawn above the wall so it stays legible. */
+.hub-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  padding: 3px 9px;
+  margin: -14px 0 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: rgba(11, 15, 24, 0.92);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
 }
+.hub-tag.is-on { opacity: 1; }

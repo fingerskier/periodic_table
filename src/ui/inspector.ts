@@ -1058,9 +1058,9 @@ function introView(v: View): Kid[] {
     h(
       'ul',
       { class: 'insp-howto', role: 'list' },
-      step('Hover', 'an element, a column number on the top ring or a period label at the left edge to read about it here.'),
+      step('Hover', 'an element, a column number on the top ring or a period label at the left edge to read about it here (on touch, tap it).'),
       step('Drag', 'beside the cylinder to rotate it, drag vertically to tilt, and scroll or pinch to zoom.'),
-      step('Click', 'to pin a selection so it stays put; Esc or Release lets it go.'),
+      step('Click', 'or tap to pin a selection so it stays put; Esc or Release lets it go. By keyboard, Tab reaches the table and the arrow keys move between elements.'),
       step('Relations', 'switched on in the left panel are drawn inside the cylinder; hover a hub or an arc for its story.'),
     ),
     section(

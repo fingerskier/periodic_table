@@ -91,11 +91,12 @@ export interface HelpRow {
 }
 
 export const HELP_ROWS: readonly HelpRow[] = [
-  { action: 'Rotate', pointer: 'Drag beside the cylinder', keys: ['←', '→'], keysNote: 'one column' },
+  { action: 'Rotate', pointer: 'Drag (or swipe) beside the cylinder', keys: ['←', '→'], keysNote: 'one column' },
   { action: 'Tilt', pointer: 'Drag up or down', keys: ['↑', '↓'] },
   { action: 'Zoom', pointer: 'Wheel or pinch', keys: ['+', '−'] },
-  { action: 'Details', pointer: 'Hover an element, a column number or a period label' },
-  { action: 'Pin', pointer: 'Click', keys: ['Esc'], keysNote: 'releases' },
+  { action: 'Details', pointer: 'Hover an element, a column number or a period label; on touch, tap it' },
+  { action: 'Pin', pointer: 'Click or tap', keys: ['Esc'], keysNote: 'releases' },
+  { action: 'Table by keyboard', keys: ['Tab'], keysNote: 'reaches the table; arrows move between elements (↑ from the top reaches the column numbers); Enter pins' },
   { action: 'Reset view', keys: ['0'] },
   { action: 'Search', keys: ['/'], keysNote: 'focuses the search box' },
 ];

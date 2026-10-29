@@ -8,5 +8,7 @@ export default defineConfig({
     sourcemap: true,
     // three.js alone is ~600 kB minified; one cacheable bundle is fine for a single-page app.
     chunkSizeWarningLimit: 1000,
+    // Keep /*! and @license banners (three.js MIT notice) in the minified bundle.
+    rolldownOptions: { output: { comments: { legal: true } } },
   },
 });
