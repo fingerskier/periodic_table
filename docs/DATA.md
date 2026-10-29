@@ -15,15 +15,17 @@ The script reads `elements.db` with `sqlite3` only (mendeleev is imported just t
 refuses other mendeleev versions, and writes deterministic output: records sorted by Z, keys in
 contract order, `json.dump(indent=1, ensure_ascii=False)` plus a trailing newline. Re-running yields
 byte-identical JSON. It also validates the result (118 rows, categories, the La–Lu and Ac–Lr series,
-the 11 gases and 2 liquids, note length) before writing. `tests/data.test.ts` checks the committed file.
+the 11 gases and 2 liquids, note length, an oxidation-state entry for every element) before writing.
+`tests/data.test.ts` checks the committed file.
 
 ## Sources
 
 ### mendeleev and the references behind its citation keys
 
 mendeleev is © 2015 Lukasz Mentel, released under the MIT licence
-(<https://github.com/lmmentel/mendeleev>); this dataset is derived from its `elements.db`. The
-database's `propertymetadata` table names a citation key for each property; the keys used here are:
+(<https://github.com/lmmentel/mendeleev>); this dataset is derived from its `elements.db`, and the
+licence notice is reproduced under [mendeleev licence](#mendeleev-licence). The database's
+`propertymetadata` table names a citation key for each property; the keys used here are:
 
 | Key | Reference | Used for |
 | --- | --- | --- |
@@ -38,7 +40,7 @@ database's `propertymetadata` table names a citation key for each property; the 
 | `Alvarez2013`, `Vogt2014` | S. Alvarez, "A cartography of the van der Waals territories", *Dalton Trans.* 42 (2013) 8617–8636, doi:[10.1039/c3dt50599e](https://doi.org/10.1039/c3dt50599e); J. Vogt and S. Alvarez, "van der Waals radii of noble gases", *Inorg. Chem.* 53 (2014) 9260–9266, doi:[10.1021/ic501364h](https://doi.org/10.1021/ic501364h) | `vdwRadius` |
 | `Pettifor1984` | D. G. Pettifor, "A chemical scale for crystal-structure maps", *Solid State Commun.* 51 (1984) 31–34, doi:[10.1016/0038-1098(84)90765-8](https://doi.org/10.1016/0038-1098(84)90765-8) | `pettifor` |
 | `white2013geochemistry`, `wiki-goldschmidt` | W. M. White, *Geochemistry*, Wiley (2013); Wikipedia, "Goldschmidt classification", revision 775842423 | `goldschmidt` |
-| `enwiki:1102394064` | Wikipedia, "Oxidation state", revision 1253639950 (accessed 4 Nov 2024) | `oxidationStates` |
+| `enwiki:1102394064` | Wikipedia, "Oxidation state", revision 1253639950 (accessed 4 Nov 2024) | comparison only: its `main` states are replaced, see [Oxidation states](#oxidation-states) |
 | `enwiki:1039678864` | Wikipedia, "List of chemical elements", revision 1039678864 (2021) | densities that are estimates |
 | `Kondev2021` | F. G. Kondev et al., "The NUBASE2020 evaluation of nuclear physics properties", *Chin. Phys. C* 45 (2021) 030001, doi:[10.1088/1674-1137/abddae](https://doi.org/10.1088/1674-1137/abddae) | isotope half-lives (mass numbers) |
 
@@ -77,7 +79,7 @@ only for comparison, never as a data source.
 | `mp`, `bp` | Melting and boiling points at 101.325 kPa, K. `bp` is a sublimation point where noted (C, As), and `mp` is then null | CRC Handbook (97th ed.) |
 | `density` | g/cm³ near room temperature (mendeleev: 295 K) for solids and liquids; for gases the ideal-gas density at 298.15 K and 101.325 kPa (so H is 8.2×10⁻⁵) | CRC Handbook, with corrections |
 | `phase` | State at 298.15 K and 101.325 kPa, derived from `mp`/`bp`; null when unknown | computed |
-| `oxidationStates` | Main oxidation states (mendeleev category `main`), ascending, no duplicates | Wikipedia via mendeleev; No corrected |
+| `oxidationStates` | Common oxidation states, ascending, no duplicates, never 0; empty when no compound chemistry is established | explicit table `OXIDATION_STATES`, see [Oxidation states](#oxidation-states) |
 | `discoveryYear` | Year of discovery or isolation; null when known since antiquity | mendeleev, with corrections |
 | `discoverers` | Discoverer(s) or laboratory; null for antiquity | mendeleev, with corrections |
 | `radioactive` | No stable isotope (Tc, Pm, Po–Og) | mendeleev `is_radioactive` |
@@ -192,6 +194,123 @@ C4-101, doi:[10.1051/jphyscol:1979431](https://doi.org/10.1051/jphyscol:1979431)
 mendeleev's metadata lists it among estimates. `mass` is never marked predicted: a mass number is
 exact, and `massIsMassNumber` already says the value is not an atomic weight.
 
+## Oxidation states
+
+`oxidationStates` lists the oxidation states an element commonly shows in its compounds: the short
+list a periodic table prints, not every state ever observed. The inspector labels it "Oxidation
+states", and readers take it as the common ones. mendeleev's `main` list (the states printed in bold in
+Wikipedia's oxidation-state table) fell short of that: copper had only +2, gold only +3, uranium only
++6, plutonium only +4, rhenium only +4, and tin and germanium were given −4. It is no longer used.
+`scripts/build_data.py` holds an explicit table, `OXIDATION_STATES`, with an entry for each of the 118
+elements and the reason for every departure from the reference list below.
+
+**Policy.**
+
+- *Reference list:* the oxidation states printed on the CRC Handbook's periodic table ("Periodic
+  Table of the Elements", *CRC Handbook of Chemistry and Physics*). The printed Handbook was not to
+  hand for this revision, so the values were read from periodic-table.org's element pages (Cu +1 +2,
+  Mn +2 +3 +4 +7, Re +4 +6 +7, Os +3 +4, U to Am +3 +4 +5 +6, Kr and Xe 0) and compared with PubChem's
+  periodic table, a second reproduction that has the same lists for all but six elements up to Lr
+  (listed after the departures table). Neither copies the Handbook everywhere: for C and Si,
+  periodic-table.org gives every state from −4 to +4, Wikipedia's full list rather than a periodic-table
+  cell's. Both should be checked against a printed copy.
+- *Listed:* a state in which the element has a substantial chemistry: its common minerals, stable
+  binary compounds (oxides, halides, hydrides, chalcogenides), ions in water, or widely used reagents
+  and catalysts.
+- *Not listed:* 0 (the element itself); states known from only a few compounds or under special
+  conditions (matrix isolation, the gas phase, strongly alkaline oxidising solution); the low formal
+  states of carbonyl and organometallic complexes. Si(II) (SiO, SiF₂), which exists only at high
+  temperature or as transient species, is therefore absent, as are Pr(IV), Tb(IV), Np(VII), Pu(VII)
+  and Xe(VIII).
+- *Checks:* mendeleev's `main` list; pymatgen's `ICSD oxidation states` (the states pymatgen assigns
+  to the element in compounds of the Inorganic Crystal Structure Database); N. N. Greenwood and
+  A. Earnshaw, *Chemistry of the Elements*, 2nd ed., Butterworth-Heinemann (1997) for the chemistry
+  behind each departure; L. R. Morss, N. M. Edelstein and J. Fuger (eds.), *The Chemistry of the
+  Actinide and Transactinide Elements*, 3rd ed., Springer (2006) for the actinides. The build fails if
+  an element has no entry or if a listed state is absent from the database's `main` and `extended`
+  lists (a guard against typos).
+- *Superheavy elements:* the state shown by single-atom chemistry, for Rf–Hs only, with a note naming
+  the experiment. No compound chemistry has been established from Mt onward (Mt–Rg, Lv, Ts and Og have
+  not been studied chemically; Cn, Nh, Fl and Mc only in adsorption experiments on the atoms), so their
+  lists are empty, as are those of He, Ne, Ar and Rn.
+
+**Departures from the reference list** (as given on periodic-table.org):
+
+| Element | Reference list | Dataset | Reason |
+| --- | --- | --- | --- |
+| C, Si | every state from −4 to +4 (PubChem: +2, +4, −4) | C −4, +2, +4; Si −4, +4 | The states with a substantial chemistry: CH₄ and carbides, CO and cyanides, CO₂ and carbonates; silicides (Mg₂Si, Ca₂Si), silica and silicates. Carbon's list is PubChem's; Si −4 is also in mendeleev's `main` list and pymatgen's ICSD list |
+| Kr | 0 | +2 | KrF₂ and the compounds made from it, all krypton(II) (Greenwood and Earnshaw, ch. 18) |
+| Xe | 0 | +2, +4, +6 | XeF₂, XeF₄, XeF₆, XeO₃; Xe(VIII) occurs only in XeO₄, the perxenates and the oxofluorides XeO₃F₂ and XeO₂F₄ |
+| Cl, I | −1, +1, +5, +7 | adds +3 | Chlorites (NaClO₂) and ClF₃; ICl₃ and iodine(III) reagents such as PhI(OAc)₂ |
+| Mo, W | +6 | +4, +6 | Molybdenite MoS₂, the ore, and MoO₂; WO₂, WS₂ |
+| Ru | +3 | +3, +4 | RuO₂ |
+| Os | +3, +4 | +3, +4, +8 | OsO₄, the best-known osmium compound, and the perosmate ion [OsO₄(OH)₂]²⁻ |
+| Po | +2, +4 | −2, +2, +4 | The polonides (Na₂Po, PbPo) |
+| At | none | −1, +1 | At⁻ and At⁺ in tracer chemistry |
+| Db | none | +5 | Volatile DbOCl₃: N. M. Chiera et al., *Angew. Chem. Int. Ed.* 60 (2021) 17871, doi:[10.1002/anie.202102808](https://doi.org/10.1002/anie.202102808) |
+| Sg | none | +6 | Volatile SgO₂Cl₂: M. Schädel et al., "Chemical properties of element 106 (seaborgium)", *Nature* 388 (1997) 55, doi:[10.1038/40375](https://doi.org/10.1038/40375) |
+| Bh | none | +7 | Volatile BhO₃Cl: R. Eichler et al., "Chemical characterization of bohrium (element 107)", *Nature* 407 (2000) 63, doi:[10.1038/35024044](https://doi.org/10.1038/35024044) |
+| Hs | not found | +8 | Volatile HsO₄: Ch. E. Düllmann et al., "Chemical investigation of hassium (element 108)", *Nature* 418 (2002) 859, doi:[10.1038/nature00980](https://doi.org/10.1038/nature00980) |
+
+0, never listed here, is the reference list's entry for Kr and Xe. He, Ne, Ar and Rn have no
+characterised compounds (a radon fluoride is reported but uncharacterised), so their lists are empty.
+
+**Where the two reproductions differ.** PubChem's periodic table (National Center for Biotechnology
+Information, <https://pubchem.ncbi.nlm.nih.gov/periodic-table/>; its 2022 data as packaged in the npm
+module `pubchem-elements` 1.0.0) has the same lists as periodic-table.org (as read for this table) for
+every element up to Lr except these six; the dataset's choice for each:
+
+- C and Si: PubChem +2, +4, −4. Carbon's list is the dataset's; silicon's +2 is left out (see *Not
+  listed* above).
+- Br: PubChem −1, +1, +5. The dataset keeps +3 (BrF₃, the bromites), as periodic-table.org and the
+  `main` list do and as for Cl and I.
+- Tc: PubChem +4, +6, +7. Tc(VI) is left out, as on periodic-table.org and in the `main` list: it
+  has few compounds (TcF₆ and some oxo- and nitridohalides).
+- Pd: PubChem +2, +3. The dataset has +2, +4, as periodic-table.org and the `main` list do: Pd(IV) is
+  well established ([PdCl₆]²⁻ salts, PdF₄), Pd(III) is rare.
+- At: PubChem −1, +1, +3, +5, +7. The dataset has the `main` list's −1 and +1 (all astatine
+  chemistry is on the tracer scale).
+
+From Db on, PubChem lists predicted states, which are not used.
+
+**Changes from mendeleev's `main` list** (32 elements; the rest are unchanged):
+
+| Element | `main` → dataset | Basis |
+| --- | --- | --- |
+| C | −4, +4 → −4, +2, +4 | CO and the cyanides (above); pymatgen's ICSD list also has +2 |
+| N | −3, +3, +5 → −3, −2, −1, +1, +2, +3, +4, +5 | CRC: NH₃, N₂H₄, NH₂OH, N₂O, NO, nitrites, NO₂, nitrates are all common |
+| S, Se, Te | −2, +2, +4, +6 → −2, +4, +6 | CRC; +2 rests on a few compounds (SCl₂, SeCl₂, TeCl₂) and has no stable oxoanion |
+| Ge, Sn | −4, +2, +4 → +2, +4 | CRC and pymatgen's ICSD list. −4 is limited to a few germanides and stannides such as Mg₂Ge and Mg₂Sn; in GeH₄ and SnH₄ hydrogen is the more electronegative partner, so Ge and Sn are +4. Si −4 rests on the same kind of compound (Mg₂Si) but is kept, because the CRC table, the `main` list and the ICSD list all have it |
+| Ti | +4 → +2, +3, +4 | CRC; TiO, TiCl₂; TiCl₃ and violet [Ti(H₂O)₆]³⁺ |
+| V | +5 → +2, +3, +4, +5 | CRC; V²⁺, V³⁺, VO²⁺ and VO₂⁺ in water |
+| Cr | +3, +6 → +2, +3, +6 | CRC; Cr²⁺ in water, chromium(II) acetate |
+| Mn | +2, +4, +7 → +2, +3, +4, +7 | CRC; Mn₂O₃, Mn₃O₄, MnOOH, MnF₃ |
+| Ni | +2 → +2, +3 | CRC; NiOOH, LiNiO₂ |
+| Cu | +2 → +1, +2 | CRC; Cu₂O, CuCl, CuI and copper(I) complexes |
+| Nb | +5 → +3, +5 | CRC |
+| Re | +4 → +4, +6, +7 | CRC; ReO₂ and ReCl₄, ReO₃, perrhenates and Re₂O₇ |
+| Os | +4 → +3, +4, +8 | CRC and OsO₄ (above) |
+| Au | +3 → +1, +3 | CRC; [Au(CN)₂]⁻ of cyanide leaching, AuCl, gold(I) phosphines |
+| Bi | +3 → +3, +5 | CRC; NaBiO₃, BiF₅ |
+| Sm, Yb | +3 → +2, +3 | CRC; SmI₂, YbI₂, YbCl₂ |
+| Pa | +5 → +4, +5 | CRC; PaO₂, PaCl₄ |
+| U | +6 → +3, +4, +5, +6 | CRC; U³⁺ and UCl₃, UO₂ and UF₄, UO₂⁺ and UF₅, UO₂²⁺ and UF₆ |
+| Np | +5 → +3, +4, +5, +6 | CRC; the four aqueous states (Morss et al.) |
+| Pu | +4 → +3, +4, +5, +6 | CRC; as for Np |
+| Am | +3 → +3, +4, +5, +6 | CRC; Am(III) is the stable aqueous state, AmO₂ the usual oxide; Am(V) and Am(VI) form with strong oxidants |
+| Bk | +3 → +3, +4 | CRC; Bk⁴⁺ in water, BkO₂ |
+| Md | +3 → +2, +3 | CRC; Md²⁺ is stable in water: E. K. Hulet et al., "Mendelevium: divalency and other chemical properties", *Science* 158 (1967) 486, doi:[10.1126/science.158.3800.486](https://doi.org/10.1126/science.158.3800.486) |
+| No | +3 → +2, +3 | CRC; No²⁺ is the most stable state in water: J. Maly et al., "Nobelium: tracer chemistry of the divalent and trivalent ions", *Science* 160 (1968) 1114, doi:[10.1126/science.160.3832.1114](https://doi.org/10.1126/science.160.3832.1114) |
+| Db, Sg, Bh, Hs | none → +5, +6, +7, +8 | Single-atom chemistry (above) |
+
+**Against pymatgen's ICSD list** (75 elements have one; `--compare` prints the comparison): every
+listed state occurs in it except N +2 and +4 (NO and NO₂ are molecular gases, not constituents of
+crystals) and the halogen oxo states Cl +1, +3, +5, +7, Br +1, +3 and I +1, +3, +7. pymatgen keeps only
+frequently assigned states, and for Cl, Br and I that leaves just the halide (and +5 for Br and I),
+although hypochlorites, chlorates, perchlorates and periodates are common salts. pymatgen's own
+`Common oxidation states` field equals mendeleev's `main` list for 116 of 118 elements (C and Re
+differ), so it is not an independent check.
+
 ## Corrections to the database
 
 Every change from mendeleev 1.3.0, with its source. Values before the arrow are the database's.
@@ -299,7 +418,7 @@ slow-electron velocity-map imaging measurements, which found much smaller values
 | | Am 12 → 13.67 | X-ray density of dhcp ²⁴¹Am (a = 346.8 pm, c = 1124 pm); CRC's 12 g/cm³ is close to the 11.87 g/cm³ calculated from a superseded 1956 cell |
 | | At 7.0 → 8.91 (predicted) | Hermann et al. (2013) via Arblaster (2018) |
 | | Fr, Lr, Rf–Og → null | See [Predicted values](#predicted-values) |
-| `oxidationStates` | No [3] → [2, 3] | No²⁺ is the most stable state in water: J. Maly et al., "Nobelium: tracer chemistry of the divalent and trivalent ions", *Science* 160 (1968) 1114, doi:[10.1126/science.160.3832.1114](https://doi.org/10.1126/science.160.3832.1114) |
+| `oxidationStates` | all 118 elements | The database's `main` list is replaced by an explicit table; the 32 elements whose list differs from it are given in [Oxidation states](#oxidation-states) |
 | `goldschmidt` | `litophile` → `lithophile` (all) | Typo |
 | | Po, At, Rn, Fr, Ac `synthetic` → null | They occur naturally in the U/Th decay series, so "synthetic" is wrong; Goldschmidt's scheme gives them no class. Tc and Np onward keep `synthetic` (known chiefly as artificial products). Pm keeps mendeleev's `lithophile` (rare-earth behaviour), as do the decay-series members Ra and Pa |
 | `name` | Aluminum → Aluminium, Cesium → Caesium | IUPAC Red Book 2005 spellings; notes give the US spellings |
@@ -328,9 +447,13 @@ Hatchett, Segrè, Auer von Welsbach, Tennant, Fourcroy, Collet-Descotils, Perey,
 Stromeyer), wrong people (beryllium: Vauquelin discovered it in 1798, Wöhler and Bussy isolated it in
 1828; platinum: Antonio de Ulloa, 1735, not Scaliger; mendelevium's team), titles and initials made
 consistent, and superheavy credits named as IUPAC/IUPAP assigned them (GSI Darmstadt for Bh–Cn;
-JINR with LLNL for Fl, Mc, Lv, Og). Lr, Rf and Db carry notes that the IUPAC/IUPAP Transfermium
-Working Group shared the credit between Berkeley and Dubna (R. C. Barber et al., "Discovery of the
-transfermium elements", *Pure Appl. Chem.* 65 (1993) 1757, doi:[10.1351/pac199365081757](https://doi.org/10.1351/pac199365081757));
+JINR with LLNL for Fl, Lv and Og; JINR with LLNL and ORNL for Mc and Ts: P. J. Karol et al.,
+"Discovery of the elements with atomic numbers Z = 113, 115 and 117 (IUPAC Technical Report)",
+*Pure Appl. Chem.* 88 (2016) 139, doi:[10.1515/pac-2015-0502](https://doi.org/10.1515/pac-2015-0502)).
+Moscovium's year is that of its first atoms (2003, Dubna and Livermore), with a note that the 2015
+credit rests on the Dubna–Livermore–Oak Ridge experiments from 2010 on. Lr, Rf and Db carry notes
+that the IUPAC/IUPAP Transfermium Working Group shared the credit between Berkeley and Dubna
+(R. C. Barber et al., "Discovery of the transfermium elements", *Pure Appl. Chem.* 65 (1993) 1757, doi:[10.1351/pac199365081757](https://doi.org/10.1351/pac199365081757));
 their year and discoverers are Berkeley's. Actinium keeps André Debierne (1899) with a note that the
 credit is disputed: his early samples are questioned, and Friedrich Giesel isolated the element
 independently in 1902 (H. W. Kirby, "The discovery of actinium", *Isis* 62 (1971) 290).
@@ -343,8 +466,9 @@ have null year and discoverers.
 `core/periodic_table.json` (extracted from the pymatgen-core 2026.10.16 sdist), reporting differences
 above these tolerances: mass 0.1%, Pauling electronegativity (`X`) 0.05, `mp`/`bp` 10 K, density 3%
 (`Density of solid`, kg/m³ → g/cm³), atomic radius 0.5 pm, first ionization energy 0.05 eV (pymatgen's
-list is in eV although its unit table says kJ/mol), electron affinity 0.02 eV. Every discrepancy was
-resolved as follows.
+list is in eV although its unit table says kJ/mol), electron affinity 0.02 eV. It also prints, per
+element, how `oxidationStates` differs from mendeleev's `main` list and from pymatgen's ICSD list (see
+[Oxidation states](#oxidation-states)). Every numeric discrepancy was resolved as follows.
 
 **Mass.** After the corrections above, four differences remain; ours are kept.
 
@@ -376,9 +500,12 @@ Ir 2719/2739, Th 2023/2115 K (ours/pymatgen).
 4273/4200, C 4098 (sublimation)/4300, Si 3538/3173, Cu 2833/3200, Ga 2502/2477, Ge 3106/3093, In
 2300/2345, Sn 2859/2875, Ba 2118/2143, Ce 3716/3633, Pr 3793/3563, Nd 3347/3373, Gd 3546/3523, Ho
 2973/2993, Au 3109/3129, Ac 3473/3573, Th 5058/5093, U 4404/4200 K. Boiling points of refractory
-metals and lanthanides are uncertain by tens of kelvin or more (see Y. Zhang, J. R. G. Evans and
-S. Yang, "Corrected values for boiling points and enthalpies of vaporization of elements in
-handbooks", *J. Chem. Eng. Data* 56 (2011) 328, doi:[10.1021/je1011086](https://doi.org/10.1021/je1011086)).
+metals and lanthanides are uncertain by tens of kelvin or more: Y. Zhang, J. R. G. Evans and S. Yang,
+"Corrected values for boiling points and enthalpies of vaporization of elements in handbooks",
+*J. Chem. Eng. Data* 56 (2011) 328, doi:[10.1021/je1011086](https://doi.org/10.1021/je1011086),
+propose corrected values that differ from the CRC's by up to a few hundred kelvin for some elements
+(W 6203 K against 5828 K, Au 3243 K against 3109 K), and Wikipedia quotes theirs. The CRC values are
+kept as the documented source; compare boiling points of such elements with that spread in mind.
 pymatgen's values for Pm, Ra, Np, Am and Cm, absent from the CRC table, are not adopted.
 
 **Density.** Ours kept in each case: B 2.34/2.46 (β-rhombohedral, the stable form, against
@@ -407,5 +534,37 @@ the CRC ones by less than 0.02 eV; the CRC values are kept.
 - Pauling electronegativities for heavy elements depend on the compilation (see above); compare
   trends, not second decimals.
 - Discovery years compress contested histories into one number; notes flag the main disputes.
+- Oxidation states are the common ones only, by design; where references disagree on what counts as
+  common, [Oxidation states](#oxidation-states) gives the choice made, and the reference list was read
+  from two reproductions of the CRC table, which differ for six elements, rather than the printed Handbook.
 - Superheavy entries (Z ≥ 104) carry mass numbers, configurations from calculations, a few
   calculated ionization energies, and little else, by design.
+
+## mendeleev licence
+
+`src/data/elements.json` is derived from the database distributed with mendeleev 1.3.0 under this
+notice:
+
+```text
+The MIT License (MIT)
+
+Copyright (c) 2015 Lukasz Mentel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

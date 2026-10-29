@@ -177,6 +177,7 @@
   "phase": "solid",
   "oxidationStates": [
    -4,
+   2,
    4
   ],
   "discoveryYear": null,
@@ -212,7 +213,12 @@
   "phase": "gas",
   "oxidationStates": [
    -3,
+   -2,
+   -1,
+   1,
+   2,
    3,
+   4,
    5
   ],
   "discoveryYear": 1772,
@@ -498,7 +504,6 @@
   "phase": "solid",
   "oxidationStates": [
    -2,
-   2,
    4,
    6
   ],
@@ -691,6 +696,8 @@
   "density": 4.506,
   "phase": "solid",
   "oxidationStates": [
+   2,
+   3,
    4
   ],
   "discoveryYear": 1791,
@@ -721,6 +728,9 @@
   "density": 6.0,
   "phase": "solid",
   "oxidationStates": [
+   2,
+   3,
+   4,
    5
   ],
   "discoveryYear": 1801,
@@ -753,6 +763,7 @@
   "density": 7.15,
   "phase": "solid",
   "oxidationStates": [
+   2,
    3,
    6
   ],
@@ -785,6 +796,7 @@
   "phase": "solid",
   "oxidationStates": [
    2,
+   3,
    4,
    7
   ],
@@ -884,7 +896,8 @@
   "density": 8.9,
   "phase": "solid",
   "oxidationStates": [
-   2
+   2,
+   3
   ],
   "discoveryYear": 1751,
   "discoverers": "Axel Fredrik Cronstedt",
@@ -914,6 +927,7 @@
   "density": 8.96,
   "phase": "solid",
   "oxidationStates": [
+   1,
    2
   ],
   "discoveryYear": null,
@@ -1004,7 +1018,6 @@
   "density": 5.3234,
   "phase": "solid",
   "oxidationStates": [
-   -4,
    2,
    4
   ],
@@ -1071,7 +1084,6 @@
   "phase": "solid",
   "oxidationStates": [
    -2,
-   2,
    4,
    6
   ],
@@ -1290,6 +1302,7 @@
   "density": 8.57,
   "phase": "solid",
   "oxidationStates": [
+   3,
    5
   ],
   "discoveryYear": 1801,
@@ -1570,7 +1583,6 @@
   "density": 7.287,
   "phase": "solid",
   "oxidationStates": [
-   -4,
    2,
    4
   ],
@@ -1637,7 +1649,6 @@
   "phase": "solid",
   "oxidationStates": [
    -2,
-   2,
    4,
    6
   ],
@@ -1950,6 +1961,7 @@
   "density": 7.52,
   "phase": "solid",
   "oxidationStates": [
+   2,
    3
   ],
   "discoveryYear": 1879,
@@ -2193,6 +2205,7 @@
   "density": 6.9,
   "phase": "solid",
   "oxidationStates": [
+   2,
    3
   ],
   "discoveryYear": 1878,
@@ -2350,7 +2363,9 @@
   "density": 20.8,
   "phase": "solid",
   "oxidationStates": [
-   4
+   4,
+   6,
+   7
   ],
   "discoveryYear": 1925,
   "discoverers": "Walter Noddack, Ida Tacke, Otto Berg",
@@ -2380,7 +2395,9 @@
   "density": 22.5872,
   "phase": "solid",
   "oxidationStates": [
-   4
+   3,
+   4,
+   8
   ],
   "discoveryYear": 1804,
   "discoverers": "Smithson Tennant",
@@ -2472,6 +2489,7 @@
   "density": 19.3,
   "phase": "solid",
   "oxidationStates": [
+   1,
    3
   ],
   "discoveryYear": null,
@@ -2599,7 +2617,8 @@
   "density": 9.79,
   "phase": "solid",
   "oxidationStates": [
-   3
+   3,
+   5
   ],
   "discoveryYear": null,
   "discoverers": null,
@@ -2875,6 +2894,7 @@
   "density": 15.4,
   "phase": "solid",
   "oxidationStates": [
+   4,
    5
   ],
   "discoveryYear": 1913,
@@ -2909,6 +2929,9 @@
   "density": 19.1,
   "phase": "solid",
   "oxidationStates": [
+   3,
+   4,
+   5,
    6
   ],
   "discoveryYear": 1789,
@@ -2939,7 +2962,10 @@
   "density": 20.2,
   "phase": "solid",
   "oxidationStates": [
-   5
+   3,
+   4,
+   5,
+   6
   ],
   "discoveryYear": 1940,
   "discoverers": "Edwin M. McMillan, Philip H. Abelson",
@@ -2969,7 +2995,10 @@
   "density": 19.7,
   "phase": "solid",
   "oxidationStates": [
-   4
+   3,
+   4,
+   5,
+   6
   ],
   "discoveryYear": 1940,
   "discoverers": "Glenn T. Seaborg, Edwin M. McMillan, Joseph W. Kennedy, Arthur C. Wahl",
@@ -2999,7 +3028,10 @@
   "density": 13.67,
   "phase": "solid",
   "oxidationStates": [
-   3
+   3,
+   4,
+   5,
+   6
   ],
   "discoveryYear": 1944,
   "discoverers": "Glenn T. Seaborg, Ralph A. James, Leon O. Morgan, Albert Ghiorso",
@@ -3061,7 +3093,8 @@
   "density": 14.78,
   "phase": "solid",
   "oxidationStates": [
-   3
+   3,
+   4
   ],
   "discoveryYear": 1949,
   "discoverers": "Stanley G. Thompson, Albert Ghiorso, Glenn T. Seaborg",
@@ -3190,6 +3223,7 @@
   "density": 10.3,
   "phase": "solid",
   "oxidationStates": [
+   2,
    3
   ],
   "discoveryYear": 1955,
@@ -3338,7 +3372,9 @@
   "bp": null,
   "density": null,
   "phase": null,
-  "oxidationStates": [],
+  "oxidationStates": [
+   5
+  ],
   "discoveryYear": 1970,
   "discoverers": "Albert Ghiorso et al. (Berkeley)",
   "radioactive": true,
@@ -3350,6 +3386,7 @@
    "ie1"
   ],
   "notes": [
+   "Oxidation state +5 is established with single atoms, in volatile DbOCl₃ (Chiera et al. 2021).",
    "IUPAC/IUPAP (1993) shared the discovery credit between Berkeley and Dubna.",
    "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
@@ -3372,7 +3409,9 @@
   "bp": null,
   "density": null,
   "phase": null,
-  "oxidationStates": [],
+  "oxidationStates": [
+   6
+  ],
   "discoveryYear": 1974,
   "discoverers": "Albert Ghiorso et al. (Berkeley and Livermore)",
   "radioactive": true,
@@ -3384,6 +3423,7 @@
    "ie1"
   ],
   "notes": [
+   "Oxidation state +6 is established with single atoms, in volatile SgO₂Cl₂ (Schädel et al. 1997).",
    "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
@@ -3405,7 +3445,9 @@
   "bp": null,
   "density": null,
   "phase": null,
-  "oxidationStates": [],
+  "oxidationStates": [
+   7
+  ],
   "discoveryYear": 1981,
   "discoverers": "GSI, Darmstadt",
   "radioactive": true,
@@ -3417,6 +3459,7 @@
    "ie1"
   ],
   "notes": [
+   "Oxidation state +7 is established with single atoms, in volatile BhO₃Cl (Eichler et al. 2000).",
    "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
@@ -3438,7 +3481,9 @@
   "bp": null,
   "density": null,
   "phase": null,
-  "oxidationStates": [],
+  "oxidationStates": [
+   8
+  ],
   "discoveryYear": 1984,
   "discoverers": "GSI, Darmstadt",
   "radioactive": true,
@@ -3451,6 +3496,7 @@
   ],
   "notes": [
    "Mass number: Hs-269 (15 s) and Hs-270 (9 s) half-lives overlap within uncertainty (NUBASE2020).",
+   "Oxidation state +8 is established with single atoms, in volatile HsO₄ (Düllmann et al. 2002).",
    "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
@@ -3676,7 +3722,7 @@
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 2003,
-  "discoverers": "Joint Institute for Nuclear Research and Lawrence Livermore National Laboratory",
+  "discoverers": "Joint Institute for Nuclear Research, Lawrence Livermore and Oak Ridge National Laboratories",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,
@@ -3686,6 +3732,7 @@
    "config"
   ],
   "notes": [
+   "First atoms made in 2003 by Dubna and Livermore; IUPAC/IUPAP (2015) credited the discovery to Dubna, Livermore and Oak Ridge for experiments from 2010 on.",
    "Made only a few atoms at a time: bulk properties such as density are unknown."
   ]
  },
@@ -3742,7 +3789,7 @@
   "phase": null,
   "oxidationStates": [],
   "discoveryYear": 2010,
-  "discoverers": "Joint Institute for Nuclear Research, Oak Ridge National Laboratory and partners",
+  "discoverers": "Joint Institute for Nuclear Research, Lawrence Livermore and Oak Ridge National Laboratories",
   "radioactive": true,
   "goldschmidt": "synthetic",
   "pettifor": null,

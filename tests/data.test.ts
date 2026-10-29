@@ -239,6 +239,19 @@ describe('elements.json content', () => {
     expect(bySymbol('Ac').notes.some((n) => /disputed.*Giesel.*1902/.test(n))).toBe(true);
   });
 
+  it('credits elements 115 and 117 to Dubna, Livermore and Oak Ridge (IUPAC/IUPAP, Karol et al. 2016)', () => {
+    for (const s of ['Mc', 'Ts']) {
+      const by = bySymbol(s).discoverers ?? '';
+      for (const lab of ['Joint Institute for Nuclear Research', 'Livermore', 'Oak Ridge']) expect(by, s).toContain(lab);
+    }
+    // The year is the first atoms' (2003, Dubna and Livermore); the credited experiments began in 2010.
+    expect(bySymbol('Mc').discoveryYear).toBe(2003);
+    expect(
+      bySymbol('Mc').notes.some((n) => /credited the discovery to Dubna, Livermore and Oak Ridge for experiments from 2010/.test(n)),
+    ).toBe(true);
+    for (const s of ['Fl', 'Lv', 'Og']) expect(bySymbol(s).discoverers, s).not.toMatch(/Oak Ridge/);
+  });
+
   it('flags mass numbers exactly for elements without a standard atomic weight', () => {
     expect(symbols((e) => e.massIsMassNumber)).toEqual(NO_STANDARD_ATOMIC_WEIGHT);
     for (const s of NO_STANDARD_ATOMIC_WEIGHT) expect(Number.isInteger(bySymbol(s).mass), s).toBe(true);
@@ -261,6 +274,53 @@ describe('elements.json content', () => {
       expect(e.oxidationStates).toEqual([...new Set(e.oxidationStates)].sort((a, b) => a - b));
       expect(e.oxidationStates.includes(0)).toBe(false);
     }
+  });
+
+  // Common states: the CRC Handbook periodic table's list with the departures in docs/DATA.md.
+  it('lists the common oxidation states that the database main list missed', () => {
+    const ox = (s: string): number[] => bySymbol(s).oxidationStates;
+    expect(ox('Cu')).toEqual([1, 2]);
+    expect(ox('Au')).toEqual([1, 3]);
+    expect(ox('V')).toEqual([2, 3, 4, 5]);
+    expect(ox('Cr')).toEqual([2, 3, 6]);
+    expect(ox('Mn')).toEqual([2, 3, 4, 7]);
+    expect(ox('Re')).toEqual([4, 6, 7]);
+    expect(ox('Os')).toEqual([3, 4, 8]);
+    expect(ox('N')).toEqual([-3, -2, -1, 1, 2, 3, 4, 5]);
+    for (const s of ['U', 'Np', 'Pu', 'Am']) expect(ox(s), s).toEqual([3, 4, 5, 6]);
+    expect(ox('No')).toEqual([2, 3]);
+  });
+
+  // periodic-table.org and PubChem reproduce the CRC lists differently for these six (docs/DATA.md).
+  it('keeps the documented choice where the two reproductions of the reference list differ', () => {
+    const ox = (s: string): number[] => bySymbol(s).oxidationStates;
+    expect(ox('C')).toEqual([-4, 2, 4]);
+    expect(ox('Si')).toEqual([-4, 4]);
+    expect(ox('Br')).toEqual([-1, 1, 3, 5]);
+    expect(ox('Tc')).toEqual([4, 7]);
+    expect(ox('Pd')).toEqual([2, 4]);
+    expect(ox('At')).toEqual([-1, 1]);
+  });
+
+  it('leaves out states found in only a few compounds (Ge and Sn −4; S, Se and Te +2)', () => {
+    const ox = (s: string): number[] => bySymbol(s).oxidationStates;
+    expect(ox('Ge')).toEqual([2, 4]);
+    expect(ox('Sn')).toEqual([2, 4]);
+    expect(ox('Pb')).toEqual([2, 4]);
+    for (const s of ['S', 'Se', 'Te']) expect(ox(s), s).toEqual([-2, 4, 6]);
+    expect(ox('O')).toEqual([-2]);
+  });
+
+  it('gives Rf–Hs the group state shown by single-atom chemistry, and no state from Mt on', () => {
+    ['Rf', 'Db', 'Sg', 'Bh', 'Hs'].forEach((s, i) => expect(bySymbol(s).oxidationStates, s).toEqual([4 + i]));
+    for (const s of ['Db', 'Sg', 'Bh', 'Hs']) {
+      expect(bySymbol(s).notes.some((n) => /^Oxidation state \+\d is established with single atoms/.test(n)), s).toBe(true);
+    }
+    // Only the noble gases without characterised compounds and the superheavies from Mt on (no
+    // established compound chemistry: unstudied, or adsorption experiments only) have none.
+    expect(symbols((e) => e.oxidationStates.length === 0)).toEqual(['He', 'Ne', 'Ar', 'Rn', ...SYMBOLS.slice(108)]);
+    expect(bySymbol('Kr').oxidationStates).toEqual([2]);
+    expect(bySymbol('Xe').oxidationStates).toEqual([2, 4, 6]);
   });
 
   it('keeps discovery fields consistent and the radioactive flag sane', () => {

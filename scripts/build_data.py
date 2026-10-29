@@ -14,8 +14,9 @@ Options:
     --check          exit 1 if src/data/elements.json differs from a fresh build (writes nothing)
     --compare PATH   print the cross-check against pymatgen's core/periodic_table.json
 
-Every departure from the database (OVERRIDE tables below) carries its source; docs/DATA.md
-explains the sources, field definitions, category scheme, predicted-value policy and cross-check.
+Every departure from the database (OVERRIDE tables below) carries its source; oxidationStates comes
+from OXIDATION_STATES, an explicit table for all 118 elements. docs/DATA.md explains the sources, field
+definitions, category scheme, predicted-value policy, oxidation-state policy and cross-check.
 """
 
 from __future__ import annotations
@@ -246,9 +247,114 @@ DENSITY_NOTES = {
 
 # ------------------------------------------------------------------ chemistry & history
 
-# No2+ is the most stable state in water: Maly et al., Science 160 (1968) 1114.
-OXIDATION_OVERRIDES = {'No': [2, 3]}
-OXIDATION_NOTES = {'No': 'Oxidation state +2 is the most stable in water, unusual among actinides.'}
+# Common oxidation states, replacing mendeleev's 'main' list for every element (policy in docs/DATA.md,
+# "Oxidation states"). Reference list: the states printed on the CRC Handbook's periodic table ("CRC"),
+# as reproduced on periodic-table.org's element pages; up to Lr, PubChem's periodic table, a second
+# reproduction, differs from it only for C, Si, Br, Tc, Pd and At (noted at each). Checked against
+# mendeleev's main states (Wikipedia's bold states, "main") and pymatgen's ICSD states ("ICSD"); the
+# chemistry behind each departure is from N. N. Greenwood and A. Earnshaw, Chemistry of the Elements,
+# 2nd ed. (1997) ("G&E") unless another source is named. 0 (the element itself) is never listed; low
+# formal states of carbonyl and organometallic complexes, and states known from only a few compounds,
+# are left out. Every state must occur in mendeleev's main or extended list (build_element checks).
+OXIDATION_STATES: dict[str, list[int]] = {
+    # s block and group 3: the group state only.
+    'H': [-1, 1], 'Li': [1], 'Na': [1], 'K': [1], 'Rb': [1], 'Cs': [1], 'Fr': [1],
+    'Be': [2], 'Mg': [2], 'Ca': [2], 'Sr': [2], 'Ba': [2], 'Ra': [2],
+    'Sc': [3], 'Y': [3], 'La': [3], 'Ac': [3],
+    # Noble gases: CRC prints 0 (for Kr and Xe as reproduced). Kr and Xe from G&E ch. 18; a radon
+    # fluoride is reported but uncharacterised.
+    'He': [], 'Ne': [], 'Ar': [], 'Rn': [],
+    'Kr': [2],  # KrF2 and the compounds made from it, all Kr(II)
+    'Xe': [2, 4, 6],  # XeF2, XeF4, XeF6, XeO3 (main); Xe(VIII) only in XeO4, perxenates, XeO3F2 and XeO2F4
+    # Group 13
+    'B': [3], 'Al': [3], 'Ga': [3], 'In': [3], 'Tl': [1, 3],
+    # Group 14. For C and Si periodic-table.org gives every state from -4 to +4 (Wikipedia's full list) and
+    # PubChem +2, +4, -4; kept are those with a substantial chemistry. Si(II) (SiO, SiF2) exists only at
+    # high temperature or as transient species.
+    'C': [-4, 2, 4],  # CH4 and carbides; CO and cyanides (ICSD has +2); CO2 and carbonates (main: -4, 4)
+    'Si': [-4, 4],  # silicides (Mg2Si, Ca2Si), silica and silicates; main, ICSD
+    # main adds -4 to Ge and Sn: only a few germanides and stannides (Mg2Ge, Mg2Sn); in GeH4 and SnH4
+    # hydrogen is the more electronegative partner, so Ge and Sn are +4. Neither CRC nor ICSD has -4.
+    # (Si -4 rests on the same kind of compound, Mg2Si, but is kept because CRC, main and ICSD all list it.)
+    'Ge': [2, 4], 'Sn': [2, 4],
+    'Pb': [2, 4],
+    # Group 15. Nitrogen has common compounds in every state (CRC): NH3, N2H4, NH2OH, N2O, NO, NO2-, NO2, NO3-.
+    'N': [-3, -2, -1, 1, 2, 3, 4, 5],  # (main: -3, 3, 5)
+    'P': [-3, 3, 5], 'As': [-3, 3, 5], 'Sb': [-3, 3, 5],
+    'Bi': [3, 5],  # CRC, ICSD; NaBiO3, BiF5 (main: 3)
+    # Group 16. main adds +2 to S, Se, Te: a few compounds (SCl2, SeCl2, TeCl2), no stable oxoanion; CRC omits it.
+    'O': [-2], 'S': [-2, 4, 6], 'Se': [-2, 4, 6], 'Te': [-2, 4, 6],
+    'Po': [-2, 2, 4],  # CRC +2 +4; -2 in the polonides (Na2Po, PbPo), main
+    # Group 17. CRC omits Cl(III) and I(III), kept from main: chlorites, ClF3; ICl3, iodine(III) reagents.
+    # Br(III) likewise (BrF3, bromites; main): periodic-table.org has it, PubChem does not.
+    'F': [-1], 'Cl': [-1, 1, 3, 5, 7], 'Br': [-1, 1, 3, 5], 'I': [-1, 1, 3, 5, 7],
+    'At': [-1, 1],  # At- and At+ in tracer chemistry (main); periodic-table.org prints none, PubChem adds 3, 5, 7
+    # Group 4
+    'Ti': [2, 3, 4],  # CRC, ICSD; TiO, TiCl2; TiCl3, [Ti(H2O)6]3+ (main: 4)
+    'Zr': [4], 'Hf': [4],
+    'Rf': [4],  # volatile RfCl4 and aqueous Rf(IV), as for Zr and Hf (main)
+    # Group 5
+    'V': [2, 3, 4, 5],  # CRC, ICSD; V2+, V3+, VO2+ and VO2+ in water (main: 5)
+    'Nb': [3, 5],  # CRC, ICSD (main: 5)
+    'Ta': [5],
+    'Db': [5],  # DbOCl3: Chiera et al., Angew. Chem. Int. Ed. 60 (2021) 17871, doi:10.1002/anie.202102808
+    # Group 6
+    'Cr': [2, 3, 6],  # CRC, ICSD; Cr2+ in water, Cr2(OAc)4 (main: 3, 6)
+    'Mo': [4, 6],  # main, ICSD; CRC prints +6 only, but molybdenite MoS2 (the ore) and MoO2 are Mo(IV)
+    'W': [4, 6],  # main, ICSD; CRC prints +6 only; WO2, WS2
+    'Sg': [6],  # SgO2Cl2: Schädel et al., Nature 388 (1997) 55, doi:10.1038/40375
+    # Group 7
+    'Mn': [2, 3, 4, 7],  # CRC, ICSD; Mn2O3, Mn3O4, MnOOH, MnF3 (main: 2, 4, 7)
+    'Tc': [4, 7],  # main, periodic-table.org; PubChem adds +6, left out: TcF6 and a few oxohalides only
+    'Re': [4, 6, 7],  # CRC, ICSD; ReO2, ReCl4; ReO3; perrhenate, Re2O7 (main: 4)
+    'Bh': [7],  # BhO3Cl: Eichler et al., Nature 407 (2000) 63, doi:10.1038/35024044
+    # Group 8
+    'Fe': [2, 3],
+    'Ru': [3, 4],  # main, ICSD; CRC prints +3 only, but RuO2 is Ru(IV)
+    'Os': [3, 4, 8],  # CRC +3 +4; +8: OsO4, the best-known osmium compound, and perosmate [OsO4(OH)2]2- (main: 4)
+    'Hs': [8],  # HsO4: Düllmann et al., Nature 418 (2002) 859, doi:10.1038/nature00980
+    # Groups 9-12
+    'Co': [2, 3], 'Rh': [3], 'Ir': [3, 4],
+    'Ni': [2, 3],  # CRC, ICSD; NiOOH, LiNiO2 (main: 2)
+    'Pd': [2, 4],  # main, periodic-table.org; PubChem has +3 for +4, but Pd(III) is rare and [PdCl6]2-, PdF4 are Pd(IV)
+    'Pt': [2, 4],
+    'Cu': [1, 2],  # CRC, ICSD; Cu2O, CuCl, CuI, Cu(I) complexes (main: 2)
+    'Ag': [1],
+    'Au': [1, 3],  # CRC; [Au(CN)2]- of cyanide leaching, AuCl, Au(I) phosphines (main: 3)
+    'Zn': [2], 'Cd': [2], 'Hg': [1, 2],
+    # Lanthanides (CRC). Pr(IV) and Tb(IV) are left out (CRC, main): beyond PrO2 and TbO2, the usual
+    # mixed-valence oxides Pr6O11 and Tb4O7 and a few fluorides, they form few compounds.
+    'Ce': [3, 4], 'Pr': [3], 'Nd': [3], 'Pm': [3],
+    'Sm': [2, 3],  # CRC, ICSD; SmI2 (main: 3)
+    'Eu': [2, 3], 'Gd': [3], 'Tb': [3], 'Dy': [3], 'Ho': [3], 'Er': [3], 'Tm': [3],
+    'Yb': [2, 3],  # CRC, ICSD; YbI2, YbCl2 (main: 3)
+    'Lu': [3],
+    # Actinides (CRC; aqueous states as in Morss, Edelstein and Fuger (eds.), The Chemistry of the
+    # Actinide and Transactinide Elements, 3rd ed., Springer (2006)). Np(VII) and Pu(VII) need strongly
+    # alkaline oxidising solution and are left out.
+    'Th': [4],
+    'Pa': [4, 5],  # PaO2, PaCl4; Pa(V) (main: 5)
+    'U': [3, 4, 5, 6],  # U3+ and UCl3; UO2 and UF4; UO2+ and UF5; UO2(2+) and UF6 (main: 6)
+    'Np': [3, 4, 5, 6],  # (main: 5)
+    'Pu': [3, 4, 5, 6],  # (main: 4)
+    'Am': [3, 4, 5, 6],  # (main: 3)
+    'Cm': [3],
+    'Bk': [3, 4],  # Bk4+ in water, BkO2 (main: 3)
+    'Cf': [3], 'Es': [3], 'Fm': [3],
+    'Md': [2, 3],  # Md2+ is stable in water: Hulet et al., Science 158 (1967) 486 (main: 3)
+    'No': [2, 3],  # No2+ is the most stable state in water: Maly et al., Science 160 (1968) 1114 (main: 3)
+    'Lr': [3],
+    # No compound chemistry established: Mt-Rg, Lv, Ts and Og are chemically unstudied; Cn, Nh, Fl and Mc
+    # have only adsorption experiments on the atoms. (PubChem lists predicted states from Db on; not used.)
+    'Mt': [], 'Ds': [], 'Rg': [], 'Cn': [], 'Nh': [], 'Fl': [], 'Mc': [], 'Lv': [], 'Ts': [], 'Og': [],
+}
+OXIDATION_NOTES = {
+    'No': 'Oxidation state +2 is the most stable in water, unusual among actinides.',
+    'Db': 'Oxidation state +5 is established with single atoms, in volatile DbOCl₃ (Chiera et al. 2021).',
+    'Sg': 'Oxidation state +6 is established with single atoms, in volatile SgO₂Cl₂ (Schädel et al. 1997).',
+    'Bh': 'Oxidation state +7 is established with single atoms, in volatile BhO₃Cl (Eichler et al. 2000).',
+    'Hs': 'Oxidation state +8 is established with single atoms, in volatile HsO₄ (Düllmann et al. 2002).',
+}
 
 # Discovery years that mendeleev gets wrong or pairs with the wrong event (sources in docs/DATA.md).
 DISCOVERY_YEAR_OVERRIDES = {
@@ -346,9 +452,11 @@ DISCOVERERS = {
     'Rg': 'GSI, Darmstadt',
     'Cn': 'GSI, Darmstadt',
     'Fl': 'Joint Institute for Nuclear Research and Lawrence Livermore National Laboratory',
-    'Mc': 'Joint Institute for Nuclear Research and Lawrence Livermore National Laboratory',
+    # 115 and 117: IUPAC/IUPAP credited the Dubna-Livermore-Oak Ridge collaboration (Karol et al.,
+    # Pure Appl. Chem. 88 (2016) 139, doi:10.1515/pac-2015-0502); mendeleev names only JINR for Mc.
+    'Mc': 'Joint Institute for Nuclear Research, Lawrence Livermore and Oak Ridge National Laboratories',
     'Lv': 'Joint Institute for Nuclear Research and Lawrence Livermore National Laboratory',
-    'Ts': 'Joint Institute for Nuclear Research, Oak Ridge National Laboratory and partners',
+    'Ts': 'Joint Institute for Nuclear Research, Lawrence Livermore and Oak Ridge National Laboratories',
     'Og': 'Joint Institute for Nuclear Research and Lawrence Livermore National Laboratory',
 }
 DISCOVERY_NOTES = {
@@ -365,6 +473,8 @@ DISCOVERY_NOTES = {
     'Rf': 'IUPAC/IUPAP (1993) shared the discovery credit between Berkeley and Dubna.',
     'Db': 'IUPAC/IUPAP (1993) shared the discovery credit between Berkeley and Dubna.',
     'Nh': 'First atom made in 2004; IUPAC/IUPAP credited the discovery in 2015.',
+    'Mc': ('First atoms made in 2003 by Dubna and Livermore; IUPAC/IUPAP (2015) credited the discovery to '
+           'Dubna, Livermore and Oak Ridge for experiments from 2010 on.'),
 }
 
 NAME_OVERRIDES = {'Al': 'Aluminium', 'Cs': 'Caesium'}  # IUPAC Red Book 2005 spellings
@@ -477,8 +587,9 @@ def load(db_path: str) -> list[dict]:
     transitions: dict[int, list[sqlite3.Row]] = {}
     for r in con.execute('SELECT * FROM phasetransitions ORDER BY atomic_number, id'):
         transitions.setdefault(r['atomic_number'], []).append(r)
+    # Every state the database knows (main and extended), to catch typos in OXIDATION_STATES.
     oxidation: dict[int, set[int]] = {}
-    for r in con.execute("SELECT atomic_number, oxidation_state FROM oxidationstates WHERE category = 'main'"):
+    for r in con.execute('SELECT atomic_number, oxidation_state FROM oxidationstates'):
         oxidation.setdefault(r['atomic_number'], set()).add(r['oxidation_state'])
     isotopes = {(r[0], r[1]) for r in con.execute('SELECT atomic_number, mass_number FROM isotopes')}
     con.close()
@@ -588,7 +699,12 @@ def build_element(r: sqlite3.Row, ie: sqlite3.Row | None, transitions: list[sqli
         notes.append(DENSITY_NOTES[sym])
 
     # chemistry and history
-    oxidation_states = OXIDATION_OVERRIDES.get(sym, sorted(oxidation))
+    require(sym in OXIDATION_STATES, f'{sym}: missing from OXIDATION_STATES')
+    oxidation_states = OXIDATION_STATES[sym]
+    require(oxidation_states == sorted(set(oxidation_states)) and 0 not in oxidation_states,
+            f'{sym}: oxidation states must be ascending, distinct and non-zero')
+    unknown = set(oxidation_states) - oxidation
+    require(not unknown, f'{sym}: oxidation states {sorted(unknown)} are not in the database (typo?)')
     if sym in OXIDATION_NOTES:
         notes.append(OXIDATION_NOTES[sym])
     year = DISCOVERY_YEAR_OVERRIDES.get(sym, r['discovery_year'])
@@ -651,6 +767,7 @@ def require(condition: bool, message: str) -> None:
 def validate(elements: list[dict]) -> None:
     require([e['z'] for e in elements] == list(range(1, 119)), 'expected Z = 1..118')
     require(len({e['name'] for e in elements}) == 118, 'names must be unique')
+    require(set(OXIDATION_STATES) == {e['symbol'] for e in elements}, 'OXIDATION_STATES must list all 118 elements')
     for e in elements:
         require(e['category'] in CATEGORIES, f'{e["symbol"]}: unknown category')
         require(set(e['predicted']) <= set(FIELDS), f'{e["symbol"]}: predicted names unknown fields')
@@ -706,7 +823,17 @@ def pymatgen_value(entry: dict, key: str) -> float | None:
     return v
 
 
-def compare(elements: list[dict], path: str) -> None:
+def main_oxidation_states(db_path: str) -> dict[int, list[int]]:
+    """mendeleev's 'main' oxidation states (Wikipedia's bold states), which OXIDATION_STATES replaces."""
+    con = sqlite3.connect(f'file:{db_path}?mode=ro', uri=True)
+    states: dict[int, set[int]] = {}
+    for z, state in con.execute("SELECT atomic_number, oxidation_state FROM oxidationstates WHERE category = 'main'"):
+        states.setdefault(z, set()).add(state)
+    con.close()
+    return {z: sorted(s) for z, s in states.items()}
+
+
+def compare(elements: list[dict], path: str, db_path: str) -> None:
     with open(path, encoding='utf-8') as fh:
         pmg = json.load(fh)
     for key, field, kind, tol in TOLERANCES:
@@ -720,6 +847,23 @@ def compare(elements: list[dict], path: str) -> None:
             diff = abs(ours - theirs) / abs(ours) if kind == 'relative' else abs(ours - theirs)
             if diff > tol:
                 print(f'  {e["symbol"]:>2}: ours {ours}, pymatgen {theirs}')
+    # Oxidation states: what OXIDATION_STATES adds to or drops from mendeleev's main list, and which
+    # listed states pymatgen's ICSD list lacks (only for elements that have an ICSD list).
+    print('== oxidationStates vs mendeleev main and pymatgen "ICSD oxidation states"')
+    main_states = main_oxidation_states(db_path)
+    for e in elements:
+        ours = set(e['oxidationStates'])
+        main_list = set(main_states.get(e['z'], []))
+        icsd = pmg.get(e['symbol'], {}).get('ICSD oxidation states')
+        parts = []
+        if ours - main_list:
+            parts.append(f'adds {sorted(ours - main_list)} to main')
+        if main_list - ours:
+            parts.append(f'drops {sorted(main_list - ours)} from main')
+        if icsd and ours - set(icsd):
+            parts.append(f'{sorted(ours - set(icsd))} not in ICSD {sorted(icsd)}')
+        if parts:
+            print(f'  {e["symbol"]:>2}: {sorted(ours)}; ' + '; '.join(parts))
 
 
 def main() -> None:
@@ -728,11 +872,12 @@ def main() -> None:
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--compare', metavar='PYMATGEN_JSON')
     args = ap.parse_args()
-    elements = load(locate_db(args.db))
+    db_path = locate_db(args.db)
+    elements = load(db_path)
     validate(elements)
     text = render(elements)
     if args.compare:
-        compare(elements, args.compare)
+        compare(elements, args.compare, db_path)
     if args.check:
         current = OUT.read_text(encoding='utf-8') if OUT.exists() else ''
         if current != text:
