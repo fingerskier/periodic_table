@@ -1,0 +1,142 @@
+/* Stage layers: WebGL underneath, CSS3D tiles above, 2D overlays on top. */
+#stage .gl-layer,
+#stage .css-layer {
+  position: absolute;
+  inset: 0;
+}
+#stage .gl-layer { z-index: 0; display: block; }
+#stage .css-layer { z-index: 1; }
+
+.tile,
+.col-head {
+  /* position/transform are owned by CSS3DRenderer */
+  margin: 0;
+  padding: 0;
+  border: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  cursor: pointer;
+  font-family: var(--font);
+  --accent: #8a93a6;
+}
+
+.tile {
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 2px var(--accent);
+  transition: opacity 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  color: var(--text);
+}
+.tile-inner {
+  position: relative;
+  display: grid;
+  grid-template-rows: 34px 1fr 30px 26px;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 10px 10px 12px;
+  transition: transform 0.18s ease;
+}
+.t-z {
+  justify-self: start;
+  font-size: 23px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+.t-sym {
+  font-size: 76px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.t-name {
+  font-size: 20px;
+  font-weight: 500;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.t-mass {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.72;
+}
+
+.tile.is-back,
+.col-head.is-back { pointer-events: none; }
+
+.tile:hover,
+.tile.is-hl { box-shadow: inset 0 0 0 3px var(--accent), 0 0 34px -4px var(--accent); }
+.tile.is-active {
+  box-shadow: inset 0 0 0 4px #fff, 0 0 46px 2px var(--accent);
+  z-index: 2;
+}
+.tile.is-active .tile-inner { transform: scale(1.05); }
+.tile.is-rel { box-shadow: inset 0 0 0 3px #fff, 0 0 26px -6px #fff; }
+.tile.is-dim { opacity: 0.26; filter: saturate(0.35); }
+.tile:focus-visible { outline: 4px solid var(--focus); outline-offset: 6px; }
+
+.col-head {
+  border-radius: 12px;
+  background: rgba(20, 27, 43, 0.82);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  color: var(--text-2);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: center;
+  align-items: center;
+  padding: 6px 0 8px;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+.h-label { font-size: 40px; font-weight: 700; line-height: 1; color: var(--text); }
+.h-sub { font-size: 16px; letter-spacing: 0.06em; opacity: 0.8; }
+.col-head.is-f { background: rgba(20, 27, 43, 0.55); }
+.col-head.is-f .h-label { font-size: 32px; color: var(--text-2); }
+.col-head:hover,
+.col-head.is-hl { background: rgba(57, 135, 229, 0.28); box-shadow: inset 0 0 0 2px #3987e5; }
+.col-head.is-active { background: rgba(57, 135, 229, 0.5); box-shadow: inset 0 0 0 3px #86b6ef; color: #fff; }
+.col-head:focus-visible { outline: 4px solid var(--focus); outline-offset: 4px; }
+
+/* Period labels pinned to the cylinder's left silhouette (rows are rings, so they never rotate). */
+.row-labels {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.row-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: rgba(15, 20, 32, 0.86);
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transform: translate(-100%, -50%);
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.row-label .rl-cap { font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; }
+.row-label:hover,
+.row-label.is-hl { background: rgba(57, 135, 229, 0.25); border-color: #3987e5; color: var(--text); }
+.row-label.is-active { background: rgba(57, 135, 229, 0.45); border-color: #86b6ef; color: #fff; }
+.row-label .rl-tick {
+  position: absolute;
+  right: -14px;
+  top: 50%;
+  width: 12px;
+  height: 1px;
+  background: var(--line-2);
+}

@@ -91,6 +91,8 @@ button, input, select { font: inherit; color: inherit; }
   overflow: hidden;
   min-height: 0;
   touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
   cursor: grab;
   background: radial-gradient(120% 90% at 50% 40%, #121a2b 0%, var(--bg) 60%);
 }

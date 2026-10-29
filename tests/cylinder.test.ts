@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  angleOfColumn, arcPoints, COLUMN_ANGLE, hubPoint, RADIUS, silhouette, TILE_WIDTH, wallPoint, wrapAngle, yawToFace, yOfPeriod,
+  angleOfColumn, arcPoints, azimuthToFace, COLUMN_ANGLE, hubPoint, RADIUS, silhouette, TILE_WIDTH, wallPoint, wrapAngle, yOfPeriod,
 } from '../src/layout/cylinder';
 
 describe('cylinder geometry', () => {
@@ -29,11 +29,11 @@ describe('cylinder geometry', () => {
     expect(wrapAngle(0.5)).toBeCloseTo(0.5);
   });
 
-  it('finds the nearest yaw that faces a column to the camera', () => {
+  it('finds the nearest camera azimuth that faces a column', () => {
     for (const c of [1, 8, 17, 32]) {
-      const yaw = yawToFace(c, 10);
-      expect(Math.abs(yaw - 10)).toBeLessThanOrEqual(Math.PI + 1e-9);
-      expect(Math.cos(angleOfColumn(c) + yaw)).toBeCloseTo(1);
+      const az = azimuthToFace(c, 10);
+      expect(Math.abs(az - 10)).toBeLessThanOrEqual(Math.PI + 1e-9);
+      expect(Math.cos(angleOfColumn(c) - az)).toBeCloseTo(1);
     }
   });
 

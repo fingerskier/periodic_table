@@ -48,10 +48,13 @@ export function wrapAngle(a: number): number {
   return x;
 }
 
-/** Yaw (cylinder rotation about +Y) that brings `column` to face the camera, nearest to `currentYaw`. */
-export function yawToFace(column: number, currentYaw: number): number {
-  const target = -angleOfColumn(column);
-  return currentYaw + wrapAngle(target - currentYaw);
+/**
+ * The cylinder stays fixed and the camera orbits it. Camera azimuth φ places the camera at
+ * (sin φ, ·, cos φ)·d, so the column at angle θ faces the viewer when φ = θ. Returns the
+ * equivalent φ nearest to `current` (so animations take the short way round).
+ */
+export function azimuthToFace(column: number, current: number): number {
+  return current + wrapAngle(angleOfColumn(column) - current);
 }
 
 /** Inward-pulled centroid used as a set's hub. depth 0 = on the wall, 1 = on the axis. */
