@@ -1,0 +1,32 @@
+{
+  "name": "periodic-cylinder",
+  "private": true,
+  "version": "0.1.0",
+  "description": "The periodic table drawn on a rotating cylinder, with chemical relations as an internal framework.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "node scripts/e2e.mjs",
+    "data": "python3 scripts/build_data.py",
+    "verify:decay": "python3 scripts/verify_decay.py"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "@types/three": "^0.186.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  }
+}

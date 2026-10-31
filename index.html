@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0b0f18" />
+    <title>Periodic Cylinder</title>
+    <meta name="description" content="The periodic table wrapped around a rotating cylinder, with chemical relations drawn as a framework inside it." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <a class="skip-link" href="#stage">Skip to the periodic table</a>
+    <div id="app">
+      <header id="topbar">
+        <h1 class="brand">Periodic <span>Cylinder</span></h1>
+        <div id="search"></div>
+        <div id="toolbar"></div>
+      </header>
+      <aside id="filters" aria-label="Relations and display settings"></aside>
+      <main id="stage" aria-label="Periodic table drawn on a rotating cylinder">
+        <div id="legend"></div>
+        <p id="hint" class="hint">Hover an element, a column number or a period label · drag beside the cylinder to rotate · scroll to zoom</p>
+      </main>
+      <aside id="inspector" aria-label="Details"></aside>
+    </div>
+    <noscript>This visualization needs JavaScript and WebGL.</noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

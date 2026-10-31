@@ -1,0 +1,177 @@
+/* Global tokens and app shell. Panels style themselves in src/ui/*.css using these tokens. */
+:root {
+  color-scheme: dark;
+  --bg: #0b0f18;
+  --bg-2: #0f1522;
+  --panel: rgba(15, 20, 32, 0.94);
+  --panel-2: #141b2b;
+  --panel-3: #1a2336;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.16);
+  --text: #f0efec;
+  --text-2: #c3c2b7;
+  --muted: #898781;
+  --accent: #3987e5;
+  --accent-2: #9085e9;
+  --focus: #86b6ef;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --topbar-h: 52px;
+  --filters-w: 300px;
+  --inspector-w: 348px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select { font: inherit; color: inherit; }
+
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  z-index: 50;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--panel-3);
+  color: var(--text);
+  text-decoration: none;
+}
+.skip-link:focus { top: 8px; }
+
+#app {
+  display: grid;
+  height: 100dvh;
+  grid-template-columns: var(--filters-w) minmax(0, 1fr) var(--inspector-w);
+  grid-template-rows: var(--topbar-h) minmax(0, 1fr);
+  grid-template-areas:
+    'top top top'
+    'filters stage inspector';
+}
+
+#topbar {
+  grid-area: top;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-2);
+  z-index: 5;
+}
+
+.brand {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.brand span { color: var(--accent-2); }
+
+#search { flex: 1 1 auto; max-width: 420px; }
+#toolbar { margin-left: auto; display: flex; gap: 6px; }
+
+#filters {
+  grid-area: filters;
+  overflow-y: auto;
+  border-right: 1px solid var(--line);
+  background: var(--panel);
+}
+
+#inspector {
+  grid-area: inspector;
+  overflow-y: auto;
+  border-left: 1px solid var(--line);
+  background: var(--panel);
+}
+
+#stage {
+  grid-area: stage;
+  position: relative;
+  /* clip, not hidden: focusing a tile must never scroll the stage (tiles would slide off the wall). */
+  overflow: clip;
+  min-height: 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  background: radial-gradient(120% 90% at 50% 40%, #121a2b 0%, var(--bg) 60%);
+}
+#stage.dragging { cursor: grabbing; }
+
+/* Top-left: the space above the header ring is empty, while the bottom holds period 7. */
+#legend {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 4;
+  max-width: calc(100% - 24px);
+}
+
+.hint {
+  position: absolute;
+  right: 12px;
+  top: 14px;
+  margin: 0;
+  z-index: 3;
+  font-size: 12px;
+  color: var(--muted);
+  pointer-events: none;
+  text-align: right;
+  /* Beside the legend (top-left), in the band the camera fit already keeps clear. */
+  max-width: calc(100% - 470px);
+  transition: opacity 0.6s ease;
+}
+.hint.is-gone { opacity: 0; }
+@media (max-width: 1180px) { .hint { display: none; } }
+
+/* Narrow screens: stage on top, inspector as a bottom sheet, filters in a drawer. */
+@media (max-width: 960px) {
+  #app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--topbar-h) minmax(0, 1fr) auto;
+    grid-template-areas: 'top' 'stage' 'inspector';
+  }
+  #inspector {
+    /* A fixed height: a content-sized sheet would resize (and refit) the cylinder on every hover. */
+    height: 38dvh;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  #filters {
+    position: fixed;
+    top: var(--topbar-h);
+    left: 0;
+    bottom: 0;
+    width: min(88vw, var(--filters-w));
+    z-index: 20;
+    transform: translateX(-102%);
+    transition: transform 0.2s ease;
+    border-right: 1px solid var(--line-2);
+  }
+  #app.filters-open #filters { transform: none; }
+  .hint { display: none; }
+}
+
+/* WCAG 1.4.10 reflow: the top bar must fit at 320px. */
+@media (max-width: 400px) {
+  #topbar { gap: 8px; padding: 0 10px; }
+  .brand { font-size: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
